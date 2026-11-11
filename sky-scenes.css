@@ -20,7 +20,7 @@
 .zodiac-star-pop { opacity: 0; transform-box: fill-box; transform-origin: center; }
 .zodiac-sparkle { fill: #f8e4c2; }
 .zodiac-star.is-bright .zodiac-sparkle { fill: #fff; }
-.zodiac-heading { top: 630px; transform: translateY(-50%); text-shadow: 0 0 30px #fa7ab3b3, 0 0 90px #ef312470; }
+.zodiac-heading { top: 560px; transform: translateY(-50%); text-shadow: 0 0 30px #fa7ab3b3, 0 0 90px #ef312470; }
 .zodiac-comet { left: 500px; top: 250px; width: 420px; height: 6px; z-index: 1; border-radius: 6px; opacity: 0; pointer-events: none; background: linear-gradient(90deg, #f8e4c200, #f8e4c2 70%, #fff); box-shadow: 0 0 18px #fa7ab3; }
 .sky-scene.is-on-screen .zodiac-star.is-bright .zodiac-sparkle { animation: zodiac-twinkle 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
 @keyframes zodiac-twinkle { 50% { opacity: .55; } }
@@ -40,12 +40,18 @@
 .ending-chapter .sky-scene.office-tower { position: absolute; inset: 0; height: 100%; z-index: 1; background: transparent; transform-origin: center; }
 .office-tower .sky-stage { position: absolute; inset: 0; height: 100%; }
 /* Неоновая вывеска стоит на крыше: низ надписи — на уровне крыши здания. */
-.office-tower .tower-sign { top: auto; bottom: 1130px; line-height: .9; color: #ffd6e8; text-shadow: 0 0 18px #fa7ab3, 0 0 60px #ef3124b3; }
-.office-tower .tower-sign.is-lit { animation: tower-neon 5s steps(1) infinite; }
+.office-tower .tower-sign { line-height: 1; }
 @keyframes tower-neon { 0%, 100% { opacity: 1; } 91% { opacity: .35; } 93% { opacity: 1; } 95% { opacity: .5; } 96% { opacity: 1; } }
 .office-tower .tower-number { font-size: 280px; }
 @media (prefers-reduced-motion: reduce) { .ending-chapter .sky-scene.office-tower { position: relative; height: 100svh; } .office-tower .tower-sign.is-lit { animation: none; } }
 /* Вывеска на горизонтальном экране — фиксированного размера над крышей; на телефоне
    её подгоняет по ширине typography.js. Неон ярче: розовое ядро и красный ореол. */
-html:not(.is-portrait) .revision-six .office-tower .tower-sign { font-size: 250px !important; }
-.office-tower .tower-sign { color: #ffc2dd; text-shadow: 0 0 6px #fff, 0 0 22px #fa7ab3, 0 0 70px #ef3124; }
+
+/* Гороскоп: 2-е и 3-е место строкой под первым. */
+.zodiac-runners { display: flex; justify-content: center; gap: 110px; opacity: 0; }
+.zodiac-runner { display: flex; align-items: center; gap: 22px; }
+.zodiac-runner-place { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; background: #ef3124; color: #f8e4c2; font: 58px/1 Agse, sans-serif; }
+.zodiac-runner-name { font: 700 104px/1 Nauryz, sans-serif; letter-spacing: -.03em; color: #fff; text-shadow: 0 0 18px #fa7ab380; }
+.zodiac-runner-share { font: 70px/1 Agse, sans-serif; color: #f8e4c2; }
+html.is-portrait .zodiac-runners { flex-direction: column; align-items: center; gap: 26px; }
+html.is-portrait .zodiac-note { top: 1650px !important; }

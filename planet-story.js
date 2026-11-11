@@ -17,7 +17,23 @@ export function createPlanetStory(data){
  const s=document.createElement('section');s.className='planet-story';s.id='alfa-ai';s.setAttribute('aria-label','Alfa AI, любимый агент и время общения');
  s.innerHTML=`<div class="planet-media"><video muted playsinline preload="none" disablepictureinpicture poster="./assets/planet/poster.jpg" src="./assets/planet/planet-smooth.mp4"></video></div><div class="planet-composition"><div class="planet-clock-art" aria-hidden="true"></div><div class="planet-ai planet-copy"><h2>alfa ai</h2><p class="planet-number"></p><p class="planet-label"></p></div><div class="planet-agent planet-copy" id="ai-agent"><h2></h2><p class="planet-label"></p></div><div class="planet-time planet-copy" id="talk-time"><p class="planet-number"></p><h2 class="planet-label"></h2><p class="planet-note"></p></div></div>`;
  s.querySelector('.planet-ai .planet-label').textContent='Запросов вы отправили\nв alfa ai';s.querySelector('.planet-ai').dataset.value=data.ai.requests;
- s.querySelector('.planet-agent h2').textContent=data.ai.agent;s.querySelector('.planet-agent .planet-label').textContent='агент с которым вы\nработали чаще всего';
+ s.querySelector('.planet-agent h2').textContent=data.ai.agent;s.querySelector('.planet-agent .planet-label').textContent=data.ai.agents.length>1?'агенты, с которыми вы\nработали чаще всего':'агент с которым вы\nработали чаще всего';
+ // Пьедестал топ-3: первое место — по центру и крупнее, 2-е и 3-е — по бокам ниже.
+ if(data.ai.agents.length>1){
+  const podium=document.createElement('div');podium.className='planet-podium';
+  const order=[1,0,2].filter(i=>data.ai.agents[i]);
+  for(const i of order){
+   const a=data.ai.agents[i],item=document.createElement('div');item.className=`podium-item podium-${i+1}`;item.style.setProperty('--i',String(i));
+   const avatar=document.createElement('div');avatar.className='podium-avatar';
+   if(a.cover){const img=document.createElement('img');img.src=a.cover;img.alt='';avatar.append(img);}
+   else{avatar.dataset.letter=a.name[0].toUpperCase();avatar.classList.add('is-placeholder');}
+   const medal=document.createElement('span');medal.className='podium-medal';medal.textContent=String(i+1);avatar.append(medal);
+   item.append(avatar);
+   if(i>0){const name=document.createElement('p');name.className='podium-name';name.textContent=a.name;item.append(name);}
+   podium.append(item);
+  }
+  s.querySelector('.planet-agent').append(podium);
+ }
  s.querySelector('.planet-time').dataset.value=data.ai.hours;s.querySelector('.planet-time h2').textContent='Часов вы общались';s.querySelector('.planet-note').textContent='Вот столько часов вы потратили листая\nрилсы на работе';
  return s;
 }

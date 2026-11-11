@@ -30,6 +30,7 @@ import { createMoments, prepareMoments } from './moments.js';
 import { createTalkContact, prepareTalkContact } from './talk-contact.js';
 import { createBookChapter, mountBookChapter } from './learning.js';
 import { createZodiac, createProfileViews, mountSkyScenes } from './sky-scenes.js';
+import { mountTalismanCard } from './talisman-card.js';
 
 const shell = document.querySelector('#recap-shell');
 shell.classList.add('november');
@@ -109,6 +110,7 @@ async function render(input) {
     if (signal.aborted) return;
     document.querySelector('.load-error').hidden = true;
     openRecap();
+    showScrollHint(signal);
     startPerformanceMonitor(signal);
     manageVideoMemory(shell, signal);
     manageSectionMemory(shell, signal);
@@ -130,6 +132,7 @@ async function render(input) {
     mountBookChapter(shell, signal);
     mountCarSequence(shell, data, signal);
     mountEndingMotion(shell, signal);
+    mountTalismanCard(shell, data, signal);
     mountOriginalOfficeMotion(shell, signal);
     if (['#learning','#top-contact','#zodiac','#profile-views','#alfa-ai', '#ai-agent', '#talk-time', '#income', '#your-year', '#thanks', '#postcards', '#moments', '#achievements', '#coins', '#spending', '#parksharing', '#office', '#finale'].includes(initialAnchor)) {
       const target = document.querySelector(initialAnchor);
@@ -148,6 +151,23 @@ async function render(input) {
     motionController.abort();
     showLoadError(error);
   }
+}
+
+// Подсказка на первом экране: люди не понимали, что дальше. Исчезает при первом скролле.
+function showScrollHint(signal) {
+  document.querySelector('.scroll-hint')?.remove();
+  if (scrollY > 40) return;
+  const touch = matchMedia('(pointer: coarse)').matches;
+  const hint = document.createElement('div');
+  hint.className = 'scroll-hint'; hint.setAttribute('role', 'note');
+  // Тихая подсказка в стиле загрузки: строка текста и линия, по которой бежит красная точка.
+  hint.innerHTML = `<span class="scroll-hint-text">листайте — дальше ваши итоги</span><span class="scroll-hint-line" aria-hidden="true"><i></i></span>`;
+  hint.classList.toggle('is-touch', touch);
+  document.body.append(hint);
+  const timer = setTimeout(() => hint.classList.add('is-visible'), 1600);
+  const hide = () => { if (scrollY > 40) { hint.classList.remove('is-visible'); hint.classList.add('is-gone'); setTimeout(() => hint.remove(), 600); removeEventListener('scroll', hide); } };
+  addEventListener('scroll', hide, { passive: true, signal });
+  signal.addEventListener('abort', () => { clearTimeout(timer); hint.remove(); }, { once: true });
 }
 
 // Backend integrations use the same loading gate when replacing the data.

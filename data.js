@@ -26,6 +26,7 @@ export function normalizeRecap(input) {
   const zodiac = input.zodiac;
   if (zodiac && !ZODIAC_SIGNS.includes(zodiac.sign)) throw new Error('Invalid zodiac sign');
   if (zodiac?.share !== undefined && (!Number.isFinite(zodiac.share) || zodiac.share < 0 || zodiac.share > 100)) throw new Error('Invalid zodiac share');
+  if (zodiac?.others !== undefined && (!Array.isArray(zodiac.others) || zodiac.others.some(o => !ZODIAC_SIGNS.includes(o?.sign)))) throw new Error('Invalid zodiac others');
   for (const [block, name] of [[profileViews, 'profileViews'], [zodiac, 'zodiac']]) for (const key of ['heading', 'kicker', 'label', 'note']) if (block?.[key] !== undefined && (typeof block[key] !== 'string' || !block[key].trim())) throw new Error(`Invalid ${name} ${key}`);
   const income = input.income;
   const moments = input.moments;
@@ -83,11 +84,20 @@ export function normalizeRecap(input) {
     zodiac: zodiac ? {
       sign: zodiac.sign,
       share: zodiac.share ?? null,
+      // 2-е и 3-е место: [{ sign, share }].
+      others: (zodiac.others || []).slice(0, 2).map(o => ({ sign: o.sign, share: Number.isFinite(o.share) ? o.share : null })),
       kicker: zodiac.kicker || 'Чаще всего вы общались со знаком',
       label: zodiac.label || null,
       note: (zodiac.note || 'Звёзды советуют в {nextYear}:\nменьше созвонов, больше спасибок').replaceAll('{nextYear}', String(input.year + 1)),
     } : null,
-    ai: { requests: input.ai?.requests ?? 543, agent: input.ai?.agent || "иллюстратор", hours: input.ai?.hours ?? 129 },
+    ai: {
+      requests: input.ai?.requests ?? 543, hours: input.ai?.hours ?? 129,
+      // Топ-3 агентов: [{ name, cover }]. Старое поле `agent` — первое место.
+      agents: (Array.isArray(input.ai?.agents) && input.ai.agents.length ? input.ai.agents : [{ name: input.ai?.agent || "иллюстратор" }])
+        .slice(0, 3).filter(a => a && typeof a.name === "string" && a.name.trim())
+        .map(a => ({ name: a.name.trim(), cover: a.cover ? assetUrl(a.cover, "ai.agents.cover") : null })),
+      get agent() { return this.agents[0]?.name || "иллюстратор"; },
+    },
     talkContact:{name:talkContact?.name||'Дмитрий',hours:talkContact?.hours??250,photo:talkContact?.photo==null?null:assetUrl(talkContact.photo,'talkContact.photo'),heading:talkContact?.heading||'Ваш топ собеседник в к-толк',label:talkContact?.label||'Часов вы общались',note:talkContact?.note||'Вот столько часов вы потратили листая\nрилсы на работе'},
     parksharing: parksharing ? {
       trips: parksharing.trips,

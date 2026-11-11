@@ -22,7 +22,8 @@ export function showLoading() {
 }
 // Пока грузится — шутки по кругу.
 const joke = overlay.querySelector('.preloader-joke');
-const jokes = ['Пересчитываем спасибки…', 'Надуваем ёлочные шары…', 'Полируем коины…', 'Проявляем моменты…', 'Запечатываем открытки…', 'Заводим часы до Нового года…', 'Будим пиплика…'];
+// Тёмная загрузка: вместо шуток — полутаинственные фразы, по одной, с затуханием.
+const jokes = ['Собираем ваш год по кусочкам', 'Кое-кто заглядывал в ваш профиль', 'Звёзды уже почти сложились', 'Считаем, сколько раз вы сказали «спасибо»', 'Кажется, вы делали это чаще других', 'Осталось совсем чуть-чуть'];
 let jokeIndex = 0, jokeTimer = 0;
 function startJokes() {
   clearInterval(jokeTimer);
@@ -31,15 +32,12 @@ function startJokes() {
     jokeIndex = (jokeIndex + 1) % jokes.length;
     joke.textContent = jokes[jokeIndex];
     joke.classList.remove('is-swapping'); void joke.offsetWidth; joke.classList.add('is-swapping');
-  }, 1500);
+  }, 2600);
 }
 const number = overlay.querySelector('.preloader-number');
 function setProgress(value) {
   const next = Math.max(highest, Math.min(100, Math.floor(value)));
   if (next === highest && percent.textContent === String(next)) return;
-  // Каждые 10% цифра подпрыгивает.
-  if (Math.floor(next / 10) !== Math.floor(highest / 10) && number?.animate && !matchMedia('(prefers-reduced-motion: reduce)').matches)
-    number.animate([{ transform: 'scale(1.16) rotate(-3deg)' }, { transform: 'none' }], { duration: 380, easing: 'cubic-bezier(.2, 1.6, .4, 1)' });
   highest = next;
   percent.textContent = String(next);
   bar.setAttribute('aria-valuenow', String(next));
@@ -48,7 +46,7 @@ function setProgress(value) {
 export function showLoadError(error) {
   overlay.classList.add('has-error');
   clearInterval(jokeTimer);
-  if (joke) joke.textContent = 'Ой, что-то пошло не так';
+  if (joke) joke.textContent = 'Что-то пошло не так';
   status.textContent = 'Не всё удалось загрузить. Проверьте соединение и попробуйте ещё раз.';
   retry.hidden = false;
   console.error('Recap loading:', error);

@@ -48,7 +48,7 @@ function scene(id, label, cls = id) {
 function place(el, x, y, w) { Object.assign(el.style, { left: `${x}px`, top: `${y}px`, width: `${w}px` }); return el; }
 
 // ───────────────────────────── «Созвездие» ─────────────────────────────
-const BOX = { x: 240, y: 190, w: 1440, h: 880 };
+const BOX = { x: 240, y: 160, w: 1440, h: 800 };
 export function createZodiac(data) {
   const z = data.zodiac, names = ZODIAC_NAMES[z.sign], shape = CONSTELLATIONS[z.sign];
   const section = scene('zodiac', 'Знак зодиака ваших собеседников');
@@ -82,12 +82,24 @@ export function createZodiac(data) {
   const heading = place(node('h2', { class: 'november-heading sky-heading zodiac-heading' }, names[0]), 0, 630, 1920);
   c.append(heading, node('i', { class: 'zodiac-comet', 'aria-hidden': 'true' }));
   if (z.share != null) {
-    const number = place(node('p', { class: 'sky-number zodiac-number', 'aria-hidden': 'true' }, `${z.share}%`), 0, 1060, 1920);
+    const number = place(node('p', { class: 'sky-number zodiac-number', 'aria-hidden': 'true' }, `${z.share}%`), 0, 960, 1920);
     number.dataset.value = String(z.share); c.append(number);
   }
   const label = z.label || (z.share != null ? `ваших собеседников — ${names[2]}` : `${names[2]} — ваши самые\nчастые собеседники`);
-  c.append(place(node('p', { class: 'sky-label zodiac-label' }, label), 0, z.share != null ? 1400 : 1120, 1920));
-  c.append(place(node('p', { class: 'sky-note zodiac-note' }, z.note), 0, z.share != null ? 1478 : 1260, 1920));
+  c.append(place(node('p', { class: 'sky-label zodiac-label' }, label), 0, z.share != null ? 1290 : 1040, 1920));
+  // 2-е и 3-е место — строкой ниже и мельче первого.
+  const runners = (z.others || []).filter(o => ZODIAC_NAMES[o.sign]);
+  if (runners.length) {
+    const row = place(node('div', { class: 'zodiac-runners' }), 0, z.share != null ? 1375 : 1125, 1920);
+    runners.forEach((o, i) => {
+      const item = node('div', { class: 'zodiac-runner' });
+      item.append(node('span', { class: 'zodiac-runner-place' }, String(i + 2)), node('span', { class: 'zodiac-runner-name' }, ZODIAC_NAMES[o.sign][0]));
+      if (o.share != null) item.append(node('span', { class: 'zodiac-runner-share' }, `${o.share}%`));
+      row.append(item);
+    });
+    c.append(row);
+  }
+  c.append(place(node('p', { class: 'sky-note zodiac-note' }, z.note), 0, (z.share != null ? 1290 : 1040) + (runners.length ? 225 : 90), 1920));
   c.append(node('span', { class: 'sr-only' }, `${z.kicker} ${names[0]}.${z.share != null ? ` ${z.share}% ваших собеседников — ${names[2]}.` : ''}`));
   return section;
 }
@@ -133,10 +145,26 @@ function mountScene(section, signal) {
     scale = fitScale(width, height, DESIGN.width, DESIGN.height, section.id);
     composition.style.transform = `translate(-50%,-50%) scale(${scale})`;
     setHeadingScale(composition, scale, width, height);
+    if (!eyesMode) fitSignName();
     dpr = canvasBudget(width, height).ratio;
     canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
     if (eyesMode) layoutEyes(); else paintSky();
     schedule();
+  }
+
+  // Название знака крупное, но длинные («Близнецы», «Скорпион», «Водолей») не
+  // должны вылезать за экран: шрифт уменьшается, пока слово не встанет с полями.
+  function fitSignName() {
+    const sign = section.querySelector('.zodiac-heading'); if (!sign) return;
+    if (width / Math.max(1, height) < .8) return;            // телефон: ширину подгоняет typography.js
+    sign.style.removeProperty('font-size');                   // сбросить прошлую подгонку перед замером
+    const range = document.createRange(); range.selectNodeContents(sign);
+    const textW = range.getBoundingClientRect().width / Math.max(.01, scale);          // ширина слова в px макета
+    const avail = Math.min(DESIGN.width, width / Math.max(.01, scale)) - 2 * 48 / Math.max(.01, scale);
+    if (textW > avail) {
+      const size = parseFloat(getComputedStyle(sign).fontSize) * avail / textW;
+      sign.style.setProperty('font-size', `${size.toFixed(1)}px`, 'important');
+    }
   }
 
   // Небо рисуется один раз на размер экрана: звёзды и розовая туманность.
@@ -259,7 +287,8 @@ function mountScene(section, signal) {
       heading.style.opacity = word; heading.style.transform = `translateY(-50%) translateY(${(1 - word) * 60}px) scale(${.85 + .15 * word})`;
       const fly = ease(.6, .78, p); comet.style.opacity = Math.sin(Math.PI * fly); comet.style.transform = `translate(${-500 + fly * 1500}px, ${fly * 380}px) rotate(24deg)`;
       if (number) { const n = ease(.66, .8, p); number.style.opacity = n; number.style.transform = `translateY(${(1 - n) * 50}px)`; number.textContent = reduced.matches ? `${number.dataset.value}%` : `${reel(number.dataset.value, ease(.66, .86, p))}%`; }
-      label.style.opacity = ease(.74, .86, p); note.style.opacity = ease(.8, .92, p);
+      label.style.opacity = ease(.74, .86, p); note.style.opacity = ease(.84, .95, p);
+      const runners = section.querySelector('.zodiac-runners'); if (runners) { const r = ease(.78, .9, p); runners.style.opacity = r; runners.style.transform = `translateY(${(1 - r) * 40}px)`; }
     }
     if (keepGoing) schedule();
   }
@@ -287,12 +316,12 @@ function mountScene(section, signal) {
 // Каждое окно — рабочий день года (13 окон в ряд, снизу вверх: январь → декабрь).
 // По скроллу окна загораются по порядку; светится ровно столько, сколько дней
 // человек был в офисе. В конце на крыше включается неоновая вывеска.
-const TOWER = { x: 560, y: 500, w: 800, h: 720, cols: 13, workdays: 260 };
+const TOWER = { x: 560, y: 640, w: 800, h: 590, cols: 13, workdays: 260 };
 export function createOfficeTower(data) {
   const o = data.office, section = scene('office', 'Походы в офис', 'office-tower');
   const c = section.querySelector('.sky-composition');
   const sign = node('h2', { class: 'november-heading sky-heading tower-sign', 'aria-hidden': 'true' }, 'офис');
-  place(sign, 0, 0, 1920); sign.style.top = '';       // вывеска прижата низом к крыше (bottom в CSS)
+  place(sign, 0, 40, 1920);                            // заголовок блока сверху; на крыше — логотип (на холсте)
   c.append(sign);
   const number = place(node('p', { class: 'sky-number tower-number', 'aria-hidden': 'true' }, '0'), 0, 1236, 1920);
   number.dataset.value = String(o.visits);
@@ -313,6 +342,8 @@ function mountTower(section, signal) {
   const litOrder = order.filter(i => lit.has(i));                     // хронологически: снизу вверх
   const kind = new Map(litOrder.map(i => [i, rnd() < .14 ? 'screen' : rnd() < .12 ? 'person' : 'lamp']));
   let active = false, raf = 0, p, last = 0, width = 1, height = 1, dpr = 1, scale = 1, sky = null, drawn = -1;
+  // Красный логотип-вывеска на крыше.
+  const logo = new Image(); logo.onload = () => { drawn = -1; schedule(); }; logo.src = './assets/brand/alfa-logo.svg';
 
   function fit() {
     width = stage.clientWidth; height = stage.clientHeight;
@@ -367,6 +398,8 @@ function mountTower(section, signal) {
     ctx.fillStyle = '#3a0f17'; ctx.fillRect(left + w * .08, top - 18 * scale, w * .84, 18 * scale);
     ctx.fillRect(left + w * .38, top - 60 * scale, w * .24, 42 * scale);
     ctx.strokeStyle = '#ef3124'; ctx.lineWidth = Math.max(1, 3 * scale); ctx.strokeRect(left, top, w, h);
+    // Красные пилоны по краям фасада.
+    ctx.fillStyle = '#ef3124'; ctx.fillRect(left - 14 * scale, top - 18 * scale, 14 * scale, h + 18 * scale); ctx.fillRect(left + w, top - 18 * scale, 14 * scale, h + 18 * scale);
     // Окна.
     const padX = 30 * scale, padY = 32 * scale, cw = (w - padX * 2) / TOWER.cols, ch = (h - padY * 2) / rows;
     const ww = cw * .66, wh = ch * .64, on = ease(.18, .66, p) * litOrder.length;
@@ -387,7 +420,27 @@ function mountTower(section, signal) {
         ctx.fillRect(x + ww * .3, y + wh * .62, ww * .4, wh * .38);
       }
     }
+    // Линии этажей — каждый месяц (≈ 2 ряда окон).
+    ctx.fillStyle = '#ef312433'; for (let r = 2; r < rows; r += 2) ctx.fillRect(left, top + h - padY - r * ch, w, Math.max(1, 2 * scale));
     ctx.restore();
+    // Вход: светящиеся двери внизу по центру.
+    const doorW = 120 * scale, doorH = 70 * scale, dx = left + w / 2 - doorW / 2, dy = ground - doorH;
+    ctx.fillStyle = '#ef3124'; ctx.fillRect(dx - 10 * scale, dy - 10 * scale, doorW + 20 * scale, 10 * scale);
+    const door = ctx.createLinearGradient(0, dy, 0, ground); door.addColorStop(0, '#f8e4c2'); door.addColorStop(1, '#fa7ab3');
+    ctx.globalAlpha = .35 + .65 * ease(.1, .3, p); ctx.fillStyle = door; ctx.fillRect(dx, dy, doorW, doorH);
+    ctx.fillStyle = '#2b0b11'; ctx.fillRect(dx + doorW / 2 - scale, dy, 2 * scale, doorH); ctx.globalAlpha = 1;
+    // Логотип-вывеска на крыше: загорается с миганием, когда год «прожит».
+    if (logo.complete && logo.naturalWidth) {
+      const lw = w * .7, lh = lw * 82 / 408, lx = left + (w - lw) / 2, ly = top - 60 * scale - 26 * scale - lh;
+      const n = ease(.64, .76, p), lit = n > 0 && n < 1 ? (Math.sin(n * 47) > .1 ? 1 : .3) : n;
+      ctx.fillStyle = '#3a0f17'; ctx.fillRect(lx + lw * .2, ly + lh, 6 * scale, top - ly - lh); ctx.fillRect(lx + lw * .8 - 6 * scale, ly + lh, 6 * scale, top - ly - lh);
+      if (lit > 0) {
+        const halo = ctx.createRadialGradient(lx + lw / 2, ly + lh / 2, 0, lx + lw / 2, ly + lh / 2, lw * .7);
+        halo.addColorStop(0, `rgba(250,122,179,${.35 * lit})`); halo.addColorStop(1, 'rgba(250,122,179,0)');
+        ctx.fillStyle = halo; ctx.fillRect(lx - lw * .2, ly - lh * 1.5, lw * 1.4, lh * 4);
+      }
+      ctx.globalAlpha = .25 + .75 * lit; ctx.drawImage(logo, lx, ly, lw, lh); ctx.globalAlpha = 1;
+    }
     // Ровно столько окон, сколько уже загорелось: счётчик совпадает с картинкой.
     return Math.round(on);
   }
@@ -403,9 +456,7 @@ function mountTower(section, signal) {
       const count = draw(p);
       number.textContent = String(reduced.matches ? visits : Math.min(visits, count));
       number.style.opacity = ease(.14, .26, p); number.style.transform = `translateY(${(1 - ease(.14, .3, p)) * 60}px)`;
-      // Неон «офис»: мигает и загорается, когда год «прожит».
-      const n = ease(.64, .76, p), flicker = n > 0 && n < 1 ? (Math.sin(n * 47) > .1 ? 1 : .25) : n;
-      sign.style.opacity = flicker; sign.classList.toggle('is-lit', n >= 1);
+      const head = ease(.02, .16, p); sign.style.opacity = head; sign.style.transform = `translateY(${(1 - head) * 40}px)`;
       label.style.opacity = ease(.7, .84, p); label.style.transform = `translateY(${(1 - ease(.7, .84, p)) * 30}px)`;
     }
     if (Math.abs(target - p) > .0002) schedule();

@@ -101,7 +101,21 @@
   "ai": {
     "requests": 543,
     "agent": "иллюстратор",
-    "hours": 129
+    "hours": 129,
+    "agents": [
+      {
+        "name": "иллюстратор",
+        "cover": null
+      },
+      {
+        "name": "копирайтер",
+        "cover": null
+      },
+      {
+        "name": "аналитик",
+        "cover": null
+      }
+    ]
   },
   "talkContact": {
     "name": "Дмитрий",
@@ -115,7 +129,17 @@
     "sign": "leo",
     "share": 34,
     "kicker": "Чаще всего вы общались со знаком",
-    "note": "Звёзды советуют в {nextYear}:\nменьше созвонов, больше спасибок"
+    "note": "Звёзды советуют в {nextYear}:\nменьше созвонов, больше спасибок",
+    "others": [
+      {
+        "sign": "gemini",
+        "share": 21
+      },
+      {
+        "sign": "pisces",
+        "share": 12
+      }
+    ]
   },
   "profileViews": {
     "count": 1248,

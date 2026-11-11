@@ -214,7 +214,7 @@ html:not(.is-portrait) .revision-six .thanks-title {font-size:min(var(--recap-he
 .november .november-park-label { left: 527px !important; width: 1014px !important; }
 /* Холсты наполнения сцен (записки, открытки, полка): внутри композиции сцены. */
 .scene-fill-canvas { position: absolute; pointer-events: none; }
-.thanks-scene > .thanks-notes-canvas { left: 0; top: 0; width: 100%; height: 100%; z-index: 5; }
+.thanks-composition > .thanks-notes-canvas { position: absolute; pointer-events: none; }
 .envelope-stage > .garland-canvas { left: 0; top: 0; width: 100%; height: 100%; z-index: 3; }
 
 /* Заголовки блоков там, где их не было: открытки, моменты, потратили. */
@@ -223,3 +223,23 @@ html:not(.is-portrait) .revision-six .thanks-title {font-size:min(var(--recap-he
 .spending-heading { top: -340px; }
 .moments-heading { top: auto; bottom: 1830px; z-index: 4; text-shadow: 0 0 14px #ffffff80, 0 4px 30px #6a0008; }
 html.is-portrait .spending-heading { top: -720px; }
+/* Обучение: часы убраны по просьбе коллег — остаются только курсы, по центру книги. */
+.learning-hours { display: none !important; }
+.learning-courses { left: 632px; }
+
+/* Альфа-ИИ: пьедестал топ-3 агентов под названием первого. */
+.planet-podium { position: absolute; left: 0; right: 0; bottom: calc(100% + 10px); display: flex; justify-content: center; align-items: flex-end; gap: 70px; }
+/* Над названием: 1-е место выше по центру, 2-е и 3-е ниже по бокам, подписи — под кругами. */
+.podium-item { display: flex; flex-direction: column; align-items: center; width: 330px; }
+.podium-2, .podium-3 { margin-bottom: 30px; }
+.podium-avatar { position: relative; width: 230px; height: 230px; border-radius: 50%; border: 8px solid #f8e4c2; box-shadow: 0 0 0 6px #ef3124, 0 12px 50px #ef312488; background: radial-gradient(circle at 35% 30%, #ff8a72, #ef3124 55%, #7a0b0e); }
+.podium-1 .podium-avatar { width: 330px; height: 330px; box-shadow: 0 0 0 8px #ef3124, 0 0 90px #fa7ab3aa; }
+.podium-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
+.podium-avatar.is-placeholder::before { content: attr(data-letter); position: absolute; inset: 0; display: grid; place-items: center; font: 700 130px/1 Nauryz, sans-serif; color: #f8e4c2; }
+.podium-1 .podium-avatar.is-placeholder::before { font-size: 190px; }
+.podium-2 .podium-avatar.is-placeholder { background: radial-gradient(circle at 35% 30%, #ffd3e6, #fa7ab3 55%, #8a1f52); }
+.podium-3 .podium-avatar.is-placeholder { background: radial-gradient(circle at 35% 30%, #b8ecff, #1ac3fd 55%, #0a4a66); }
+.podium-medal { position: absolute; right: -6px; bottom: -6px; width: 92px; height: 92px; border-radius: 50%; display: grid; place-items: center; background: #ef3124; border: 6px solid #f8e4c2; color: #f8e4c2; font: 64px/1 Agse, sans-serif; }
+.podium-1 .podium-medal { width: 112px; height: 112px; font-size: 80px; }
+.podium-name { margin: 26px 0 0; font: 700 52px/1 Styrene, sans-serif; letter-spacing: -.03em; color: #fff; text-shadow: 0 2px 10px #2c0018; }
+html:not(.is-portrait) .planet-podium { transform: scale(1.5); transform-origin: 50% 100%; }

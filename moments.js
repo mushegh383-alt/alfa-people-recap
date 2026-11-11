@@ -41,21 +41,24 @@ export function createMoments(data) {
 // (бордовый → #ef3124 → коралловый блик), объём и прозрачность сохраняются.
 // Один раз при загрузке, на прокрутку не влияет.
 const RED_RAMP = [[0, [120, 10, 14]], [.3, [239, 49, 36]], [.55, [255, 72, 52]], [.75, [255, 122, 96]], [.9, [255, 184, 162]], [1, [255, 238, 228]]];
-const RED_LUT = (() => {
+// Сердцевина — голубым градиентом, как небо на полароидах (синий → голубой → персиковый блик).
+const BLUE_RAMP = [[0, [12, 24, 70]], [.3, [36, 92, 205]], [.55, [40, 150, 240]], [.75, [110, 196, 255]], [.9, [214, 210, 250]], [1, [255, 232, 236]]];
+const makeLut = ramp => {
   const lut = new Uint8ClampedArray(256 * 3);
   for (let i = 0; i < 256; i++) {
-    const l = i / 255; let k = 1; while (k < RED_RAMP.length - 1 && RED_RAMP[k][0] < l) k++;
-    const [a, ca] = RED_RAMP[k - 1], [b, cb] = RED_RAMP[k], t = (l - a) / Math.max(1e-6, b - a);
+    const l = i / 255; let k = 1; while (k < ramp.length - 1 && ramp[k][0] < l) k++;
+    const [a, ca] = ramp[k - 1], [b, cb] = ramp[k], t = (l - a) / Math.max(1e-6, b - a);
     for (let c = 0; c < 3; c++) lut[i * 3 + c] = ca[c] + (cb[c] - ca[c]) * t;
   }
   return lut;
-})();
-function recolorRed(ctx, width, height) {
+};
+const RED_LUT = makeLut(RED_RAMP), BLUE_LUT = makeLut(BLUE_RAMP);
+function recolorRed(ctx, width, height, lut = RED_LUT) {
   const image = ctx.getImageData(0, 0, width, height), d = image.data;
   for (let i = 0; i < d.length; i += 4) {
     if (!d[i + 3]) continue;
     const l = (d[i] * 54 + d[i + 1] * 183 + d[i + 2] * 19) >> 8, j = l * 3;
-    d[i] = RED_LUT[j]; d[i + 1] = RED_LUT[j + 1]; d[i + 2] = RED_LUT[j + 2];
+    d[i] = lut[j]; d[i + 1] = lut[j + 1]; d[i + 2] = lut[j + 2];
   }
   ctx.putImageData(image, 0, 0);
 }
@@ -71,7 +74,7 @@ async function rasterizeStar(img, signal) {
   const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height;
   const ctx = canvas.getContext('2d');
   ctx.drawImage(source, 0, 0, width, height);
-  recolorRed(ctx, width, height);
+  recolorRed(ctx, width, height, img.classList.contains('moments-core') ? BLUE_LUT : RED_LUT);
   const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/webp', .92));
   signal.throwIfAborted();
   if (!blob) return;

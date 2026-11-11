@@ -25,12 +25,20 @@ export function createThanksNotes(section) {
   // Точка макета (x, y) на экране: (W/2 + (x − 958)·s, H/2 + (y − 739)·s).
   const host = section.querySelector('.thanks-scene') || section;
   const canvas = document.createElement('canvas'); canvas.className = 'scene-fill-canvas thanks-notes-canvas'; canvas.setAttribute('aria-hidden', 'true');
-  host.append(canvas);
+  // Внутри композиции между лучами и сердцем: записки выглядывают из-за сердца.
+  // CSS-размер холста — ровно экран, с обратным масштабом (1/s): слой GPU остаётся
+  // размером с экран, а не 3320×2520 px макета (так было +0.5 ГБ на iPhone).
+  composition.insertBefore(canvas, composition.querySelector('.thanks-art'));
   const ctx2 = canvas.getContext('2d');
   let W = 1, H = 1, dpr = 1, S = 1;
   const layer = {
     ctx: ctx2,
-    resize(scale) { W = host.clientWidth; H = host.clientHeight; S = scale; dpr = canvasBudget(W, H).ratio; canvas.width = Math.max(1, Math.round(W * dpr)); canvas.height = Math.max(1, Math.round(H * dpr)); },
+    resize(scale) {
+      W = host.clientWidth; H = host.clientHeight; S = scale; dpr = canvasBudget(W, H).ratio;
+      canvas.width = Math.max(1, Math.round(W * dpr)); canvas.height = Math.max(1, Math.round(H * dpr));
+      // Левый верхний угол экрана в координатах макета: (−(W/2 − 958·s)/s, −(H/2 − 739·s)/s).
+      Object.assign(canvas.style, { left: `${-(W / 2 - 958 * S) / S}px`, top: `${-(H / 2 - 739 * S) / S}px`, width: `${W}px`, height: `${H}px`, transform: `scale(${1 / S})`, transformOrigin: '0 0' });
+    },
     begin() { ctx2.setTransform(1, 0, 0, 1, 0, 0); ctx2.clearRect(0, 0, canvas.width, canvas.height); ctx2.setTransform(dpr * S, 0, 0, dpr * S, dpr * (W / 2 - 958 * S), dpr * (H / 2 - 739 * S)); },
     release() { canvas.width = canvas.height = 1; },
   };
@@ -40,7 +48,7 @@ export function createThanksNotes(section) {
   // Заготовки в двойном разрешении: на телефоне записки крупные и должны быть резкими.
   const cards = THANKS_WORDS.map((word, i) => sprite(600, 300, (c, w, h) => {
     c.save(); c.translate(w / 2, h / 2); c.scale(2, 2); c.rotate((i % 2 ? 1 : -1) * .02);
-    roundRect(c, -128, -52, 256, 104, 18); c.fillStyle = i % 3 === 2 ? '#ffd3e6' : '#f8e4c2'; c.fill();
+    roundRect(c, -128, -52, 256, 104, 18); c.fillStyle = i % 2 ? '#ffc4dd' : '#ffd6e8'; c.fill();   // только розовые
     c.lineWidth = 4; c.strokeStyle = '#ef3124'; c.stroke();
     c.fillStyle = '#ef3124'; c.font = '700 34px Styrene, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(word, 0, 2);
     c.restore();
@@ -48,7 +56,7 @@ export function createThanksNotes(section) {
   const plane = sprite(400, 280, (c) => {
     c.translate(200, 140); c.scale(2, 2);
     c.beginPath(); c.moveTo(80, 0); c.lineTo(-70, -48); c.lineTo(-38, 0); c.lineTo(-70, 46); c.closePath();
-    c.fillStyle = '#f8e4c2'; c.fill(); c.lineWidth = 4; c.lineJoin = 'round'; c.strokeStyle = '#ef3124'; c.stroke();
+    c.fillStyle = '#ffd6e8'; c.fill(); c.lineWidth = 4; c.lineJoin = 'round'; c.strokeStyle = '#ef3124'; c.stroke();
     c.beginPath(); c.moveTo(80, 0); c.lineTo(-38, 0); c.lineTo(-56, 22); c.closePath(); c.fillStyle = '#fa7ab3'; c.fill(); c.stroke();
   });
   const make = (count, side) => { const n = Math.min(count, cap); return Array.from({ length: n }, (_, i) => {
@@ -165,30 +173,39 @@ export function createPostcardGarland(section) {
     const cw = 1920 * scale, ch = 2059 * scale, left = (W - cw) / 2, top = (H - ch) / 2 + shift * scale;
     const headingTop = top - 400 * scale, headingBottom = headingTop + recapHeadingPixels(W, H) * 1.15;
     source = { x: W / 2, y: top + ch * .42 };
-    const portrait = W / Math.max(1, H) < .8;
-    card = Math.max(46, Math.min(124, (portrait ? W * .19 : Math.min(left * .44, H * .12))));
+    // Раскладка — по реальному свободному месту, а не по ориентации экрана:
+    // по бокам только если сбоку хватает места (на почти квадратных окнах его нет).
+    const sideCard = Math.min(124, Math.min(left * .44, H * .12));
     ropes = [];
-    if (portrait) {
-      // Верёвки в свободных зонах над и под конвертом, открытки видны целиком.
-      // Верхняя верёвка — над заголовком, нижняя — под конвертом; если над
-      // заголовком места нет, вторая верёвка висит ниже первой.
-      const sag = card * .45, bottomFree = H - (top + ch);
-      const y2 = Math.min(H - bottomFree * .5 - card * .2, H - sag - card * .9);
-      const y1 = headingTop - card * .85 - sag - 8;
-      ropes.push({ x0: -10, y0: y2, x1: W + 10, y1: y2, sag });
-      if (y1 > 6) ropes.push({ x0: -10, y0: y1, x1: W + 10, y1: y1, sag });
-    } else {
+    if (sideCard >= 70 && left >= sideCard * 2.4) {
+      card = sideCard;
       const side = Math.max(card * 1.4, left), rows = [.1, .4, .7];
       for (const r of rows) {
         ropes.push({ x0: -10, y0: H * r, x1: side - card * .15, y1: H * (r + .06), sag: card * .6 });
         ropes.push({ x0: W - side + card * .15, y0: H * (r + .06), x1: W + 10, y1: H * r, sag: card * .6 });
       }
+    } else {
+      // Горизонтальные верёвки во всю ширину: над конвертом и под ним.
+      card = Math.max(46, Math.min(110, W * (W / Math.max(1, H) < .8 ? .19 : .085)));
+      const sag = card * .45, hang = card * .78 + sag;           // сколько занимает верёвка с открытками
+      const envelopeTop = top + ch * .08, envelopeBottom = top + ch * .9;   // верх — кончик ромбовой открытки
+      // Верх: в просвете между заголовком и конвертом, иначе — над заголовком.
+      if (envelopeTop - (headingBottom + 6) >= hang) ropes.push({ x0: -10, y0: headingBottom + 6, x1: W + 10, y1: headingBottom + 6, sag });
+      else if (headingTop - hang - 8 > 6) ropes.push({ x0: -10, y0: headingTop - hang - 8, x1: W + 10, y1: headingTop - hang - 8, sag });
+      // Низ: под конвертом, а если места мало — по нижнему краю экрана.
+      const y2 = Math.min(Math.max(envelopeBottom, H - (H - envelopeBottom) * .5 - hang * .55), H - hang - 4);
+      ropes.push({ x0: -10, y0: y2, x1: W + 10, y1: y2, sag });
     }
     // Слоты прищепок равномерно по всем верёвкам.
     // Равномерно по всем верёвкам (15 на 6 → 3,2,3,2,3,2), чтобы ни одна не пустовала.
+    // На каждой верёвке — не больше, чем помещается без нахлёста.
     slots = [];
+    // Шаг между прищепками len/(n+1) не меньше ширины открытки с небольшим зазором.
+    const capacity = ropes.map(r => Math.max(1, Math.floor(Math.hypot(r.x1 - r.x0, r.y1 - r.y0) / (card * 1.08)) - 1));
+    const total = Math.min(keep, capacity.reduce((a, b) => a + b, 0));
     ropes.forEach((rope, ri) => {
-      const count = Math.floor((ri + 1) * keep / ropes.length) - Math.floor(ri * keep / ropes.length);
+      const even = Math.floor((ri + 1) * total / ropes.length) - Math.floor(ri * total / ropes.length);
+      const count = Math.min(even, capacity[ri]);
       for (let k = 0; k < count; k++) slots.push({ rope: ri, t: (k + 1) / (count + 1), tilt: (rnd() - .5) * .4 });
     });
   }

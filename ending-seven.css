@@ -95,3 +95,21 @@
    (text-shadow) снято: фильтр обводил и его, давая размытые линии внутри цифр. */
 .office-restored .office-number, .office-restored .office-number > span {-webkit-text-stroke:0;text-shadow:none!important;}
 .office-restored .office-number {filter:drop-shadow(5px 0 0 #110d0a) drop-shadow(-5px 0 0 #110d0a) drop-shadow(0 5px 0 #110d0a) drop-shadow(0 -5px 0 #110d0a);}
+
+/* Открытка с талисманом: ссылка под «играть», кликабельная марка и окно просмотра. */
+.finale-card-link { position: absolute; left: 50%; top: calc(100% + 34px); transform: translateX(-50%); padding: 10px 6px; border: 0; background: none; color: #f8e4c2; font: 700 46px/1 Styrene, sans-serif; letter-spacing: -.03em; text-decoration: underline; text-underline-offset: 10px; text-decoration-thickness: 3px; white-space: nowrap; cursor: pointer; }
+.finale-card-link:focus-visible, .finale-seven-stamp.is-clickable:focus-visible { outline: 5px solid #f8e4c2; outline-offset: 10px; }
+.finale-seven-stamp.is-clickable { cursor: pointer; pointer-events: auto; }
+.talisman-modal { position: fixed; inset: 0; z-index: 10001; display: grid; place-items: center; padding: 20px; background: #020101e6; opacity: 0; transition: opacity .3s ease; }
+.talisman-modal.is-open { opacity: 1; }
+.talisman-modal-card { display: flex; flex-direction: column; align-items: center; gap: 18px; max-height: 100%; transform: translateY(24px) scale(.96); transition: transform .4s cubic-bezier(.2, 1.3, .4, 1); }
+.talisman-modal.is-open .talisman-modal-card { transform: none; }
+.talisman-modal-preview { display: grid; place-items: center; width: min(86vw, calc((100svh - 150px) * .8)); aspect-ratio: 4 / 5; border-radius: 18px; overflow: hidden; background: #2a0b10; box-shadow: 0 20px 80px #ef312466; color: #f8e4c2; font: 700 16px Styrene, sans-serif; }
+.talisman-modal-preview img { width: 100%; height: 100%; display: block; }
+.talisman-modal-preview[aria-busy=true]::before { content: 'Собираем открытку…'; }
+.talisman-modal-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.talisman-modal-actions button { padding: 14px 26px; border-radius: 999px; border: 0; font: 700 17px/1 Styrene, sans-serif; cursor: pointer; }
+.talisman-download { background: #ef3124; color: #fff; }
+.talisman-download:disabled { opacity: .5; cursor: default; }
+.talisman-close { background: #f8e4c2; color: #020101; }
+html.has-modal, html.has-modal body { overflow: hidden; }

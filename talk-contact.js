@@ -31,6 +31,14 @@ export async function prepareTalkContact(root,data,signal){
   pattern.id='contact-live-photo';pattern.setAttribute('width','1');pattern.setAttribute('height','1');pattern.setAttribute('viewBox','0 0 688 688');
   image.setAttribute('width','688');image.setAttribute('height','688');image.setAttribute('preserveAspectRatio','xMidYMid slice');image.setAttribute('href',data.talkContact.photo);pattern.append(image);svg.querySelector('defs').append(pattern);photo.setAttribute('fill','url(#contact-live-photo)');
  }
+ // Вместо значка к-толка (камеры) — 3D-конверт; та же позиция и анимация (prop-one).
+ const camera=svg.querySelector('[data-contact-part="prop-one"]');
+ if(camera){
+  const env=document.createElementNS(ns,'image');
+  // Центр там же, где была камера (1343, 546); конверт поменьше — ~320 px макета.
+  for(const [key,value] of Object.entries({x:'1183',y:'417',width:'320',height:'259',href:'./assets/top-contact/envelope.png',preserveAspectRatio:'xMidYMid meet'}))env.setAttribute(key,value);
+  env.dataset.contactPart='prop-one';camera.replaceWith(env);
+ }
  for(const part of [...svg.querySelectorAll('[data-contact-part]')]){
   const g=document.createElementNS(ns,'g');g.dataset.contactMotion=part.dataset.contactPart;part.before(g);g.append(part);
  }
