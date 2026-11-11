@@ -1,0 +1,588 @@
+{
+  "sourceManifest": "/Users/museg/Documents/ChatGPT/Alfa People New Year/alfa-recap/design-reference/november/download-all.json",
+  "assetCount": 26,
+  "assets": [
+    {
+      "name": "final-tree.png",
+      "source": "https://www.figma.com/api/mcp/asset/8ed532ea-8e97-4639-93c6-a2737cbbee2d.png",
+      "bytes": 678085,
+      "sha256": "b9bdd46e1634b7fb6e707161c6bc6e2fc822404470fabc06ac2a73651f17ae9c",
+      "exactMatches": [
+        "assets/final-tree.png"
+      ],
+      "format": "PNG",
+      "width": 1024,
+      "height": 1024,
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "alphaExtrema": [
+        0,
+        255
+      ],
+      "hasTransparency": true,
+      "alphaNonzeroBounds": [
+        153,
+        49,
+        872,
+        949
+      ],
+      "transparentPixelPercent": 73.235,
+      "opaquePixelPercent": 24.421
+    },
+    {
+      "name": "ornament.png",
+      "source": "https://www.figma.com/api/mcp/asset/ea6a6d94-29bc-41d4-b2b3-65621c78c88e.png",
+      "bytes": 1062987,
+      "sha256": "51daacac51e58eb379c1a686ebe109c3645fbb06f43604da98ee52a66f390eab",
+      "exactMatches": [
+        "assets/hero-ornament.png"
+      ],
+      "format": "PNG",
+      "width": 1024,
+      "height": 1024,
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "alphaExtrema": [
+        0,
+        255
+      ],
+      "hasTransparency": true,
+      "alphaNonzeroBounds": [
+        148,
+        98,
+        876,
+        922
+      ],
+      "transparentPixelPercent": 59.476,
+      "opaquePixelPercent": 39.208
+    },
+    {
+      "name": "achievement-star.png",
+      "source": "https://www.figma.com/api/mcp/asset/7affbeb2-e2a2-4706-b8f5-24d312b7ad81.png",
+      "bytes": 1019464,
+      "sha256": "40e7a1e17bd55f389eccf98390172526c7bdc69037ec5942542bd8ecbc214b66",
+      "exactMatches": [],
+      "format": "PNG",
+      "width": 1425,
+      "height": 1104,
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "alphaExtrema": [
+        0,
+        255
+      ],
+      "hasTransparency": true,
+      "alphaNonzeroBounds": [
+        319,
+        156,
+        1182,
+        996
+      ],
+      "transparentPixelPercent": 65.61,
+      "opaquePixelPercent": 23.107
+    },
+    {
+      "name": "final-goat.png",
+      "source": "https://www.figma.com/api/mcp/asset/95931e3d-96da-4ad5-aadb-e56f1927602c.png",
+      "bytes": 3461671,
+      "sha256": "1916dff32ea357e31ed7de28eadf02e8f4ce523b6ae47e45a392e3fdc9f51398",
+      "exactMatches": [
+        "assets/final-goat.png"
+      ],
+      "format": "PNG",
+      "width": 2488,
+      "height": 3516,
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "alphaExtrema": [
+        255,
+        255
+      ],
+      "hasTransparency": false,
+      "alphaNonzeroBounds": [
+        0,
+        0,
+        2488,
+        3516
+      ],
+      "transparentPixelPercent": 0.0,
+      "opaquePixelPercent": 100.0
+    },
+    {
+      "name": "final-gift.png",
+      "source": "https://www.figma.com/api/mcp/asset/95749f79-d309-4011-89da-37fc26a93fde.png",
+      "bytes": 1054864,
+      "sha256": "96ea0c9c5646ae7d368ad2a228b1d626c41f16dcf04d28c241aa297563e58dab",
+      "exactMatches": [
+        "assets/final-gift.png"
+      ],
+      "format": "PNG",
+      "width": 1024,
+      "height": 1024,
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "alphaExtrema": [
+        0,
+        255
+      ],
+      "hasTransparency": true,
+      "alphaNonzeroBounds": [
+        152,
+        97,
+        872,
+        940
+      ],
+      "transparentPixelPercent": 55.199,
+      "opaquePixelPercent": 43.604
+    },
+    {
+      "name": "final-gift-under.png",
+      "source": "https://www.figma.com/api/mcp/asset/13dd2a50-2fec-43ad-84c8-3bc7cfa89dcc.png",
+      "bytes": 1331083,
+      "sha256": "b4c7a284c41b0bd4a17ff5474db2239689b0c89a33f50dad962c0fc405b8b74d",
+      "exactMatches": [
+        "assets/final-gift-under.png"
+      ],
+      "format": "PNG",
+      "width": 1024,
+      "height": 1024,
+      "mode": "RGB",
+      "hasAlphaChannel": false
+    },
+    {
+      "name": "office-scene.png",
+      "source": "https://www.figma.com/api/mcp/asset/8917b6c0-86ed-469d-93d9-d2a62a09dc5d.png",
+      "bytes": 1123182,
+      "sha256": "83064bd277c94a0c1d23b08dd8cf3ea28c216ec7d6aba521060638225bd21261",
+      "exactMatches": [
+        "assets/office-scene.png"
+      ],
+      "format": "PNG",
+      "width": 1024,
+      "height": 1024,
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "alphaExtrema": [
+        0,
+        255
+      ],
+      "hasTransparency": true,
+      "alphaNonzeroBounds": [
+        0,
+        37,
+        1016,
+        1024
+      ],
+      "transparentPixelPercent": 44.589,
+      "opaquePixelPercent": 53.36
+    },
+    {
+      "name": "thanks-background.png",
+      "source": "https://www.figma.com/api/mcp/asset/aeff6f95-b146-41fc-a683-fcb448bf1d82.png",
+      "bytes": 2406588,
+      "sha256": "04b8419a406f4f47fffb7c5693a3ba3a6247b148021910f6da33b2f75dc22bb2",
+      "exactMatches": [],
+      "format": "PNG",
+      "width": 1541,
+      "height": 1021,
+      "mode": "RGB",
+      "hasAlphaChannel": false
+    },
+    {
+      "name": "cap-under.png",
+      "source": "https://www.figma.com/api/mcp/asset/f1df34d7-7a79-499b-a11b-af553f802380.png",
+      "bytes": 3179,
+      "sha256": "42f8f2f649ba2b5d58bf8dfaa597b66107ffcc51eec1a3a17bea09d74e8833f7",
+      "exactMatches": [
+        "assets/income-ornament-poster.png",
+        "assets/income-glass/cap-base.png"
+      ],
+      "format": "PNG",
+      "width": 256,
+      "height": 256,
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "alphaExtrema": [
+        255,
+        255
+      ],
+      "hasTransparency": false,
+      "alphaNonzeroBounds": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "transparentPixelPercent": 0.0,
+      "opaquePixelPercent": 100.0
+    },
+    {
+      "name": "cap.png",
+      "source": "https://www.figma.com/api/mcp/asset/8a3441ac-d686-4179-a31f-a24671b0c0e1.png",
+      "bytes": 2713447,
+      "sha256": "ae56ec5fb412d75c22c91904601a96d3480d1ecd2ee240f6620e3ed477d2be99",
+      "exactMatches": [
+        "assets/income-ornament-layer.png",
+        "assets/income-glass/cap-gold.png"
+      ],
+      "format": "PNG",
+      "width": 1595,
+      "height": 986,
+      "mode": "RGB",
+      "hasAlphaChannel": false
+    },
+    {
+      "name": "personal-background.png",
+      "source": "https://www.figma.com/api/mcp/asset/6184d11f-79c3-48c5-9b85-5cd3bc067187.png",
+      "bytes": 2402993,
+      "sha256": "31eeaee44123f354747ce8ac202f23dd573a729bcd00e07163c722f900cd9f31",
+      "exactMatches": [],
+      "format": "PNG",
+      "width": 1484,
+      "height": 1060,
+      "mode": "RGB",
+      "hasAlphaChannel": false
+    },
+    {
+      "name": "personal-frame.png",
+      "source": "https://www.figma.com/api/mcp/asset/fa7be785-03bc-4aa7-9d05-841adcbb17d4.png",
+      "bytes": 1383081,
+      "sha256": "fa16e094202d8ce9e3c29627cab5fb8b1c0d79eb06779579b070325a149a3fe2",
+      "exactMatches": [],
+      "format": "PNG",
+      "width": 2231,
+      "height": 2030,
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "alphaExtrema": [
+        0,
+        255
+      ],
+      "hasTransparency": true,
+      "alphaNonzeroBounds": [
+        0,
+        0,
+        2231,
+        2030
+      ],
+      "transparentPixelPercent": 31.805,
+      "opaquePixelPercent": 67.993
+    },
+    {
+      "name": "thanks-heart.png",
+      "source": "https://www.figma.com/api/mcp/asset/9293eace-9111-4af3-b894-a3f0cbff6ee3.png",
+      "bytes": 1485709,
+      "sha256": "437acc3582026a47f312df8f63f0846f2a0355a5eed16103db17463c9477d14d",
+      "exactMatches": [],
+      "format": "PNG",
+      "width": 1448,
+      "height": 1086,
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "alphaExtrema": [
+        0,
+        255
+      ],
+      "hasTransparency": true,
+      "alphaNonzeroBounds": [
+        85,
+        88,
+        1329,
+        1073
+      ],
+      "transparentPixelPercent": 52.49,
+      "opaquePixelPercent": 33.579
+    },
+    {
+      "name": "coins-blue-star.png",
+      "source": "https://www.figma.com/api/mcp/asset/a59dae3f-aab6-498a-940b-4d088ca9cc0f.png",
+      "bytes": 1818954,
+      "sha256": "dbae10b61baf6421a67ffd6927d0439e1a7d8ed61fe6da6d6599839ea03758e9",
+      "exactMatches": [],
+      "format": "PNG",
+      "width": 1069,
+      "height": 1471,
+      "mode": "RGB",
+      "hasAlphaChannel": false
+    },
+    {
+      "name": "coin-outer.png",
+      "source": "https://www.figma.com/api/mcp/asset/6d5a08a8-b9a7-4875-a785-2ec764e8d051.png",
+      "bytes": 1512243,
+      "sha256": "fa6f1d9b68f0fd57f6bcd0193a0b656ccdb5cf3e3bba2c3e97a936f0c733ff86",
+      "exactMatches": [],
+      "format": "PNG",
+      "width": 1530,
+      "height": 1028,
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "alphaExtrema": [
+        0,
+        255
+      ],
+      "hasTransparency": true,
+      "alphaNonzeroBounds": [
+        72,
+        162,
+        1450,
+        851
+      ],
+      "transparentPixelPercent": 50.668,
+      "opaquePixelPercent": 41.547
+    },
+    {
+      "name": "coin-middle.png",
+      "source": "https://www.figma.com/api/mcp/asset/430beff6-1a1c-4a2a-b9cc-9ac1e576e12a.png",
+      "bytes": 1579949,
+      "sha256": "57300be7f9564ab07e6045041775c9538085fc10922b89ada28830bab21fd03d",
+      "exactMatches": [],
+      "format": "PNG",
+      "width": 1531,
+      "height": 1027,
+      "mode": "RGBA",
+      "hasAlphaChannel": true,
+      "alphaExtrema": [
+        0,
+        255
+      ],
+      "hasTransparency": true,
+      "alphaNonzeroBounds": [
+        54,
+        129,
+        1465,
+        851
+      ],
+      "transparentPixelPercent": 47.665,
+      "opaquePixelPercent": 38.992
+    },
+    {
+      "name": "coins-pink-star.png",
+      "source": "https://www.figma.com/api/mcp/asset/ecef25df-a338-48f1-a747-503a7bdb154f.png",
+      "bytes": 1968729,
+      "sha256": "3d278a8e0b1414756b0d9d10b3d5bb80f3445f966c3cca57d756e301c30b0308",
+      "exactMatches": [],
+      "format": "PNG",
+      "width": 1123,
+      "height": 1400,
+      "mode": "RGB",
+      "hasAlphaChannel": false
+    },
+    {
+      "name": "spending-alfa.svg",
+      "source": "https://www.figma.com/api/mcp/asset/1264042c-9df5-4624-9ebe-0f8a0ac1b167.svg",
+      "bytes": 2542,
+      "sha256": "18a5080f24ccd4cfcad4c114a36e6e0c81cfb28786e6a547bb7b3c90582d29ba",
+      "exactMatches": [
+        "assets/spending-snowflake.svg"
+      ],
+      "format": "SVG",
+      "width": "383.4",
+      "height": "383.4",
+      "viewBox": "0 0 383.4 383.4",
+      "preserveAspectRatio": "none",
+      "elements": {
+        "svg": 1,
+        "g": 1,
+        "rect": 2,
+        "path": 1
+      },
+      "ids": [
+        "Frame 2136138620",
+        "Rectangle 240663072",
+        "Rectangle 240663073",
+        "Subtract"
+      ],
+      "references": []
+    },
+    {
+      "name": "spending-flake.svg",
+      "source": "https://www.figma.com/api/mcp/asset/fa172cf9-ac19-4768-b864-bcb98b89c339.svg",
+      "bytes": 777,
+      "sha256": "cc73b6ca86775f4439c872502202eb3128ba3abbc56fc7acbf82eecb7fb8d43b",
+      "exactMatches": [
+        "assets/spending-alfa.svg"
+      ],
+      "format": "SVG",
+      "width": "383.4",
+      "height": "384.678",
+      "viewBox": "0 0 383.4 384.678",
+      "preserveAspectRatio": "none",
+      "elements": {
+        "svg": 1,
+        "g": 1,
+        "path": 1
+      },
+      "ids": [
+        "Frame 2136138623",
+        "Coin"
+      ],
+      "references": []
+    },
+    {
+      "name": "spending-burst.svg",
+      "source": "https://www.figma.com/api/mcp/asset/d18ab8fc-4dd0-4127-904e-7a1f707df765.svg",
+      "bytes": 2770,
+      "sha256": "4ab1e57dc91f68eb7d07d2d4a74fc91d804e5bd71bb26159de7d69dc7375db1d",
+      "exactMatches": [
+        "assets/spending-burst.svg"
+      ],
+      "format": "SVG",
+      "width": "333",
+      "height": "384",
+      "viewBox": "0 0 333 384",
+      "preserveAspectRatio": "none",
+      "elements": {
+        "svg": 1,
+        "path": 1
+      },
+      "ids": [
+        "Subtract"
+      ],
+      "references": []
+    },
+    {
+      "name": "final-stamp.svg",
+      "source": "https://www.figma.com/api/mcp/asset/2cc9272d-61cb-4f37-baef-471754019a44.svg",
+      "bytes": 7792,
+      "sha256": "a7fcc4e0d555559b1046c200d6b4a2533d4c0057b1ffd660b4b4e0bf60b07ebb",
+      "exactMatches": [],
+      "format": "SVG",
+      "width": "707.264",
+      "height": "946.946",
+      "viewBox": "0 0 707.264 946.946",
+      "preserveAspectRatio": "none",
+      "elements": {
+        "svg": 1,
+        "g": 1,
+        "use": 2,
+        "mask": 1,
+        "path": 2,
+        "defs": 1
+      },
+      "ids": [
+        "Subtract",
+        "stroke1_0_22",
+        "stroke0_0_22"
+      ],
+      "references": [
+        "#stroke0_0_22",
+        "#stroke0_0_22"
+      ]
+    },
+    {
+      "name": "gift-mask.svg",
+      "source": "https://www.figma.com/api/mcp/asset/9811ae02-38b6-44f6-a806-e0a838f03d45.svg",
+      "bytes": 306,
+      "sha256": "02c47244fa144eb74fa895d3a9fe04d0e3d88c0207c7f2df421c0b117664d1cc",
+      "exactMatches": [
+        "assets/final-gift-mask.svg"
+      ],
+      "format": "SVG",
+      "width": "459.501",
+      "height": "220.718",
+      "viewBox": "0 0 459.501 220.718",
+      "preserveAspectRatio": "none",
+      "elements": {
+        "svg": 1,
+        "path": 1
+      },
+      "ids": [
+        "Vector 234257058"
+      ],
+      "references": []
+    },
+    {
+      "name": "office-base-mask.svg",
+      "source": "https://www.figma.com/api/mcp/asset/5630c79a-40ba-4ee4-a930-f23094277b62.svg",
+      "bytes": 330,
+      "sha256": "3cc2a62b61c387b17159a5180d8199abb7ad9ea17a5c5c532d48ac5132df8d01",
+      "exactMatches": [],
+      "format": "SVG",
+      "width": "1737.5",
+      "height": "1789.5",
+      "viewBox": "0 0 1737.5 1789.5",
+      "preserveAspectRatio": "none",
+      "elements": {
+        "svg": 1,
+        "path": 1
+      },
+      "ids": [
+        "Vector 234257078"
+      ],
+      "references": []
+    },
+    {
+      "name": "office-front-mask.svg",
+      "source": "https://www.figma.com/api/mcp/asset/2d39054b-4dae-4d5d-9585-1a0c19f6e888.svg",
+      "bytes": 278,
+      "sha256": "fe5ee10d03ac6e0358cb1a854bb1787d3961eb0231fb5a55c917f00cbf3bec9d",
+      "exactMatches": [],
+      "format": "SVG",
+      "width": "1504",
+      "height": "265.5",
+      "viewBox": "0 0 1504 265.5",
+      "preserveAspectRatio": "none",
+      "elements": {
+        "svg": 1,
+        "path": 1
+      },
+      "ids": [
+        "Vector 234257057"
+      ],
+      "references": []
+    },
+    {
+      "name": "cap-mask.svg",
+      "source": "https://www.figma.com/api/mcp/asset/09840651-a4e1-4857-9a5a-81a3505c474a.svg",
+      "bytes": 1424,
+      "sha256": "a233b46c049c8c048ff1c3a8a9184d0b52b1493da718a8fe7ee05d81d621bb2c",
+      "exactMatches": [
+        "assets/income-glass/cap-mask.svg"
+      ],
+      "format": "SVG",
+      "width": "326",
+      "height": "352.474",
+      "viewBox": "0 0 326 352.474",
+      "preserveAspectRatio": "none",
+      "elements": {
+        "svg": 1,
+        "path": 1
+      },
+      "ids": [
+        "Subtract"
+      ],
+      "references": []
+    },
+    {
+      "name": "snow.svg",
+      "source": "https://www.figma.com/api/mcp/asset/9c4caf27-aad8-4f98-be4c-68851ffe551b.svg",
+      "bytes": 1340,
+      "sha256": "c68b969ad5ef09e170339348fb6a85a0159ffc288e0ece6fd6599ad06cc70d43",
+      "exactMatches": [],
+      "format": "SVG",
+      "width": "2082.6",
+      "height": "1520.18",
+      "viewBox": "0 0 2082.6 1520.18",
+      "preserveAspectRatio": "none",
+      "elements": {
+        "svg": 1,
+        "g": 1,
+        "path": 1,
+        "defs": 1,
+        "filter": 1,
+        "feFlood": 1,
+        "feBlend": 1,
+        "feGaussianBlur": 1,
+        "feTurbulence": 1,
+        "feDisplacementMap": 1,
+        "feMerge": 1,
+        "feMergeNode": 1
+      },
+      "ids": [
+        "Vector 234257077",
+        "filter0_fg_0_4"
+      ],
+      "references": []
+    }
+  ]
+}

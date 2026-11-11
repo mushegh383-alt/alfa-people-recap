@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ef3124" />
+    <meta name="description" content="Ваш год в Alfa People — личные итоги, встречи и маленькие большие достижения." />
+    <title>Итоги года — Alfa People</title>
+    <link rel="preload" href="./assets/nauryz.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="preload" href="./assets/agse.otf" as="font" type="font/otf" crossorigin />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./preloader.css" />
+    <link rel="preload" href="./assets/styrene-a-bold.otf" as="font" type="font/otf" crossorigin />
+    <link rel="stylesheet" href="./revision-six.css" />
+    <link rel="stylesheet" href="./ending-seven.css" />
+    <link rel="stylesheet" href="./performance.css" />
+    <link rel="stylesheet" href="./motion-polish.css" />
+    <link rel="stylesheet" href="./sky-scenes.css" />
+    <link rel="stylesheet" href="./mobile.css" />
+    <script type="module">
+      import('./app.js').catch(error => {
+        console.error('Application loading:', error);
+        const loader = document.querySelector('#preloader');
+        loader.querySelector('.preloader-status').textContent = 'Не удалось запустить итоги. Попробуйте ещё раз.';
+        const retry = loader.querySelector('button');
+        retry.hidden = false;
+        retry.onclick = () => location.reload();
+      });
+    </script>
+  </head>
+  <body class="is-loading">
+    <div id="preloader" class="preloader" aria-label="Загрузка итогов года">
+      <div class="preloader-top"><span class="preloader-year">итоги 2026</span></div>
+      <div class="preloader-center">
+        <p class="preloader-title">ваш год<br><em>уже рядом</em></p>
+        <div class="preloader-burst" aria-hidden="true">
+          <svg class="burst-back" viewBox="-100 -100 200 200"><polygon points="0.0,-98.0 12.1,-60.8 37.5,-90.5 34.4,-51.6 69.3,-69.3 51.6,-34.4 90.5,-37.5 60.8,-12.1 98.0,0.0 60.8,12.1 90.5,37.5 51.6,34.4 69.3,69.3 34.4,51.6 37.5,90.5 12.1,60.8 0.0,98.0 -12.1,60.8 -37.5,90.5 -34.4,51.6 -69.3,69.3 -51.6,34.4 -90.5,37.5 -60.8,12.1 -98.0,0.0 -60.8,-12.1 -90.5,-37.5 -51.6,-34.4 -69.3,-69.3 -34.4,-51.6 -37.5,-90.5 -12.1,-60.8"/></svg>
+          <p class="preloader-number"><span class="preloader-percent">0</span><span class="preloader-unit">%</span></p>
+        </div>
+        <div class="preloader-track" role="progressbar" aria-label="Загрузка контента" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+        <p class="preloader-joke" aria-hidden="true">Пересчитываем спасибки…</p>
+        <p class="preloader-status" role="status">Загружаем изображения и анимации</p>
+        <button class="preloader-retry" type="button" hidden>Попробовать ещё раз</button>
+      </div>
+    </div>
+    <noscript><style>#preloader{display:none!important}</style><p>Для просмотра итогов включите JavaScript.</p></noscript>
+    <a class="skip-link" href="#your-year">Перейти к моим итогам</a>
+    <div class="recap-grain" aria-hidden="true"></div>
+    <main id="recap-shell" inert aria-busy="true" aria-label="Ваш год в Alfa People"></main>
+    <p class="load-error" role="alert" hidden>Не удалось загрузить итоги. Обновите страницу, чтобы попробовать ещё раз.</p>
+  </body>
+</html>

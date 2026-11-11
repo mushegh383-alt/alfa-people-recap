@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1790" viewBox="0 26590 1920 1790" fill="none"><g id="Ellipse 9003" filter="url(#filter23_fn_2964_4685)">
+<circle cx="899" cy="27686" r="641" fill="#9A1D19"/>
+</g>
+<g id="Vector 234257090" filter="url(#filter24_fn_2964_4685)">
+<path d="M1420.5 27897.5C1436.89 27895.6 1456.17 27892.6 1477.57 27888.4C1605.01 27869.6 1784.06 27853.8 1782 27897.5C1779.6 27948.3 1459 28185 1299 28297C1457.17 28193.8 1785.6 28009.5 1834 28097.5C1882.4 28185.5 1790.5 28521.8 1738.5 28679L2149.5 28361L2170 27200C2134.33 27307.2 2066.13 27560.1 1937.5 27682.5C1822.62 27791.8 1609.63 27862.3 1477.57 27888.4C1456.85 27891.4 1437.49 27894.5 1420.5 27897.5Z" fill="url(#paint6_linear_2964_4685)"/>
+</g>
+<defs><filter id="filter24_fn_2964_4685" x="1288.6" y="27189.6" width="891.8" height="1499.8" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="5.2" result="effect1_foregroundBlur_2964_4685"/>
+</filter>
+<linearGradient id="paint6_linear_2964_4685" x1="1734.5" y1="27200" x2="1734.5" y2="28679" gradientUnits="userSpaceOnUse">
+<stop stop-color="#C760C8"/>
+<stop offset="0.846596" stop-color="#F70406"/>
+</linearGradient>
+<filter id="filter23_fn_2964_4685" x="-140.4" y="26646.6" width="2078.8" height="2078.8" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="199.2" result="effect1_foregroundBlur_2964_4685"/>
+</filter>
+</defs></svg>

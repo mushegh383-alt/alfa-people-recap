@@ -1,0 +1,97 @@
+.revision-six .ending-seven {position:relative;height:220svh;background:#020101;isolation:isolate;}
+.revision-six .ending-seven.finale {height:320svh;min-height:320svh;}
+.ending-seven-stage {position:sticky;top:0;width:100%;height:100svh;overflow:clip;isolation:isolate;background:#020101;}
+.ending-seven-composition {position:absolute;left:50%;top:50%;width:1920px;height:1790px;transform-origin:center;}
+.finale .ending-seven-composition {height:1467px;}
+.ending-seven-world {position:absolute;inset:0;transform-origin:center;}
+.ending-vector-art {position:absolute;inset:0;pointer-events:none;transform:scale(var(--ending-art-wide,1),var(--ending-art-tall,1));transform-origin:center;}
+.ending-seven-svg {display:block;overflow:visible;max-width:none;}
+.ending-seven-lens {position:absolute;border-radius:50%;backdrop-filter:blur(22.45px);-webkit-backdrop-filter:blur(22.45px);mask-image:radial-gradient(closest-side,#000 65%,transparent);pointer-events:none;}
+.office-seven-back {z-index:0;}
+.office-seven-foreground {z-index:3;}
+.office-restored,.office-restored .ending-stage {background:#020101;}
+.office-restored .ending-composition {overflow:visible;}
+.office-restored .office-motion-base {z-index:1;}
+.office-restored .office-motion-tray {z-index:2;}
+.office-restored .office-number {z-index:3;}
+.office-restored .office-motion-front {z-index:4;}
+.office-restored .office-caption {left:450px;top:1403px;width:1018px;font:700 60px/.907 Styrene,sans-serif;letter-spacing:-.04em;text-align:center;color:white;z-index:5;}
+.office-restored .office-seven-foreground {z-index:6;}
+.finale-seven-art {z-index:0;}
+.finale-seven-core {position:absolute;inset:0;z-index:1;}
+.finale-seven-core > :not(.finale-seven-ghost) {z-index:1;}
+.finale-seven-title {position:absolute;left:526px;top:45px;width:868px;height:346px;font:200px/160px Agse,serif;letter-spacing:-.03em;color:white;text-align:center;white-space:pre-line;text-shadow:0 0 14px #ffffff40;transform-origin:center;}
+.finale-seven-stamp {position:absolute;left:818px;top:433px;width:282px;height:374px;transform-origin:center;filter:drop-shadow(0 15px 30px #110311b3);}
+.finale-seven-frame {position:absolute;inset:0;width:282px;height:374px;}
+.finale-seven-mascot {position:absolute;left:31.797px;top:30.62px;width:219.551px;height:310.326px;object-fit:cover;}
+.finale-seven-name {position:absolute;left:451px;top:853px;width:1018px;font:700 60px/.907 Styrene,sans-serif;letter-spacing:-.04em;text-align:center;color:white;text-shadow:0 4px 31.1px #0009;}
+.finale-seven-caption {position:absolute;left:451px;top:939px;width:1018px;font:500 48px/.907 Formular,sans-serif;letter-spacing:-.04em;text-align:center;white-space:pre-line;color:#fff9;text-shadow:0 4px 31.1px #0009;}
+.finale-seven-action-slot {position:absolute;left:813px;top:1169px;width:294px;height:156.401px;perspective:900px;}
+.finale-seven-action {display:flex;align-items:center;justify-content:center;width:294px;height:156.401px;border:0;border-radius:77.7733px;background:#1ac3fd;color:#ef3124;font:85.4651px/120px Agse,serif;letter-spacing:-.03em;text-decoration:none;text-align:center;box-shadow:0 0 28px #1ac3fd38;transition:transform .25s,box-shadow .25s;cursor:pointer;}
+.finale-seven-action:hover {transform:translateY(-5px) scale(1.035);box-shadow:0 0 50px #1ac3fd66;}
+.finale-seven-action:focus-visible {outline:5px solid #f8e4c2;outline-offset:10px;}
+.finale-seven-action[aria-disabled=true] {cursor:default;}
+.is-ending-active .finale-seven-art,.is-ending-active .finale-seven-stamp,.is-ending-active .ending-cached-layer,.is-ending-active .finale-seven-ghost {will-change:transform;}
+.ending-cached-layer {position:absolute;left:960px;top:733.5px;width:0;height:0;transform-origin:0 0;pointer-events:none;}
+.ending-cached-layer img {position:absolute;max-width:none;}
+.finale-seven-ghost.is-preblurred {filter:none;}
+.ending-seven-lens.is-cached-lens {backdrop-filter:none;-webkit-backdrop-filter:none;mask-image:none;border-radius:0;}
+.is-cached-lens img {display:block;width:100%;height:100%;}
+@media(prefers-reduced-motion:reduce) {
+ .revision-six .ending-seven,.revision-six .ending-seven.finale {height:100svh;min-height:100svh;}
+ .finale-seven-action {transition:none;}
+}
+
+/* A single viewport carries the desk into the final scene: no travelling
+   horizontal section edge or differently textured rectangular underlay. */
+.ending-chapter {position:relative;height:350svh;background:#020101;isolation:isolate;}
+.ending-chapter-pin {position:sticky;top:0;height:100svh;overflow:clip;background:#020101;isolation:isolate;}
+.revision-six .ending-chapter :is(.office-restored,.ending-seven.finale) {position:absolute;inset:0;width:100%;height:100%;min-height:0;background:transparent;transform-origin:center;}
+.ending-chapter :is(.ending-stage,.ending-seven-stage) {position:absolute;inset:0;height:100%;background:transparent;overflow:visible;}
+.ending-chapter .office-restored {z-index:1;}
+.ending-chapter .finale {z-index:2;opacity:0;}
+.finale .ending-seven-composition {z-index:1;overflow:visible;}
+.finale-seven-art {mask-image:linear-gradient(to bottom,transparent,#000 7%,#000 82%,transparent);}
+.finale-seven-ghost {position:absolute;left:-10%;top:-10%;width:120%;height:120%;max-width:none;object-fit:contain;opacity:.3;filter:blur(24px);mask-image:radial-gradient(ellipse,#000 28%,transparent 73%);pointer-events:none;}
+@media(prefers-reduced-motion:reduce) {
+ .ending-chapter {height:auto;}
+ .ending-chapter-pin {position:relative;height:auto;overflow:visible;}
+ .revision-six .ending-chapter :is(.office-restored,.ending-seven.finale) {position:relative;height:100svh;opacity:1;}
+ .ending-chapter :is(.ending-stage,.ending-seven-stage) {overflow:clip;}
+ .ending-chapter .finale {opacity:1;}
+}
+
+/* Офис из Figma (node 309:2611): кадр 1737.5×1789.5 по центру композиции 1920×2000.
+   Сцена в макете растянута до 2125×1823.27 — повторяем это без object-fit. */
+/* У картинки сцены непрозрачный чёрный фон: lighten убирает чёрный прямоугольник,
+   оставляя видимыми красные завитки сцены вокруг тумбы. */
+.office-art {position:absolute;left:151px;top:0;transform-origin:0 0;width:1737.5px;height:1789.5px;z-index:1;pointer-events:none;isolation:isolate;mix-blend-mode:lighten;}
+.office-art img {position:absolute;max-width:none;display:block;}
+.office-art-scene {left:-194px;top:-192px;width:2125px;height:1823.27px;}
+.office-art-drawer {position:absolute;left:461.55px;top:485px;width:760.33px;height:471px;transform-origin:50% 50%;will-change:transform;}
+.office-art-drawer-mask {position:absolute;inset:0;mask:url('./assets/office-figma/drawer-mask.svg') 0 0 / 760.33px 471px no-repeat;-webkit-mask:url('./assets/office-figma/drawer-mask.svg') 0 0 / 760.33px 471px no-repeat;}
+.office-art-drawer-mask img {left:-18.78px;top:-349.26px;width:900.13px;height:900.2px;}
+.office-art-top {position:absolute;left:331.69px;top:81.79px;width:1123.77px;height:707.21px;mask:url('./assets/office-figma/top-mask.svg') 0 0 / 100% 100% no-repeat;-webkit-mask:url('./assets/office-figma/top-mask.svg') 0 0 / 100% 100% no-repeat;}
+.office-art-top img {left:-525.44px;top:-273.79px;width:2125px;height:1823.27px;}
+.office-restored .office-number {z-index:4;}
+
+/* Финальный кадр (Figma node 296:12862, 1919×1790): анимация сама приходит в него —
+   ящик дорастает до размера финальной картинки, цифра сидит внутри ящика под его
+   передней стенкой. Стенка — тот же кусок drawer.png, едущий вместе с ящиком. */
+.office-front-track {position:absolute;left:612.55px;top:485px;width:760.33px;height:471px;z-index:5;pointer-events:none;transform-origin:50% 50%;will-change:transform;filter:drop-shadow(0 -10px 12px rgb(67 21 18 / .13));}
+.office-front-mask {position:absolute;inset:0;mask:url('./assets/office-figma/front-mask.svg') -35.47px 297.27px / 843.01px 138.31px no-repeat;-webkit-mask:url('./assets/office-figma/front-mask.svg') -35.47px 297.27px / 843.01px 138.31px no-repeat;}
+.office-front-mask img {position:absolute;left:-18.78px;top:-349.26px;width:900.13px;height:900.2px;max-width:none;}
+.office-restored .office-number {left:234px;top:586px;width:1418px;z-index:4;}
+.office-restored .office-caption {left:450px;top:1381px;width:1018px;font:700 60px/.907 Styrene,sans-serif;letter-spacing:-2.4px;text-shadow:0 4px 31.1px rgb(199 0 0 / .55);z-index:6;}
+.office-restored .office-composition {width:1919px;height:1790px;}
+
+/* Склеенный финал (слабые устройства): одна картинка с запечённой маской. */
+.finale-flat {position:absolute;max-width:none;transform-origin:50% 50%;pointer-events:none;}
+.finale-seven-art.is-flattened {mask-image:none;-webkit-mask-image:none;}
+.is-ending-active .finale-flat {will-change:transform,opacity;}
+/* Цифры «134» заходят друг на друга (отрицательный трекинг), а обводка
+   -webkit-text-stroke рисуется у каждой своя: контур «3» ложился поверх «1»
+   тёмными линиями. Общий контур всего числа — тенями фильтра. Свечение
+   (text-shadow) снято: фильтр обводил и его, давая размытые линии внутри цифр. */
+.office-restored .office-number, .office-restored .office-number > span {-webkit-text-stroke:0;text-shadow:none!important;}
+.office-restored .office-number {filter:drop-shadow(5px 0 0 #110d0a) drop-shadow(-5px 0 0 #110d0a) drop-shadow(0 5px 0 #110d0a) drop-shadow(0 -5px 0 #110d0a);}

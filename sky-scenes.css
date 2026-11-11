@@ -1,0 +1,51 @@
+/* «Созвездие» и «Стена глаз»: липкая сцена на чёрном, как остальные слайды. */
+.sky-scene { position: relative; z-index: 2; width: 100%; height: 260svh; background: #020101; }
+.sky-stage { background: #020101; }
+.sky-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.sky-composition { width: 1920px; height: 1600px; }
+.sky-composition > :is(svg, i) { position: absolute; }
+.sky-kicker, .sky-heading, .sky-number, .sky-label, .sky-note { margin: 0; text-align: center; opacity: 0; }
+.sky-kicker { font: 700 56px/1.1 Styrene, sans-serif; letter-spacing: -.03em; color: #fff; }
+.sky-heading { z-index: 2; }
+.sky-number { font: 330px/1 Agse, sans-serif; letter-spacing: -.03em; color: #f8e4c2; white-space: nowrap; text-shadow: 0 4px 13.2px currentColor; transform-origin: center; }
+.sky-label { font: 700 60px/.95 Styrene, sans-serif; letter-spacing: -.04em; color: #fff; white-space: pre-line; }
+.sky-note { font: 500 44px/1.02 Formular, sans-serif; letter-spacing: -.04em; color: #ffffff99; white-space: pre-line; }
+
+/* Созвездие: линии прорисовываются по скроллу (--draw), звёзды «вспыхивают». */
+.zodiac-art { z-index: 1; overflow: visible; transform-origin: 50% 50%; }
+.zodiac-line { opacity: 0; }
+.zodiac-line path { fill: none; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: var(--draw, 1); }
+.zodiac-line-glow { stroke: #fa7ab3; stroke-width: 16; opacity: .26; }
+.zodiac-line-core { stroke: #f8e4c2; stroke-width: 3.5; }
+.zodiac-star-pop { opacity: 0; transform-box: fill-box; transform-origin: center; }
+.zodiac-sparkle { fill: #f8e4c2; }
+.zodiac-star.is-bright .zodiac-sparkle { fill: #fff; }
+.zodiac-heading { top: 630px; transform: translateY(-50%); text-shadow: 0 0 30px #fa7ab3b3, 0 0 90px #ef312470; }
+.zodiac-comet { left: 500px; top: 250px; width: 420px; height: 6px; z-index: 1; border-radius: 6px; opacity: 0; pointer-events: none; background: linear-gradient(90deg, #f8e4c200, #f8e4c2 70%, #fff); box-shadow: 0 0 18px #fa7ab3; }
+.sky-scene.is-on-screen .zodiac-star.is-bright .zodiac-sparkle { animation: zodiac-twinkle 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes zodiac-twinkle { 50% { opacity: .55; } }
+
+/* Глаза: цифра поверх холста с глазами. */
+.eyes-number { line-height: normal; z-index: 2; }
+.eyes-heading, .eyes-label, .eyes-note { z-index: 2; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sky-scene { height: 110svh; }
+  .sky-scene.is-on-screen .zodiac-star.is-bright .zodiac-sparkle { animation: none; }
+}
+/* Знак — главный акцент сцены: вдвое крупнее общего размера заголовков. */
+.revision-six .sky-scene .zodiac-heading { font-size: calc(var(--recap-heading-logical, 260px) * 2) !important; }
+
+/* «Офис-высотка» внутри общей главы с финалом: занимает закреплённый экран. */
+.ending-chapter .sky-scene.office-tower { position: absolute; inset: 0; height: 100%; z-index: 1; background: transparent; transform-origin: center; }
+.office-tower .sky-stage { position: absolute; inset: 0; height: 100%; }
+/* Неоновая вывеска стоит на крыше: низ надписи — на уровне крыши здания. */
+.office-tower .tower-sign { top: auto; bottom: 1130px; line-height: .9; color: #ffd6e8; text-shadow: 0 0 18px #fa7ab3, 0 0 60px #ef3124b3; }
+.office-tower .tower-sign.is-lit { animation: tower-neon 5s steps(1) infinite; }
+@keyframes tower-neon { 0%, 100% { opacity: 1; } 91% { opacity: .35; } 93% { opacity: 1; } 95% { opacity: .5; } 96% { opacity: 1; } }
+.office-tower .tower-number { font-size: 280px; }
+@media (prefers-reduced-motion: reduce) { .ending-chapter .sky-scene.office-tower { position: relative; height: 100svh; } .office-tower .tower-sign.is-lit { animation: none; } }
+/* Вывеска на горизонтальном экране — фиксированного размера над крышей; на телефоне
+   её подгоняет по ширине typography.js. Неон ярче: розовое ядро и красный ореол. */
+html:not(.is-portrait) .revision-six .office-tower .tower-sign { font-size: 250px !important; }
+.office-tower .tower-sign { color: #ffc2dd; text-shadow: 0 0 6px #fff, 0 0 22px #fa7ab3, 0 0 70px #ef3124; }

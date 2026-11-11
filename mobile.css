@@ -1,0 +1,59 @@
+/* Мобильная версия: правки раскладки для вертикальных экранов (html.is-portrait,
+   ширина/высота < 0.8). Масштабы сцен — в layout-fit.js. */
+
+/* Первый экран: заголовок наверху, подпись внизу — не перекрывают «2026». */
+html.is-portrait .hero-film .hero-title { top: calc((1401px - var(--film-viewport-height, 1401px)) / 2 + 110px); }
+html.is-portrait .hero-film .hero-subtitle { top: calc((1401px + var(--film-viewport-height, 1401px)) / 2 - 230px); left: 560px; width: 800px; }
+html.is-portrait .hero-film .hero-subtitle { text-shadow: 0 2px 18px #000, 0 0 40px #000; }
+
+/* Моменты: полароиды подтягиваем внутрь видимой полосы, иначе они за краем экрана. */
+html.is-portrait .moments-photo[data-photo="0"] { left: 460px !important; top: 330px !important; }
+html.is-portrait .moments-photo[data-photo="1"] { left: 1170px !important; top: 300px !important; }
+html.is-portrait .moments-photo[data-photo="2"] { left: 520px !important; top: 1880px !important; }
+
+/* Траты коинов: на десктопе цифра слева, подпись справа от кольца —
+   на телефоне цифра над кольцом, подпись под ним, обе по центру. */
+html.is-portrait .spending-number { left: 486px; top: 950px; width: 947px; height: auto; line-height: 1; text-align: center; }
+html.is-portrait .spending-digits { font-size: 420px !important; }
+html.is-portrait .spending-caption { left: 440px; top: 1525px; width: 1040px; text-align: center; }
+html.is-portrait .spending-note { left: 440px !important; top: 1600px !important; width: 1040px !important; text-align: center; }
+html.is-portrait .spending-artboard { clip-path: none !important; }
+
+/* Память на телефоне: не держим постоянных огромных слоёв в «Моментах»
+   (на экране 3× каждый — десятки мегабайт), линзы без размытия подложки. */
+html.is-portrait .moments :is(.moments-back,.moments-core,.moments-camera),
+html.is-portrait .moments.is-moments-active .moments-sparkles i { will-change: auto; }
+html.is-portrait .moments-lens { backdrop-filter: none; -webkit-backdrop-filter: none; background: radial-gradient(ellipse, #18031019, transparent 70%); }
+
+/* Память: на телефоне коины не наезжают на ачивки — сцены сменяют друг друга,
+   и ачивки успевают освободить память. Анимации коинов — только на экране. */
+html.is-portrait .november .november-scene.coins.follows-achievements { margin-top: 0; background: #020101; }
+html.is-portrait .november .november-scene.coins.follows-achievements .november-stage { background: #020101; }
+.november-scene.coins:not(.is-on-screen) :is(.coins-mini, .coins-sparkle) { animation-play-state: paused; }
+
+
+/* Коины на телефоне: вертикальная композиция «коиновый дождь» — заголовок наверху,
+   крупная стопка в центре, подпись под ней, мини-коины и искры по всей высоте экрана
+   (видимая полоса макета на 375×812: x 410…1510, y −320…2060). */
+html.is-portrait .coins .coins-heading { top: 10px !important; }
+html.is-portrait .coins .coins-copy { top: 1640px !important; }
+html.is-portrait .november .coins-pink-orbit { width: 1000px; height: 330px; top: 1010px; }
+html.is-portrait .coins-glow { width: 1150px; height: 1500px; }
+html.is-portrait .coins-blue-orbit > div:nth-of-type(1) { left: 475px !important; top: 62px !important; width: 170px !important; height: 116px !important; }
+html.is-portrait .coins-blue-orbit > div:nth-of-type(2) { left: 1315px !important; top: 164px !important; width: 150px !important; height: 102px !important; }
+html.is-portrait .coins-blue-orbit > div:nth-of-type(3) { left: 1325px !important; top: 829px !important; width: 210px !important; height: 143px !important; }
+html.is-portrait .coins-blue-orbit > div:nth-of-type(4) { left: 385px !important; top: 696px !important; width: 190px !important; height: 129px !important; }
+html.is-portrait .coins-blue-orbit > div:nth-of-type(5) { left: 1250px !important; top: 1776px !important; width: 160px !important; height: 109px !important; }
+html.is-portrait .coins-blue-orbit > div:nth-of-type(6) { left: 550px !important; top: 1833px !important; width: 140px !important; height: 95px !important; }
+html.is-portrait .coins-blue-orbit > div:nth-of-type(7) { left: 950px !important; top: 1949px !important; width: 120px !important; height: 82px !important; }
+html.is-portrait .coins-blue-orbit > i:nth-of-type(1) { left: 460px !important; top: 300px !important; }
+html.is-portrait .coins-blue-orbit > i:nth-of-type(2) { left: 1460px !important; top: 420px !important; }
+html.is-portrait .coins-blue-orbit > i:nth-of-type(3) { left: 700px !important; top: -200px !important; }
+html.is-portrait .coins-blue-orbit > i:nth-of-type(4) { left: 1250px !important; top: -120px !important; }
+html.is-portrait .coins-blue-orbit > i:nth-of-type(5) { left: 450px !important; top: 1450px !important; }
+html.is-portrait .coins-blue-orbit > i:nth-of-type(6) { left: 1480px !important; top: 1500px !important; }
+html.is-portrait .coins-blue-orbit > i:nth-of-type(7) { left: 800px !important; top: 2000px !important; }
+html.is-portrait .coins-blue-orbit > i:nth-of-type(8) { left: 1150px !important; top: 1980px !important; }
+/* К-толк: блок «250 / Часов вы общались» стоял на 55 px макета правее центра —
+   на узком экране это заметно. Выравниваем по центру экрана, как заголовок. */
+html.is-portrait .talk-contact-data { margin-left: -55px; }

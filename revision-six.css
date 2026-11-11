@@ -1,0 +1,225 @@
+/* Figma 2964:4685, local revision of 6 November. Scope ends at top-1 service. */
+@font-face { font-family: Styrene; src: url('./assets/styrene-a-bold.otf') format('opentype'); font-style: normal; font-weight: 700; font-display: swap; }
+@font-face { font-family: Styrene; src: url('./assets/styrene-a-regular.otf') format('opentype'); font-style: normal; font-weight: 400; font-display: swap; }
+.revision-six .opening-story { height: 1130svh; }
+.revision-six .story-dark { background: #020101; }
+.revision-six .story-panel-thanks { z-index: 3; }
+.revision-six .story-panel-postcards { z-index: 4; }
+.revision-six .story-panel-moments { z-index: 5; }
+.revision-six .story-panel-income { z-index: 6; }
+.revision-six .hero-subtitle { font-family: Styrene, sans-serif; line-height: .8953; }
+.revision-six .person-name { width: 1011px; left: 455px; font-size: var(--name-size, 250px); line-height: 272px; }
+.revision-six .visit-count { left: 549px; width: 820px; height: 823px; }
+.revision-six .counter { line-height: 980px; }
+.revision-six .visit-caption { font: 700 60px/.9 Styrene, sans-serif; color: white; letter-spacing: -.04em; }
+.revision-six .thanks-composition { top: 50%; height: 1478px; }
+.revision-six .thanks-art { height: 1478px; }
+.revision-six .thanks-heart-motion { left: -66px; top: -195px; width: 2288.152px; height: 1854.468px; }
+.revision-six .thanks-heart-entrance, .revision-six .thanks-heart-mask { position: relative; width: 2288.152px; height: 1854.468px; }
+.revision-six .thanks-heart-mask img { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-8.77deg); }
+.revision-six .thanks-title { z-index: 4; text-shadow: none; }
+.revision-six .thanks-caption { font: 700 60px/.9174 Styrene, sans-serif; letter-spacing: -.04em; }
+.revision-six .thanks-stats { left: 200px; width: 1520px; }
+.revision-six .thanks-stat { gap: 60px; }
+.revision-six .thanks-number { height: 608px; }
+.revision-six .thanks-digits { line-height: normal; letter-spacing: -.03em; }
+.revision-six .thanks-burst-motion { top: -122px; left: -157px; width: 2412px; height: 1597px; }
+.revision-six .opening-story .envelope-section { position: absolute; inset: 0; height: 100%; background: transparent; }
+.revision-six .opening-story .envelope-stage { position: absolute; inset: 0; height: 100%; background: transparent; }
+.revision-six .envelope-data { left: 605px; top: 333px; width: 656px; }
+.revision-six .envelope-number { font-size: 700px; line-height: 1.1114; }
+.revision-six .envelope-caption { margin-top: -45px; font: 700 60px/.9174 Styrene, sans-serif; letter-spacing: -.04em; }
+.revision-six .income-glass-stage { height: 1644px; }
+.revision-six .income-glass-world, .revision-six .income-glass-fallback-world { transform-origin: 878.5px 952.5px; }
+.revision-six .income-glass-title { left: -68px; top: 102px; width: 1890px; font-size: 260px; line-height: 283px; letter-spacing: -.03em; }
+.revision-six .income-glass-rank { left: -68px; top: 0; width: 1890px; font: 700 60px/72px Styrene, sans-serif; letter-spacing: -.03em; color: white; }
+.revision-six .income-glass-cap { left: 1092.44px; top: 144.5px; transform: rotate(1.93deg); }
+.revision-six .income-glass-fallback { top: 257px; height: 1391px; }
+.revision-six .income-glass-fallback-caption { font: 700 60px/.8953 Styrene, sans-serif; letter-spacing: -.04em; }
+.moments { position: absolute; inset: 0; height: 100%; }
+.moments-stage { position: absolute; inset: 0; overflow: clip; }
+.moments-composition { position: absolute; left: 50%; top: 50%; width: 1920px; height: 2777px; transform-origin: center; }
+.moments-vector { position: absolute; inset: 0; }
+.moments-camera { position: absolute; inset: 0; transform-origin: 988px 1390px; }
+.moments.is-moments-active .moments-camera { will-change: transform; }
+.moments-svg { display: block; overflow: visible; }
+.moments-info { position: absolute; left: 385px; top: 837.82px; width: 1205px; color: #e8e8e8; text-align: center; transform-origin: center; }
+.moments-number { font: 700px/980px Agse, sans-serif; height: 769px; letter-spacing: -.03em; text-shadow: 0 4px 13.2px white; }
+.moments-caption { width: 556px; margin: 50px auto 0; font: 700 60px/.9 Styrene, sans-serif; letter-spacing: -.03em; white-space: pre-line; color: white; }
+.moments-back,.moments-core {position:absolute;left:-640px;top:-310px;width:3200px;height:3400px;max-width:none;transform-origin:1628px 1700px;}
+.moments-photo {position:absolute;width:288px;height:350px;transform-origin:center;z-index:3;}
+.moments-photo img {display:block;width:100%;height:100%;object-fit:cover;box-shadow:0 8px 35px #14001466;}
+.moments-info {z-index:2;pointer-events:none;}
+.moments-lens {position:absolute;border-radius:50%;pointer-events:none;mask-image:radial-gradient(closest-side,#000 72%,transparent);}
+.moments-lens-one {left:-86px;top:1641.47px;width:767px;height:1100px;backdrop-filter:blur(16px);}  /* было 34px: пересчитывалось каждый кадр под вращающейся звездой */
+.moments-lens-two {left:930px;top:1881.47px;width:550px;height:644px;backdrop-filter:blur(3.45px);}
+.moments-lens-three {left:413.316px;top:53.375px;width:542.418px;height:682.506px;transform:rotate(-12.55deg);backdrop-filter:blur(3.45px);}
+/* Звёзды — огромные SVG: держим их слои постоянно, иначе каждый вход в сцену
+   заново растеризует их (~100 мс провала). */
+.moments :is(.moments-back,.moments-core,.moments-camera) {will-change:transform;}
+.moments.is-moments-active .moments-photo {will-change:transform;}
+@media (prefers-reduced-motion: reduce) { .revision-six .thanks-burst-idle { animation: none; } }
+/* One continuous film: ornament → AI planet → agent → clock. */
+.revision-six .opening-story { height: 1680svh; }
+.story-panel-planet { z-index: 7; }
+.planet-story { position: absolute; inset: 0; overflow: clip; }
+.planet-composition { position: absolute; left:50%; top:50%; width:1920px; height:2287px; transform-origin:center; }
+.planet-media { position:absolute; left:0; top:0; width:1920px; height:1082px; transform-origin:0 0; }
+.planet-media video { position:absolute; inset:0; width:1920px; height:1082px; object-fit:fill; }
+.planet-copy { position:absolute; text-align:center; opacity:0; color:#e8e8e8; }
+.planet-copy h2:not(.planet-label) {font:700 260px/283px Nauryz,sans-serif;letter-spacing:-.03em;text-shadow:0 4px 13.2px #fff;}
+.planet-label {font:700 60px/.9 Styrene,sans-serif;letter-spacing:-.04em;white-space:pre-line;color:white;text-shadow:0 2px 10px #2c0018,0 1px 2px #140009;}
+.planet-number {font:700px/980px Agse,serif;letter-spacing:-.03em;text-shadow:0 4px 13.2px #fff;}
+.planet-ai {left:357.5px;top:260px;width:1205px;}
+.planet-ai .planet-number {height:769px;margin-top:-100px;}
+.planet-ai .planet-label {width:800px;margin:50px auto 0;}
+.planet-agent {left:-65px;top:655px;width:2050px;}
+.planet-agent .planet-label {margin:50px auto;width:800px;}
+.planet-time {left:452.5px;top:1387px;width:1015px;}
+.planet-time .planet-number {position:absolute;top:-305px;left:calc(50% - 473.5px);width:947px;font-size:550px;line-height:770px;height:708px;color:#fae7c4;}
+.planet-time .planet-label {margin-top:357px;}
+.planet-note {font:500 48px/.917 Formular,sans-serif;letter-spacing:-.04em;white-space:pre-line;opacity:.6;margin-top:32px;}
+.planet-clock-art {position:absolute;inset:0;pointer-events:none;}
+.planet-clock-art svg {overflow:visible;}
+[data-clock-hand] {transform-box:view-box;}
+.planet-media video { mask-image:linear-gradient(to bottom,transparent,#000 3%,#000 97%,transparent),linear-gradient(to right,transparent,#000 3%,#000 97%,transparent);mask-composite:intersect; }
+/* Shared visible title size; every fitted camera supplies its own compensation. */
+.revision-six :is(.hero-title,.person-name,.thanks-title,.income-glass-title,.november-heading,.talk-contact-name),
+.revision-six .planet-copy h2:not(.planet-label) {font-size:var(--recap-heading-logical,260px)!important;letter-spacing:-.03em;}
+.revision-six .opening-story {height:1920svh;}
+.story-panel-contact {z-index:8;}
+.talk-contact {position:absolute;inset:0;overflow:clip;}
+.talk-contact-composition {position:absolute;left:50%;top:50%;width:1920px;height:1647px;transform-origin:center;}
+.talk-contact-art {position:absolute;inset:0;}
+.talk-contact-svg {display:block;overflow:visible;}
+.talk-contact-heading {position:absolute;left:50%;top:60px;width:1650px;transform-origin:center;translate:-50% 0;text-align:center;}
+.talk-contact-kicker {font:700 60px/79px Styrene,sans-serif;letter-spacing:-.03em;}
+.talk-contact-name {margin-top:30px;font:700 260px/263px Nauryz,sans-serif;letter-spacing:-.03em;text-shadow:0 4px 13.2px #fff;}
+.talk-contact-data {position:absolute;left:509px;top:1046px;width:1015px;text-align:center;}
+.talk-contact-number {position:absolute;top:-305px;left:calc(50% - 473.5px);width:947px;height:708px;font:550px/770px Agse,serif;letter-spacing:-.03em;color:#fae7c4;text-shadow:0 4px 13.2px #fff;}
+.talk-contact-label {margin-top:367px;font:700 60px/.9 Styrene,sans-serif;letter-spacing:-.03em;}
+.talk-contact-note {margin-top:32px;font:500 48px/.9174 Formular,sans-serif;letter-spacing:-.04em;white-space:pre-line;opacity:.6;}
+/* One page-level layer sits above footage, SVG effects, text and all later scenes. */
+.november::after {display:none;}
+.recap-grain {position:fixed;inset:0;z-index:9000;pointer-events:none;background:url('./assets/finish-grain.png') repeat;background-size:384px 384px;opacity:.13;}
+.talk-contact-heading {z-index:1;}
+.talk-contact-art {z-index:2;}
+.talk-contact-data {z-index:3;}
+
+/* November 7: new coin artwork; original stack/spiral timing is preserved. */
+.revision-six .november-coin {mix-blend-mode:normal;filter:none;}
+.revision-six .coins-copy {font:700 60px/.9174 Styrene,sans-serif;letter-spacing:-.04em;}
+.revision-six .spending-number {top:111.628px;font-size:550px;line-height:770px;}
+.revision-six .spending-caption {left:947px;top:496px;width:970px;font:700 60px/.9174 Styrene,sans-serif;letter-spacing:-.04em;color:white;}
+.spending-note {position:absolute;left:947px;top:583px;width:970px;font:500 48px/.9174 Formular,sans-serif;letter-spacing:-.04em;color:#fff9;white-space:pre-line;opacity:0;}
+.revision-six .spending-shape[data-artwork] .spending-face {overflow:visible;border-radius:0!important;filter:none;}
+.spending-shape[data-artwork] img {left:-60px;top:-60px;width:calc(100% + 120px);height:calc(100% + 120px);overflow:visible;}
+.revision-six .spending-ornament .spending-face img {inset:0;width:100%;height:100%;}
+.spending-face > img {width:100%;height:100%;}
+
+/* One sticky stage owns both coin spending and the learning book. */
+.book-chapter {position:relative;height:var(--chapter-height);background:#020101;isolation:isolate;z-index:3;}
+.learning-anchor {position:absolute;left:0;pointer-events:none;}
+.book-chapter-stage {position:sticky;top:0;width:100%;height:100svh;overflow:clip;isolation:isolate;}
+.revision-six .book-chapter .spending {position:absolute;inset:0;margin:0;height:100%;transform-origin:50% 80%;z-index:0;}
+.book-chapter .spending-stage {position:absolute;inset:0;height:100%;}
+.book-chapter-backdrop {position:absolute;inset:0;background:#020101;z-index:1;opacity:0;pointer-events:none;}
+.learning-book {position:absolute;left:0;top:0;z-index:2;opacity:0;transform-origin:center;mix-blend-mode:screen;pointer-events:none;}
+.learning-book video,.learning-open-poster {position:absolute;inset:0;width:100%;height:100%;object-fit:contain;}
+.learning-open-poster {display:none;}
+.learning-scene {position:absolute;inset:0;z-index:3;pointer-events:none;}
+.learning-composition {position:absolute;left:50%;top:50%;width:1920px;height:1662px;transform-origin:center;}
+.learning-heading {position:absolute;left:411.5px;top:157px;width:1097px;opacity:0;}
+.learning-stat {position:absolute;top:358px;width:656px;text-align:center;color:#fae7c4;opacity:0;transform-origin:center 60%;}
+.learning-courses {left:304px;}
+.learning-hours {left:960px;}
+.learning-number {height:550px;font:500px/700px Agse,serif;letter-spacing:-.03em;text-shadow:0 4px 13.2px #fff;white-space:nowrap;}
+.learning-label {width:516px;margin:64px auto 0;font:700 60px/.9174 Styrene,sans-serif;letter-spacing:-.04em;white-space:pre-line;}
+.book-reduced .learning-open-poster {display:block;}
+.book-reduced video {visibility:hidden;}
+@media (prefers-reduced-motion:reduce) {
+ .book-chapter {height:100svh;}
+ .book-chapter.has-spending {height:200svh;}
+ .book-chapter-stage {position:relative;height:100%;}
+ .revision-six .book-chapter .spending {height:100svh;}
+ .book-chapter-backdrop {display:none;}
+ .has-spending .learning-scene {top:100svh;height:100svh;}
+ .standalone-book .learning-scene {height:100svh;}
+}
+/* Моменты: вспышка фотоаппарата и искры при появлении */
+.moments-flash {position:absolute;inset:0;z-index:6;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 48%,#fffffff2 0%,#ffffff66 38%,#fa7ab300 75%);visibility:hidden;}
+.moments-sparkles {position:absolute;left:988px;top:1390px;width:0;height:0;z-index:4;pointer-events:none;}
+.moments-sparkles i {position:absolute;left:-46px;top:-46px;width:92px;height:92px;opacity:0;background:#f8e4c2;clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);visibility:hidden;}
+.moments-sparkles i:nth-child(3n) {background:#1ac3fd;}
+.moments-sparkles i:nth-child(4n) {background:#ef3124;}
+.moments.is-moments-active .moments-sparkles i {will-change:transform,opacity;}
+/* Достижения: заголовок за звездой, сияние, искры и вспышка пролёта */
+.november .achievement-heading {position:absolute;left:960px;top:-40px;margin:0;font:700 330px/1 Nauryz,sans-serif;letter-spacing:-.03em;color:#fff;white-space:nowrap;opacity:0;transform:translateX(-50%);text-shadow:0 0 40px #fa7ab355;}
+html[data-quality=lite] .achievement-sparkles i {filter:none;}
+.november .achievement-halo {position:absolute;left:50%;top:50%;width:1300px;height:1300px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,#ff5a3d55 0%,#fa7ab322 55%,#fa7ab300 100%);pointer-events:none;}
+.november .achievements.is-motion-active .achievement-halo {animation:achievement-breathe 3.2s ease-in-out infinite;}
+.november .achievement-caption {left:603px;top:972px;width:600px;font:700 66px/.95 Styrene,sans-serif;letter-spacing:-.04em;text-align:center;}
+.november .achievement-sparkles {position:absolute;left:903px;top:640px;width:0;height:0;pointer-events:none;}
+.november .achievement-sparkles i {position:absolute;left:-40px;top:-40px;width:80px;height:80px;opacity:0;background:#f8e4c2;clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);}
+.november .achievement-sparkles i:nth-child(3n) {background:#1ac3fd;}
+.november .achievement-sparkles i:nth-child(4n) {background:#fa7ab3;}
+.achievement-flash {position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,#fff 0%,#ffd6e8aa 30%,#fa7ab300 70%);}
+.achievement-rays-canvas {transform-origin:50% 50%;}
+@keyframes achievement-breathe {50% {transform:translate(-50%,-50%) scale(1.08);opacity:.75;}}
+
+/* Коины поднимаются сквозь исчезающую звезду, а не выезжают после чёрной паузы. */
+.november .november-scene.coins.follows-achievements {margin-top:-60svh;background:transparent;z-index:2;}
+@media (prefers-reduced-motion: reduce) {.november .november-scene.coins.follows-achievements {margin-top:0;background:#020101;}}
+/* Коины: наполнение сцены */
+.coins-deco {position:absolute;inset:0;pointer-events:none;}
+.coins-glow {position:absolute;left:940px;top:930px;width:1500px;height:1300px;border-radius:50%;background:radial-gradient(ellipse,#ff3d2e66 0%,#fa7ab333 38%,transparent 68%);opacity:0;}
+.november .coins-pink-orbit {position:absolute;left:940px;top:1010px;width:1380px;height:430px;border-radius:50%;border:4px solid #fa7ab3;box-shadow:0 0 30px #fa7ab3aa,inset 0 0 30px #fa7ab366;opacity:0;transform:translate(-50%,-50%) rotate(-12deg);}
+.november .coins-blue-orbit {position:absolute;inset:0;pointer-events:none;opacity:0;transform-origin:940px 930px;}
+.coins-mini {position:absolute;animation:coins-mini-float 5.5s ease-in-out infinite;}
+.coins-mini img {width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 22px #ef312488);}
+.coins-mini.is-far {opacity:.65;}
+.coins-mini.is-far img {filter:blur(5px) drop-shadow(0 0 16px #ef312466);}
+.coins-sparkle {position:absolute;width:44px;height:44px;margin:-22px;background:#f8e4c2;clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);filter:drop-shadow(0 0 10px #fff);animation:coins-twinkle 2.4s ease-in-out infinite;}
+.coins-sparkle:nth-of-type(3n) {background:#1ac3fd;width:30px;height:30px;margin:-15px;}
+.coins-sparkle:nth-of-type(4n) {background:#fa7ab3;}
+@keyframes coins-mini-float {0%,100%{transform:translateY(0) rotate(-8deg);}50%{transform:translateY(-26px) rotate(7deg);}}
+@keyframes coins-twinkle {0%,100%{transform:scale(.4) rotate(0);opacity:.3;}50%{transform:scale(1) rotate(45deg);opacity:1;}}
+html[data-quality=lite] .coins-mini.is-far img, html[data-quality=lite] .coins-mini img, html[data-quality=lite] .coins-sparkle {filter:none;}
+@media (prefers-reduced-motion: reduce) {.coins-mini,.coins-sparkle{animation:none;}}
+.november .november-scene.coins.follows-achievements .november-stage {background:transparent;}
+/* Лучам — мягкое розовое свечение, как у звёзд «Моментов» и «Спасибок». */
+
+
+/* Паркшеринг: цифра, подпись и примечание — по центру композиции (2068 → ось 1034). */
+.november .parksharing .november-number { left: 706px !important; width: 656px !important; text-align: center; }
+.november .november-park-label { left: 706px !important; width: 656px !important; text-align: center; }
+.november .november-park-note { left: 527px !important; width: 1014px !important; text-align: center; }
+
+/* Мягкий переход паркшеринг → офис: снег уходит в черноту по мере ухода сцены,
+   а офис проступает из той же черноты, а не обрывается белым краем. */
+.november .parksharing.november-scene { isolation: isolate; }
+.november .parksharing.november-scene::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 100svh; z-index: 5; pointer-events: none;
+  background: linear-gradient(to bottom, #02010100 0%, #02010100 25%, #02010199 60%, #020101 100%); }
+.ending-chapter::before { content: ''; position: absolute; left: 0; right: 0; top: -1px; height: 90svh; z-index: 20; pointer-events: none;
+  background: linear-gradient(to bottom, #020101 0%, #020101cc 30%, #02010166 60%, #02010100 100%); }
+/* «Спасибки»: на широких экранах общий размер заголовка (180 px на экране) в
+   координатах сцены выходил больше макетных 248 px, и слово наезжало на цифры. */
+html:not(.is-portrait) .revision-six .thanks-title {font-size:min(var(--recap-heading-logical,248px),232px)!important;top:52px;}
+/* Надпись «ачивки» с размытой тенью сдвигается каждый кадр — свой слой, чтобы
+   тень не перерисовывалась заново. Искры и строки подписи — тоже. */
+.november .achievements.is-motion-active :is(.achievement-heading,.achievement-sparkles i,.achievement-caption-reveal,.achievement-digits) {will-change:transform;}
+/* Паркшеринг: заголовок поверх машины — ёлка на крыше больше не перекрывает буквы. */
+.november .parksharing .november-park-heading { z-index: 3; }
+/* Подпись паркшеринга — по ширине примечания: крупный текст не дробится на три строки. */
+.november .november-park-label { left: 527px !important; width: 1014px !important; }
+/* Холсты наполнения сцен (записки, открытки, полка): внутри композиции сцены. */
+.scene-fill-canvas { position: absolute; pointer-events: none; }
+.thanks-scene > .thanks-notes-canvas { left: 0; top: 0; width: 100%; height: 100%; z-index: 5; }
+.envelope-stage > .garland-canvas { left: 0; top: 0; width: 100%; height: 100%; z-index: 3; }
+
+/* Заголовки блоков там, где их не было: открытки, моменты, потратили. */
+.block-heading { position: absolute; left: 0; width: 1920px; margin: 0; text-align: center; z-index: 4; pointer-events: none; }
+.envelope-heading { top: -400px; }
+.spending-heading { top: -340px; }
+.moments-heading { top: auto; bottom: 1830px; z-index: 4; text-shadow: 0 0 14px #ffffff80, 0 4px 30px #6a0008; }
+html.is-portrait .spending-heading { top: -720px; }

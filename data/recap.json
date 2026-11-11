@@ -1,0 +1,133 @@
+{
+  "year": 2026,
+  "person": {
+    "name": "андрей",
+    "photo": "./assets/november/personal-frame.png",
+    "photoAlt": "Андрей улыбается",
+    "photoMode": "framed"
+  },
+  "stats": {
+    "visits": 264
+  },
+  "achievements": {
+    "count": 3,
+    "label": "вы получили"
+  },
+  "postcards": {
+    "sent": 15,
+    "received": 15,
+    "sentLabel": "Открыток вы отправили",
+    "receivedLabel": "Открыток вы получили",
+    "front": "./assets/postcard-front.png",
+    "alternate": "./assets/postcard-alternate.png",
+    "video": "./assets/envelope/envelope.mp4",
+    "poster": "./assets/envelope/open.png"
+  },
+  "thanks": {
+    "sent": 55,
+    "received": 64,
+    "sentLabel": "Отправили",
+    "receivedLabel": "Получили",
+    "note": "",
+    "title": "Спасибки"
+  },
+  "income": {
+    "title": "Мой доход",
+    "rank": 1,
+    "rankLabel": "Ваш топ‑{rank} сервис",
+    "visits": 274,
+    "caption": "Раз вы заходили в Alfa People в {year} году",
+    "note": "Столько дней вы заходили в Alfa People в этом году. Наверное, проверяли циферки зарплаты. Давайте видеться чаще в {nextYear}?",
+    "video": "./assets/income-ornament-scroll.mp4",
+    "poster": "./assets/income-ornament-layer.png"
+  },
+  "copy": {
+    "heading": "итоги",
+    "visits": "Раз вы заходили в Alfa People в {year} году"
+  },
+  "art": {
+    "texture": "./assets/texture.png",
+    "frame": "./assets/scallop-frame.svg",
+    "character": "./assets/character.png"
+  },
+  "intro": {
+    "mode": "video",
+    "title": "ИТОГИ",
+    "caption": "в Alfa people",
+    "captionArtwork": null,
+    "mediaYear": 2026,
+    "revealVideo": "./assets/intro-film/intro-2026.mp4",
+    "loopVideo": "./assets/intro-film/intro-loop.mp4",
+    "revealVideoMobile": "./assets/intro-film/intro-2026-mobile.mp4",
+    "loopVideoMobile": "./assets/intro-film/intro-loop-mobile.mp4",
+    "poster": "./assets/intro-film/poster.png"
+  },
+  "coins": {
+    "earned": 2500,
+    "title": "КОИНЫ",
+    "label": "Коинов вы получили\nв {year} году"
+  },
+  "spending": {
+    "amount": 1500,
+    "label": "Коинов вы потратили",
+    "note": "в {year} году"
+  },
+  "parksharing": {
+    "trips": 502,
+    "title": "Паркшеринг",
+    "note": "Спасибо, что приезжали в офис\nи были рядом с командой.",
+    "sequence": {
+      "base": "./assets/car-sequence/",
+      "frameCount": 100,
+      "fps": 24,
+      "width": 1536,
+      "height": 864
+    }
+  },
+  "office": {
+    "visits": 134,
+    "label": "Вы были в офисе"
+  },
+  "finale": {
+    "gameUrl": "./game/",
+    "label": "Собирайте марки в игре\nи откройте 5 новогодних открыток",
+    "heading": "Ваш Талисман {nextYear} года",
+    "talisman": "Синий Единорог"
+  },
+  "moments": {
+    "count": 12,
+    "label": "Моментов\nвы опубликовали"
+  },
+  "ai": {
+    "requests": 543,
+    "agent": "иллюстратор",
+    "hours": 129
+  },
+  "talkContact": {
+    "name": "Дмитрий",
+    "hours": 250,
+    "photo": null,
+    "heading": "Ваш топ собеседник в к-толк",
+    "label": "Часов вы общались",
+    "note": "Вот столько часов вы потратили листая\nрилсы на работе"
+  },
+  "zodiac": {
+    "sign": "leo",
+    "share": 34,
+    "kicker": "Чаще всего вы общались со знаком",
+    "note": "Звёзды советуют в {nextYear}:\nменьше созвонов, больше спасибок"
+  },
+  "profileViews": {
+    "count": 1248,
+    "heading": "на вас смотрят",
+    "label": "Раз смотрели\nваш профиль",
+    "note": "Кажется, вы звезда офиса.\nИли кто-то ищет ваш номер"
+  },
+  "learning": {
+    "courses": 5,
+    "hours": 25,
+    "title": "Обучение",
+    "coursesLabel": "Курсов вы прошли\nв этом году",
+    "hoursLabel": "Часов вы потратили\nна это"
+  }
+}

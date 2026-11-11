@@ -1,0 +1,36 @@
+/* One static grain surface across the site; no duplicate full-window overlay. */
+.november::after {display:none;}
+.recap-grain {opacity:.19;contain:strict;}
+.november .thanks-burst-idle {animation:thanks-star-drift 12s ease-in-out infinite,thanks-star-opacity 3.2s ease-in-out infinite;animation-play-state:paused;}
+@keyframes thanks-star-opacity {0%,24%,100%{opacity:.94}8%{opacity:1}16%{opacity:.97}}
+html[data-quality=balanced] .moments-lens-one {backdrop-filter:blur(8px);}
+html[data-quality=lite] :is(.moments-lens,.ending-seven-lens,.car-ground-blend) {backdrop-filter:none;-webkit-backdrop-filter:none;}
+html[data-quality=lite] .moments-lens {background:radial-gradient(ellipse,#18031019,transparent 70%);}
+html[data-quality=lite] :is(.planet-clock-art,.talk-contact-art,.office-seven-back,.office-seven-foreground) [filter] {filter:none;}
+html[data-quality=lite] :is(.income-glass-cap,.office-motion-base,.achievement-star,.spending-face) {filter:none!important;}
+html[data-quality=lite] .thanks-burst-idle {animation:none;}
+html[data-quality=lite] .car-ground-blend {background:linear-gradient(transparent,#fff8,transparent);}
+html[data-quality=lite] .achievement-focal::before {filter:none;opacity:.75;}
+@media(prefers-reduced-motion:reduce){.november .thanks-burst-idle{animation:none;}}
+/* The common grain supplies paper texture; don't decode another 28MB surface. */
+.november .income-glass-viewport::before {background:#020101;}
+/* Большие размытые свечения в lite прячем (без размытия это жёсткие пятна),
+   главное красное свечение за тумбой офиса заменяем дешёвым градиентом. */
+html[data-quality=lite] .soft-glow {display:none;}
+html[data-quality=lite] .office-seven-back {background:radial-gradient(circle 1050px at 899px 1096px,#9a1d19 0%,#9a1d19b3 38%,#9a1d1900 72%);}
+/* Финал на телефоне: размытая копия талисмана (blur 24px на картинке 120%) —
+   одна из самых дорогих операций по памяти; на lite её нет. */
+html[data-quality=lite] .finale-seven-ghost {display:none;}
+html[data-quality=lite] .is-offscreen-chapter > * {visibility:hidden !important;content-visibility:hidden;}
+/* Финал на телефоне: без тени-фильтра у марки (мерцала вместе с движением слоя). */
+html[data-quality=lite] .finale-seven-stamp {filter:none;}
+html[data-quality=lite] .finale-seven-frame {box-shadow:none;}
+
+/* Телефон: невидимые сцены открывающей истории не рисуются и не раскладываются. */
+html[data-quality=lite] .story-panel.is-panel-off {content-visibility:hidden;}
+html[data-quality=lite] .story-pin::after {content:'';position:absolute;inset:0;z-index:60;background:#020101;opacity:var(--release-dim,0);pointer-events:none;}
+/* Офис на телефоне: без постоянных слоёв у ящика, стенки и цифры. Любой из них
+   заставлял WebKit выносить в отдельные слои всю сцену с «осветлением» и
+   масками — память GPU на этом экране росла до ~3.7 ГБ (замер в WebKit,
+   режим iPhone), и iOS закрывал вкладку сразу после машины паркшеринга. */
+html[data-quality=lite] :is(.office-art-drawer,.office-front-track,.office-restored .office-number) {will-change:auto!important;}
