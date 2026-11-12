@@ -1,7 +1,7 @@
 import { setHeadingScale } from './typography.js';
 import { requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cancelAnimationFrame } from './performance.js';
 import { spendingEntrance, spendingFrame, spendingInformation, spendingPose, spendingScrollProgress, spendingShapeEntrance, spendingShapes, shapeColor } from './spending-layout.js';
-import { fitScale } from './layout-fit.js';
+import { fitScale, placeComposition } from './layout-fit.js';
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
 export function mountSpendingMotion(root, signal) {
@@ -26,7 +26,7 @@ export function mountSpendingMotion(root, signal) {
     // Телефон: колонка от заголовка (−760) до примечания (~1740) целиком по высоте экрана.
     let scale = fitScale(stage.clientWidth, stage.clientHeight, spendingFrame.width, spendingFrame.height + (portrait ? 0 : 360), 'spending');
     if (portrait) scale = Math.min(scale, stage.clientHeight * .96 / 2500);
-    composition.style.transform = `translate(-50%, -50%) scale(${scale}) translateY(${portrait ? 160 : 180}px)`;
+    placeComposition(composition, scale, ` translateY(${portrait ? 160 : 180}px)`);
     setHeadingScale(composition, scale, stage.clientWidth, stage.clientHeight);
     lastPaint=undefined;schedule();
   }

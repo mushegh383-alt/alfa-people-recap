@@ -149,7 +149,8 @@ export async function prepareContent(root, data, signal) {
   // На телефоне декодируем заранее только первый экран: остальные картинки
   // декодируются, когда до них доходят. Иначе разом ~200 МБ растров в памяти.
   const lite = document.documentElement.dataset.quality === 'lite';
-  const allImages=[...root.querySelectorAll('img')];
+  // Картинки без адреса (фон неба, кадр машины) заполняются кодом позже — их не трогаем.
+  const allImages=[...root.querySelectorAll('img')].filter(image=>image.getAttribute('src'));
   const firstScreen = root.querySelector('.story-panel-hero, .hero');
   if (lite) for (const image of allImages) if (!firstScreen?.contains(image)) { image.decoding = 'async'; image.src = resourceUrl(image.src); }
   const imageNodes = lite ? allImages.filter(image => firstScreen?.contains(image)) : allImages;

@@ -27,7 +27,7 @@ export function createNovemberPark(data){
  const section=scene('parksharing','Паркшеринг',2068,1950),c=section.querySelector('.november-composition');
  image(c,'snow.svg','november-snow',-7.24,1101.8,2082.48,1520.02);
  copy(c,'h2','november-heading november-park-heading',data.parksharing.title,0,158,2088);
- const canvas=document.createElement('canvas');canvas.className='car-sequence';canvas.setAttribute('aria-hidden','true');canvas.width=1536;canvas.height=864;const car=document.createElement('div');car.className='car-motion';const blend=document.createElement('div');blend.className='car-ground-blend';blend.setAttribute('aria-hidden','true');car.append(canvas,blend);c.append(car);
+ const canvas=document.createElement('img');canvas.className='car-sequence';canvas.alt='';canvas.decoding='sync';canvas.draggable=false;canvas.setAttribute('aria-hidden','true');const car=document.createElement('div');car.className='car-motion';const blend=document.createElement('div');blend.className='car-ground-blend';blend.setAttribute('aria-hidden','true');car.append(canvas,blend);c.append(car);
  count(c,data.parksharing.trips,670,874,656,500);
  copy(c,'p','november-park-label','Раза вы бронировали\nпаркшеринг',670,1488,656);
  copy(c,'p','november-copy november-park-note',data.parksharing.note,548,1582,1014.732);return section;

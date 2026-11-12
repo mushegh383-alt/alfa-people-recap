@@ -4,7 +4,7 @@
 // небо и глаза — по одному canvas (один слой GPU вместо десятков элементов).
 import { requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cancelAnimationFrame, canvasBudget, getQuality } from './performance.js';
 import { ease, sectionProgress, reel } from './november-layout.js';
-import { fitScale } from './layout-fit.js';
+import { fitScale, placeComposition, screenRect } from './layout-fit.js';
 import { setHeadingScale } from './typography.js';
 import { endingSceneProgress } from './ending-chapter-layout.js';
 
@@ -42,7 +42,11 @@ const SPARKLE = 'M0 -1 L.22 -.22 L1 0 L.22 .22 L0 1 L-.22 .22 L-1 0 L-.22 -.22 Z
 function node(tag, attrs = {}, text) { const el = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v); if (text !== undefined) el.textContent = text; return el; }
 function scene(id, label, cls = id) {
   const section = node('section', { id, class: `sky-scene ${cls}`, 'aria-label': label });
-  section.innerHTML = '<div class="november-stage sky-stage"><canvas class="sky-canvas" aria-hidden="true"></canvas><div class="november-composition sky-composition"></div></div>';
+  // Порядок слоёв важен для памяти на iPhone: холст (отдельный GPU-слой) лежит ПОВЕРХ
+  // текста. Если холст под текстом, Safari выносит весь масштабированный макет 1920 px
+  // над ним в отдельные слои в полный размер — это +0,5–1 ГБ и вылеты. Статичное небо —
+  // обычная картинка под текстом (не отдельный слой).
+  section.innerHTML = '<div class="november-stage sky-stage"><img class="sky-backdrop" alt="" aria-hidden="true"><div class="november-composition sky-composition"></div><canvas class="sky-canvas" aria-hidden="true"></canvas></div>';
   return section;
 }
 function place(el, x, y, w) { Object.assign(el.style, { left: `${x}px`, top: `${y}px`, width: `${w}px` }); return el; }
@@ -122,10 +126,25 @@ export function mountSkyScenes(root, signal) {
   root.querySelectorAll('.sky-scene').forEach(section => (section.id === 'office' ? mountTower : mountScene)(section, signal));
 }
 
+// Нарисованный один раз холст превращается в картинку-фон, а сам холст освобождается.
+function setBackdrop(img, source) {
+  source.toBlob(blob => {
+    source.width = source.height = 1;
+    if (!blob) return;
+    const url = URL.createObjectURL(blob), old = img.dataset.blobUrl;
+    img.dataset.blobUrl = url;
+    if (img.dataset.memSrc) img.dataset.memSrc = url; else img.src = url;   // глава может быть «выгружена» (performance.js)
+    if (old) URL.revokeObjectURL(old);
+  });
+}
+
 function mountScene(section, signal) {
   const eyesMode = section.id === 'profile-views';
   const stage = section.querySelector('.sky-stage'), composition = section.querySelector('.sky-composition');
-  const canvas = section.querySelector('.sky-canvas'), ctx = canvas.getContext('2d');
+  const canvas = section.querySelector('.sky-canvas'), backdrop = section.querySelector('.sky-backdrop');
+  // Созвездию холст на экране не нужен: небо рисуется во временный холст и становится картинкой.
+  const paper = eyesMode ? canvas : document.createElement('canvas'), ctx = paper.getContext('2d');
+  if (!eyesMode) canvas.hidden = true;
   const q = sel => section.querySelector(sel);
   const heading = q('.sky-heading'), number = q('.sky-number'), label = q('.sky-label'), note = q('.sky-note'), kicker = q('.sky-kicker');
   const lines = [...section.querySelectorAll('.zodiac-line')], stars = [...section.querySelectorAll('.zodiac-star-pop')], art = q('.zodiac-art'), comet = q('.zodiac-comet');
@@ -143,12 +162,12 @@ function mountScene(section, signal) {
   function fit() {
     width = stage.clientWidth; height = stage.clientHeight;
     scale = fitScale(width, height, DESIGN.width, DESIGN.height, section.id);
-    composition.style.transform = `translate(-50%,-50%) scale(${scale})`;
+    placeComposition(composition, scale);
     setHeadingScale(composition, scale, width, height);
     if (!eyesMode) fitSignName();
     dpr = canvasBudget(width, height).ratio;
-    canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
-    if (eyesMode) layoutEyes(); else paintSky();
+    paper.width = Math.round(width * dpr); paper.height = Math.round(height * dpr);
+    if (eyesMode) layoutEyes(); else { paintSky(); setBackdrop(backdrop, paper); }
     schedule();
   }
 
@@ -159,7 +178,7 @@ function mountScene(section, signal) {
     if (width / Math.max(1, height) < .8) return;            // телефон: ширину подгоняет typography.js
     sign.style.removeProperty('font-size');                   // сбросить прошлую подгонку перед замером
     const range = document.createRange(); range.selectNodeContents(sign);
-    const textW = range.getBoundingClientRect().width / Math.max(.01, scale);          // ширина слова в px макета
+    const textW = screenRect(range).width / Math.max(.01, scale);          // ширина слова в px макета
     const avail = Math.min(DESIGN.width, width / Math.max(.01, scale)) - 2 * 48 / Math.max(.01, scale);
     if (textW > avail) {
       const size = parseFloat(getComputedStyle(sign).fontSize) * avail / textW;
@@ -189,13 +208,13 @@ function mountScene(section, signal) {
     const r = Math.max(16, Math.min(58, Math.min(width, height) * (portrait ? .072 : .052)));
     const shownText = number.textContent; number.textContent = Number(number.dataset.value).toLocaleString('ru-RU');
     const stageBox = stage.getBoundingClientRect(), pad = r * .9;
-    const blocked = [heading, number, label, note].filter(Boolean).map(el => { const b = el.getBoundingClientRect(); return { l: b.left - stageBox.left - pad, t: b.top - stageBox.top - pad, r: b.right - stageBox.left + pad, b: b.bottom - stageBox.top + pad }; });
+    const blocked = [heading, number, label, note].filter(Boolean).map(el => { const b = screenRect(el); return { l: b.left - stageBox.left - pad, t: b.top - stageBox.top - pad, r: b.right - stageBox.left + pad, b: b.bottom - stageBox.top + pad }; });
     // Текст в ширину блока, а не во весь контейнер: сужаем рамки до реального слова.
     for (const [i, el] of [heading, number, label, note].filter(Boolean).entries()) {
-      const range = document.createRange(); range.selectNodeContents(el); const t = range.getBoundingClientRect();
+      const range = document.createRange(); range.selectNodeContents(el); const t = screenRect(range);
       if (t.width) Object.assign(blocked[i], { l: t.left - stageBox.left - pad, r: t.right - stageBox.left + pad });
     }
-    const nb = number.getBoundingClientRect();
+    const nb = screenRect(number);
     centre = { x: (nb.left + nb.right) / 2 - stageBox.left, y: (nb.top + nb.bottom) / 2 - stageBox.top };
     number.textContent = shownText;
     const target = Math.round(portrait ? 24 : Math.min(40, width * height / 26000)), list = [];
@@ -276,7 +295,7 @@ function mountScene(section, signal) {
       const frameGap = getQuality() === 'lite' ? 32 : 0;
       if (keepGoing || now - lastDraw >= frameGap) { lastDraw = now; if (drawEyes(now)) keepGoing = true; } else keepGoing = true;
     } else {
-      canvas.style.opacity = ease(0, .12, p);
+      backdrop.style.opacity = ease(0, .12, p);
       kicker.style.opacity = ease(.04, .16, p);
       const spin = ease(.08, .62, p);
       art.style.transform = `rotate(${(1 - spin) * -8}deg) scale(${.88 + .12 * spin})`;
@@ -309,7 +328,7 @@ function mountScene(section, signal) {
   window.addEventListener('scroll', schedule, { passive: true, signal });
   document.addEventListener('visibilitychange', () => { last = 0; schedule(); }, { signal });
   reduced.addEventListener('change', schedule, { signal });
-  signal.addEventListener('abort', () => { observer.disconnect(); resize.disconnect(); cancelAnimationFrame(raf); canvas.width = canvas.height = 1; }, { once: true });
+  signal.addEventListener('abort', () => { observer.disconnect(); resize.disconnect(); cancelAnimationFrame(raf); canvas.width = canvas.height = 1; if (backdrop.dataset.blobUrl) URL.revokeObjectURL(backdrop.dataset.blobUrl); }, { once: true });
 }
 
 // ───────────────────────────── «Офис-высотка» ─────────────────────────────
@@ -332,7 +351,7 @@ export function createOfficeTower(data) {
 
 function mountTower(section, signal) {
   const stage = section.querySelector('.sky-stage'), composition = section.querySelector('.sky-composition');
-  const canvas = section.querySelector('.sky-canvas'), ctx = canvas.getContext('2d');
+  const canvas = section.querySelector('.sky-canvas'), ctx = canvas.getContext('2d'), backdrop = section.querySelector('.sky-backdrop');
   const sign = section.querySelector('.tower-sign'), number = section.querySelector('.tower-number'), label = section.querySelector('.tower-label');
   const visits = Number(number.dataset.value);
   const cells = Math.max(TOWER.workdays, Math.ceil(visits / TOWER.cols) * TOWER.cols), rows = cells / TOWER.cols;
@@ -348,7 +367,7 @@ function mountTower(section, signal) {
   function fit() {
     width = stage.clientWidth; height = stage.clientHeight;
     scale = fitScale(width, height, DESIGN.width, DESIGN.height, 'office');
-    composition.style.transform = `translate(-50%,-50%) scale(${scale})`;
+    placeComposition(composition, scale);
     setHeadingScale(composition, scale, width, height);
     dpr = canvasBudget(width, height).ratio;
     canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
@@ -376,20 +395,21 @@ function mountTower(section, signal) {
       }
     }
     s.fillStyle = '#0a0205'; s.fillRect(0, ground, width, height - ground);
+    // Розовый отсвет на земле — тоже в фоне: холст сверху не должен тонировать цифру под зданием.
+    const tw = TOWER.w * scale, pool = s.createRadialGradient(width / 2, ground, 0, width / 2, ground, tw * 1.3);
+    pool.addColorStop(0, 'rgba(250,122,179,.24)'); pool.addColorStop(1, 'rgba(250,122,179,0)');
+    s.fillStyle = pool; s.fillRect(0, ground - tw * .2, width, tw * 1.4);
+    setBackdrop(backdrop, sky);
     drawn = -1; schedule();
   }
   const X = x => width / 2 + (x - DESIGN.width / 2) * scale, Y = y => height / 2 + (y - DESIGN.height / 2) * scale;
 
   function draw(p) {
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.globalAlpha = ease(0, .1, p); ctx.drawImage(sky, 0, 0); ctx.globalAlpha = 1;
+    backdrop.style.opacity = ease(0, .1, p);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const rise = reduced.matches ? 0 : (1 - ease(0, .2, p)) * 240;          // здание поднимается из темноты
     const left = X(TOWER.x), top = Y(TOWER.y + rise), w = TOWER.w * scale, h = TOWER.h * scale, ground = Y(TOWER.y + TOWER.h);
-    // Земля и отражение света.
-    const pool = ctx.createRadialGradient(width / 2, ground, 0, width / 2, ground, w * 1.3);
-    pool.addColorStop(0, `rgba(250,122,179,${.28 * ease(.2, .66, p)})`); pool.addColorStop(1, 'rgba(250,122,179,0)');
-    ctx.fillStyle = pool; ctx.fillRect(0, ground - w * .2, width, w * 1.4);
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, width, ground); ctx.clip();
     // Корпус: тёмный фасад, красная кромка, ступенька-крыша.
     const facade = ctx.createLinearGradient(0, top, 0, top + h);
@@ -473,5 +493,5 @@ function mountTower(section, signal) {
   window.addEventListener('scroll', schedule, { passive: true, signal });
   document.addEventListener('visibilitychange', () => { last = 0; schedule(); }, { signal });
   reduced.addEventListener('change', schedule, { signal });
-  signal.addEventListener('abort', () => { observer.disconnect(); resize.disconnect(); cancelAnimationFrame(raf); canvas.width = canvas.height = 1; if (sky) sky.width = sky.height = 1; }, { once: true });
+  signal.addEventListener('abort', () => { observer.disconnect(); resize.disconnect(); cancelAnimationFrame(raf); canvas.width = canvas.height = 1; if (sky) sky.width = sky.height = 1; if (backdrop.dataset.blobUrl) URL.revokeObjectURL(backdrop.dataset.blobUrl); }, { once: true });
 }

@@ -4,7 +4,7 @@ import { endingSevenFrames, finaleFrame, endingVectorPose } from './ending-seven
 import { createOffice as createOriginalOffice } from './blocks/ending.js';
 import { endingChapterFrame, endingSceneProgress, toEndingAnchor } from './ending-chapter-layout.js';
 import { ease } from './november-layout.js';
-import { fitScale } from './layout-fit.js';
+import { fitScale, placeComposition } from './layout-fit.js';
 import { createOfficeTower } from './sky-scenes.js';
 const assets = './assets/ending-seven/';
 const ns = 'http://www.w3.org/2000/svg';
@@ -191,7 +191,7 @@ function mount(section, signal) {
   const copy=Object.fromEntries(['title','name','caption','action-slot'].map(name=>[name,section.querySelector(`.finale-seven-${name}`)]));
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let raf = 0, active = false, last = 0, p, scale = 1, px = 0, py = 0, tx = 0, ty = 0;
-  function fit() { scale = fitScale(stage.clientWidth, stage.clientHeight, logical.width, logical.height, 'finale'); composition.style.transform = `translate(-50%,-50%) scale(${scale})`; setTextScale(composition, scale, stage.clientWidth, stage.clientHeight); composition.style.setProperty('--ending-art-wide', Math.max(1, stage.clientWidth / (logical.width * scale))); composition.style.setProperty('--ending-art-tall', Math.max(1, stage.clientHeight / (logical.height * scale))); schedule(); }
+  function fit() { scale = fitScale(stage.clientWidth, stage.clientHeight, logical.width, logical.height, 'finale'); placeComposition(composition, scale); setTextScale(composition, scale, stage.clientWidth, stage.clientHeight); composition.style.setProperty('--ending-art-wide', Math.max(1, stage.clientWidth / (logical.width * scale))); composition.style.setProperty('--ending-art-tall', Math.max(1, stage.clientHeight / (logical.height * scale))); schedule(); }
   function paint(now) {
     raf = 0; if (!active || document.hidden || signal.aborted) return;
     const target = endingSceneProgress(section, innerHeight, reduced.matches), dt = last ? Math.min(64, now - last) : 16; last = now;
@@ -287,6 +287,8 @@ function mountChapter(chapter, signal) {
     office.style.opacity = 1-officeOut;
     office.style.transform = `scale(${1 + blend*.09})`;
     office.style.visibility = officeOut>.9999?'hidden':'visible'; office.inert=blend>.5;
+    // Погасший холст офиса убираем совсем: иначе финал над ним Safari держит в отдельных слоях (память iPhone).
+    const towerCanvas=office.querySelector('.sky-canvas'); if(towerCanvas) towerCanvas.hidden=officeOut>.9999;
     finale.style.opacity = finaleIn;
     finale.style.visibility = finaleIn<.0001?'hidden':'visible'; finale.inert=blend<.5;
     chapter.dataset.handoff=blend.toFixed(4);

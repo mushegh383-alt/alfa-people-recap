@@ -1,3 +1,4 @@
+import { placeComposition } from './layout-fit.js';
 import { createScrollVideo } from './performance.js';
 import { optimizedAssetUrl } from './resources.js';
 import { requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cancelAnimationFrame } from './performance.js';
@@ -55,7 +56,7 @@ export function mountBookChapter(root, signal) {
     book.style.transform = `translate(${g.x - g.size / 2}px,${g.y - g.size / 2 + (reduced.matches && spending ? innerHeight : 0)}px) rotate(${g.rotation || 0}deg)`;
     book.style.opacity = g.opacity ?? f.appear;
     book.style.visibility = (g.opacity ?? f.appear) > .001 ? 'visible' : 'hidden';
-    composition.style.transform = `translate(-50%,-50%) scale(${g.fit})`;
+    placeComposition(composition, g.fit);
     setHeadingScale(composition, g.fit, stage.clientWidth, innerHeight);
     backdrop.style.opacity = spending ? f.exit : 1;
     if (spending) {

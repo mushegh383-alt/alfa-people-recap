@@ -1,4 +1,4 @@
-import { isPortrait } from './layout-fit.js';
+import { isPortrait, placeComposition } from './layout-fit.js';
 import { optimizedAssetUrl } from './resources.js';
 import { createScrollVideo, markSoftGlows, getQuality, requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cancelAnimationFrame } from './performance.js';
 import { ease, reel } from './november-layout.js';
@@ -75,7 +75,7 @@ export function mountPlanet(root,signal){
  const comp=section.querySelector('.planet-composition'),media=section.querySelector('.planet-media'),video=section.querySelector('video'),ai=section.querySelector('.planet-ai'),agent=section.querySelector('.planet-agent'),hours=section.querySelector('.planet-time');
  const clockArt=section.querySelector('.planet-clock-art');
  const layers=[...section.querySelectorAll('[data-clock-layer]')],hands=[...section.querySelectorAll('[data-clock-hand]')],ticks=[...section.querySelectorAll('[data-clock-tick]')],bridge=section.querySelector('[data-contact-frame]');
- let target=0,visible=false,last=null,width=1,height=1,aiInkCenter=490,agentInkCenter=141;
+ let target=0,visible=false,last=null,width=1,height=1,aiInkCenter=490,agentInkCenter=141,mediaK=1;
  const transforms=new WeakMap();const transform=(node,value)=>{if(transforms.get(node)!==value){transforms.set(node,value);node.setAttribute('transform',value);}};
  const strokes=new Map(layers.map(layer=>[layer,[...layer.querySelectorAll('[data-clock-stroke]')]]));
  // Пишем стили обводок только при реальном изменении: лишние записи заставляли
@@ -84,7 +84,10 @@ export function mountPlanet(root,signal){
  const measure=document.createElement('canvas').getContext('2d');
  const transport=createScrollVideo(video,signal,()=>{if(last)paint(...last);});
  function seek(){transport.seek(target,visible);}
- function fit(){width=section.clientWidth;height=section.clientHeight;const {scale}=planetComposition(width,height);comp.style.transform=`translate(-50%,-50%) scale(${scale})`;setHeadingScale(comp,scale,width,height);const agentWidth=Math.max(2050,(width-32)/scale);agent.style.width=`${agentWidth}px`;agent.style.left=`${960-agentWidth/2}px`;
+ function fit(){width=section.clientWidth;height=section.clientHeight;
+  // Слой видео — размером с экран, а не с макет 1920×1082: маску краёв Safari растеризует
+  // в размер слоя ×3, на iPhone это сотни мегабайт. Масштаб докручиваем в transform.
+  mediaK=Math.max(width/1920,height/1082);media.style.width=`${1920*mediaK}px`;media.style.height=`${1082*mediaK}px`;const {scale}=planetComposition(width,height);placeComposition(comp, scale);setHeadingScale(comp,scale,width,height);const agentWidth=Math.max(2050,(width-32)/scale);agent.style.width=`${agentWidth}px`;agent.style.left=`${960-agentWidth/2}px`;
   const number=ai.querySelector('.planet-number'),style=getComputedStyle(number);measure.font=`${style.fontSize} Agse`;
   const m=measure.measureText(ai.dataset.value),ascent=m.fontBoundingBoxAscent??parseFloat(style.fontSize)*.8,descent=m.fontBoundingBoxDescent??parseFloat(style.fontSize)*.2;
   aiInkCenter=(parseFloat(style.lineHeight)-ascent-descent)/2+ascent+(m.actualBoundingBoxDescent-m.actualBoundingBoxAscent)/2;
@@ -99,7 +102,7 @@ export function mountPlanet(root,signal){
   const handoff=clockContactFrame(u,reduced),geometry=clockContactGeometry(width,height,u,reduced);
   const pose=planetMediaPose(width,height,u,video.currentTime,focus,agentFocus,reduced);
   media.style.visibility=u<=10.85&&video.currentTime>.018?'hidden':'visible';
-  media.style.transform=`translate(${pose.x}px,${pose.y}px) scale(${pose.scale})`;
+  media.style.transform=`translate(${pose.x}px,${pose.y}px) scale(${pose.scale/mediaK})`;
   media.style.opacity=handoff.face;
   section.dataset.time=target.toFixed(3);section.dataset.phase=u<12.4?'ai':u<14?'agent':'clock';
   for(const [el,opacity] of [[ai,f.ai],[agent,f.agent],[hours,ease(14.95,15.4,u)*handoff.information]]){el.style.opacity=opacity;el.style.visibility=opacity>.001?'visible':'hidden';el.style.transform=`translateY(${f.offset+(reduced?0:(1-opacity)*45)}px)`;el.inert=opacity<.5;}

@@ -3,7 +3,7 @@ import { createScrollVideo } from './performance.js';
 import { optimizedAssetUrl } from './resources.js';
 import { requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cancelAnimationFrame } from './performance.js';
 import { envelopeFrame, sectionProgress, reel } from './november-layout.js';
-import { fitScale } from './layout-fit.js';
+import { fitScale, placeComposition } from './layout-fit.js';
 import { createPostcardGarland } from './scene-fill.js';
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 export const HEADROOM={envelope:420};
@@ -29,7 +29,7 @@ export function mountEnvelope(root,signal,external=false) {
  const entries=['received','sent'].map(kind=>section.querySelector(`.envelope-${kind}`));
  let raf=0,active=false,p,latest=0,displayed=0,lastTime=0,externalProgress=0;
  const garland=createPostcardGarland(section);
- function fit(){const scale=fitScale(stage.clientWidth,stage.clientHeight,1920,2059+HEADROOM.envelope,'envelope');composition.style.transform=`translate(-50%, -50%) scale(${scale}) translateY(${HEADROOM.envelope/2}px)`;setHeadingScale(composition,scale,stage.clientWidth,stage.clientHeight);garland?.resize(scale,HEADROOM.envelope/2);p===undefined||garland?.draw(p);schedule();}
+ function fit(){const scale=fitScale(stage.clientWidth,stage.clientHeight,1920,2059+HEADROOM.envelope,'envelope');placeComposition(composition, scale, ` translateY(${HEADROOM.envelope/2}px)`);setHeadingScale(composition,scale,stage.clientWidth,stage.clientHeight);garland?.resize(scale,HEADROOM.envelope/2);p===undefined||garland?.draw(p);schedule();}
  const transport=createScrollVideo(film,signal,()=>{displayed=film.currentTime/Math.max(.01,film.duration-.045);schedule();});
  function seek(){transport.seek(latest,active);}
  film.addEventListener('loadeddata',schedule,{signal});

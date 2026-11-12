@@ -1,3 +1,4 @@
+import { placeComposition } from './layout-fit.js';
 import { coinPose, coinsEntrance, coinsFrame, coinsInformation, coinsScrollProgress } from './coins-layout.js';
 import { spendingEntrance } from './spending-layout.js';
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -39,7 +40,7 @@ export function mountCoinsMotion(root, signal) {
     if (!settling) { progress = target; entrance = enterTarget; closing = closeTarget; }
     const information = coinsInformation(progress, number.dataset.value);
     composition.style.opacity = entrance * (1 - closing);
-    composition.style.transform = `translate(-50%, -50%) scale(${scale}) translateY(${-closing * 100}px) scale(${1 - closing * .08})`;
+    placeComposition(composition, scale, ` translateY(${-closing * 100}px) scale(${1 - closing * .08})`);
     paper.style.opacity = entrance;
     paper.style.setProperty('--coins-paper-feather', `${(1 - entrance) * 180}px`);
     layers.forEach((layer, index) => {

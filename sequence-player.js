@@ -14,6 +14,7 @@ export async function prepareCarSequence(root, data, signal) {
     await image.decode(); return [i, image];
   }));
   signal.throwIfAborted(); prepared.set(canvas, new Map(images));
+  if (canvas instanceof HTMLImageElement) { canvas.src = images[0][1].src; return; }
   canvas.width = Math.min(meta.width,getBudget().mediaWidth); canvas.height = Math.round(canvas.width*meta.height/meta.width);
   canvas.getContext('2d').drawImage(images[0][1], 0, 0, canvas.width, canvas.height);
 }
@@ -22,7 +23,10 @@ export function mountCarSequence(root, data, signal) {
   if (!canvas || !data.parksharing?.sequence) return;
   const section = canvas.closest('#parksharing');
   const meta = data.parksharing.sequence, cache = prepared.get(canvas) || new Map();
-  const pending = new Map(), failed = new Set(), ctx = canvas.getContext('2d');
+  // Кадры машины показываются картинкой (<img>), а не холстом: холст внутри масштабированной
+  // сцены — отдельный GPU-слой, и iPhone держал из-за него ~0,9 ГБ лишней памяти.
+  const isImg = canvas instanceof HTMLImageElement;
+  const pending = new Map(), failed = new Set(), ctx = isImg ? null : canvas.getContext('2d');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   prepared.delete(canvas);
   let requested = 0, displayed = cache.has(0) ? 0 : -1, progress = 0, active = false, raf = 0, direction = 1;
@@ -49,7 +53,7 @@ export function mountCarSequence(root, data, signal) {
       image.src = resourceUrl(new URL(`frame-${String(index).padStart(4, '0')}.webp`, meta.base));
       image.decode().then(async () => {
         let surface=image;
-        if(typeof createImageBitmap==='function'){
+        if(!isImg&&typeof createImageBitmap==='function'){
           const width=Math.min(image.naturalWidth||meta.width,getBudget().mediaWidth),height=Math.round(width*meta.height/meta.width);
           surface=await createImageBitmap(image,{resizeWidth:width,resizeHeight:height,resizeQuality:'medium'});image.src='';
         }
@@ -67,8 +71,8 @@ export function mountCarSequence(root, data, signal) {
     raf = 0; if (!available()) return;
     const image = cache.get(requested);
     if (image && displayed !== requested) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+      if (isImg) canvas.src = image.src;
+      else { ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.drawImage(image, 0, 0, canvas.width, canvas.height); }
       displayed = requested; canvas.dataset.frame = String(displayed); delete canvas.dataset.error;
     }
     canvas.dataset.playing = String(displayed !== requested && !failed.has(requested));
@@ -91,7 +95,7 @@ export function mountCarSequence(root, data, signal) {
     else seek();
   }, { signal });
   reduced.addEventListener('change', seek, { signal });
-  onQualityChange(()=>{canvas.width=Math.min(meta.width,getBudget().mediaWidth);canvas.height=Math.round(canvas.width*meta.height/meta.width);displayed=-1;for(const image of cache.values()){image.close?.();if(image instanceof Image)image.src='';}cache.clear();schedule();},signal);
+  onQualityChange(()=>{if(!isImg){canvas.width=Math.min(meta.width,getBudget().mediaWidth);canvas.height=Math.round(canvas.width*meta.height/meta.width);}displayed=-1;for(const image of cache.values()){image.close?.();if(image instanceof Image)image.src='';}cache.clear();schedule();},signal);
   signal.addEventListener('abort', () => {
     observer.disconnect(); cancelAnimationFrame(raf);for(const image of cache.values())image.close?.(); cache.clear();
     pending.forEach(image => { image.src = ''; }); pending.clear();

@@ -21,7 +21,7 @@ export function createRaysRenderer(canvas, signal, onReady, { luminous = false }
   let width = 1;
   let height = 1;
   let dpr = 1;
-  let previous = -1, tier=getQuality();
+  let previous = -1, tier=getQuality(), sparkList = [], sparkKey = '';
   Promise.all(achievementEdges.map(async (_, index) => {
     const response = await fetch(resourceUrl(`./assets/achievement-edge-${String(index).padStart(2, '0')}.svg`), { signal });
     if (!response.ok) throw new Error('Could not load achievement artwork');
@@ -57,9 +57,11 @@ export function createRaysRenderer(canvas, signal, onReady, { luminous = false }
     canvas.height = Math.round(height * dpr);
     previous = -1;
   }
-  function draw(progress, offsetY = 0) {
+  // label — надпись «ачивки», которую на телефоне рисуем прямо на холсте (холст там лежит
+  // поверх сцены, см. achievements-motion.js): { text, font, x, y, size, alpha, cx, cy, scale, spin }.
+  function draw(progress, offsetY = 0, label = null) {
     if(tier!==getQuality()||canvas.width===1)resize(width,height);
-    const key = `${progress}:${offsetY}`;
+    const key = `${progress}:${offsetY}:${sparkKey}:${label ? [label.x, label.y, label.size, label.alpha, label.scale, label.spin].map(v => v.toFixed(2)).join(',') : ''}`;
     if (!context || !artwork || previous === key || signal.aborted) return;
     previous = key;
     context.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -79,6 +81,26 @@ export function createRaysRenderer(canvas, signal, onReady, { luminous = false }
       });
       context.restore();
     });
+    if (label && label.alpha > .005) {
+      // Холст сам повёрнут и масштабирован CSS-ом (пролёт в конце) — компенсируем, чтобы
+      // надпись стояла ровно там, где была бы обычная.
+      context.save();
+      context.translate(label.cx, label.cy); context.rotate(-label.spin * Math.PI / 180); context.scale(1 / label.scale, 1 / label.scale); context.translate(-label.cx, -label.cy);
+      const a = Math.min(1, label.alpha);   // прозрачность цветом: globalAlpha WebKit для текста с тенью не учитывал
+      context.font = `700 ${label.size.toFixed(2)}px ${label.font}`;
+      if ('letterSpacing' in context) context.letterSpacing = `${(-.03 * label.size).toFixed(2)}px`;
+      context.textAlign = 'center'; context.textBaseline = 'middle';
+      context.shadowColor = `rgba(250,122,179,${(.33 * a).toFixed(3)})`; context.shadowBlur = 40 * label.size / 330;
+      context.fillStyle = `rgba(255,255,255,${a.toFixed(3)})`; context.fillText(label.text, label.x, label.y);
+      context.restore();
+    }
+    for (const sp of sparkList) {
+      if (sp.alpha < .01) continue;
+      context.save(); context.translate(sp.x, sp.y); context.rotate(sp.rot * Math.PI / 180);
+      const h = sp.side / 2, k = sp.side * .11;
+      context.beginPath(); context.moveTo(0, -h); context.lineTo(k, -k); context.lineTo(h, 0); context.lineTo(k, k); context.lineTo(0, h); context.lineTo(-k, k); context.lineTo(-h, 0); context.lineTo(-k, -k); context.closePath();
+      context.fillStyle = `rgba(${sp.color},${sp.alpha.toFixed(3)})`; context.fill(); context.restore();
+    }
     // Текстуру больше не накладываем каждый кадр через маску из всех 116 лент:
     // при альфе .1 её не видно под общим зерном страницы, а кадр она удваивала.
   }
@@ -87,5 +109,6 @@ export function createRaysRenderer(canvas, signal, onReady, { luminous = false }
     if (context) { context.setTransform(1, 0, 0, 1, 0, 0); context.clearRect(0, 0, canvas.width, canvas.height); }
     canvas.width=canvas.height=1;previous = -1;
   }
-  return { resize, draw, clear };
+  function sparks(list) { sparkList = list; sparkKey = list.map(sp => `${sp.x.toFixed(1)},${sp.y.toFixed(1)},${sp.side.toFixed(1)},${sp.alpha.toFixed(2)}`).join(';'); }
+  return { resize, draw, clear, sparks };
 }

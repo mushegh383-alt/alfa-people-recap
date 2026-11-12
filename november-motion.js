@@ -1,14 +1,14 @@
 import { requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cancelAnimationFrame } from './performance.js';
 import { setHeadingScale } from './typography.js';
 import { ease, sectionProgress, reel } from './november-layout.js';
-import { fitScale } from './layout-fit.js';
+import { fitScale, placeComposition } from './layout-fit.js';
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 export function mountNovemberScenes(root,signal){root.querySelectorAll('.november-scene').forEach(section=>mount(section,signal));}
 function mount(section,signal){
  const stage=section.querySelector('.november-stage'),composition=section.querySelector('.november-composition'),number=section.querySelector('.november-number'),heading=section.querySelector('.november-heading'),copy=section.querySelector('.november-copy');
  const layers=[...section.querySelectorAll('.november-coin')];
  let active=false,raf=0,p,last=0;
- function fit(){const scale=fitScale(stage.clientWidth,stage.clientHeight,Number(section.dataset.width),Number(section.dataset.height),section.id);composition.style.transform=`translate(-50%,-50%) scale(${scale})`;setHeadingScale(composition,scale,stage.clientWidth,stage.clientHeight);if(section.id==='parksharing'){const snow=section.querySelector('.november-snow'),w=Math.max(2082.48,stage.clientWidth/scale+24);snow.style.width=`${w}px`;snow.style.height=`${w*1520.02/2082.48}px`;snow.style.left=`${Number(section.dataset.width)/2-w/2}px`;}schedule();}
+ function fit(){const scale=fitScale(stage.clientWidth,stage.clientHeight,Number(section.dataset.width),Number(section.dataset.height),section.id);placeComposition(composition, scale);setHeadingScale(composition,scale,stage.clientWidth,stage.clientHeight);if(section.id==='parksharing'){const snow=section.querySelector('.november-snow'),w=Math.max(2082.48,stage.clientWidth/scale+24);snow.style.width=`${w}px`;snow.style.height=`${w*1520.02/2082.48}px`;snow.style.left=`${Number(section.dataset.width)/2-w/2}px`;}schedule();}
  function update(now){raf=0;if(!active||document.hidden||signal.aborted)return;const b=section.getBoundingClientRect(),target=reduced.matches?1:sectionProgress(b.top,b.height,innerHeight),dt=last?Math.min(64,now-last):16;last=now;p=p===undefined||reduced.matches?target:p+(target-p)*(1-Math.exp(-dt/75));if(Math.abs(target-p)<.0002)p=target;
   section.dataset.progress=p.toFixed(4);
   const reveal=ease(.28,.64,p);number.style.opacity=reveal;number.style.transform=`translateY(${(1-reveal)*50}px)`;number.textContent=reduced.matches?number.dataset.value:reel(number.dataset.value,ease(.30,.78,p));

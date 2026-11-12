@@ -3,7 +3,7 @@ import { setHeadingScale } from './typography.js';
 import { endingEase, endingFrames, endingInformation, finalePose } from './ending-layout.js';
 import { createOfficeAnimation } from './office-animation.js';
 import { endingSceneProgress } from './ending-chapter-layout.js';
-import { fitScale } from './layout-fit.js';
+import { fitScale, placeComposition } from './layout-fit.js';
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
 // Each scene owns one scroll clock; no independent loops or offscreen work.
@@ -24,7 +24,7 @@ function mountScene(section, signal) {
   function fit() {
     const scale = fitScale(stage.clientWidth, stage.clientHeight, logical.viewWidth || logical.width, logical.height, section.id);
     const offset = logical.width / 2 - (logical.viewCenterX ?? logical.width / 2);
-    composition.style.transform = `translate(-50%, -50%) scale(${scale}) translateX(${offset}px)`;
+    placeComposition(composition, scale, ` translateX(${offset}px)`);
     setHeadingScale(composition,scale,stage.clientWidth,stage.clientHeight);
     officeAnimation?.resize(scale);
     forcePaint = true;

@@ -3,6 +3,7 @@
 // (записки, самолётики, открытки) рендерятся один раз и дальше только двигаются.
 import { canvasBudget, getQuality } from './performance.js';
 import { recapHeadingPixels } from './typography.js';
+import { screenRect } from './layout-fit.js';
 
 const clamp = v => Math.max(0, Math.min(1, v));
 const smooth = t => t * t * (3 - 2 * t);
@@ -71,8 +72,8 @@ export function createThanksNotes(section) {
   // Куда садятся полученные записки: по лучу от сердца наружу — первое место,
   // которое видно на экране, не задевает заголовок и цифры и не налезает на соседей.
   function place(scale) {
-    const cb = composition.getBoundingClientRect(), toDesign = r => ({ l: (r.left - cb.left) / scale, t: (r.top - cb.top) / scale, r: (r.right - cb.left) / scale, b: (r.bottom - cb.top) / scale });
-    const text = ['.thanks-title', '.thanks-stats'].map(sel => section.querySelector(sel)).filter(Boolean).map(el => toDesign(el.getBoundingClientRect()));
+    const cb = screenRect(composition), toDesign = r => ({ l: (r.left - cb.left) / scale, t: (r.top - cb.top) / scale, r: (r.right - cb.left) / scale, b: (r.bottom - cb.top) / scale });
+    const text = ['.thanks-title', '.thanks-stats'].map(sel => section.querySelector(sel)).filter(Boolean).map(el => toDesign(screenRect(el)));
     const cx = 960, cy = 739, minX = cx - visibleHalf + 30, maxX = cx + visibleHalf - 30, minY = cy - visibleHalfH + 30, maxY = cy + visibleHalfH - 30;
     const taken = [];
     for (const n of incoming) {

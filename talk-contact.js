@@ -1,3 +1,4 @@
+import { placeComposition } from './layout-fit.js';
 import { markSoftGlows } from './performance.js';
 import { optimizedAssetUrl } from './resources.js';
 import { ease,reel } from './november-layout.js';
@@ -48,7 +49,7 @@ export function mountTalkContact(root,signal){
  const s=root.querySelector('.talk-contact');if(!s)return null;
  const composition=s.querySelector('.talk-contact-composition'),heading=s.querySelector('.talk-contact-heading'),number=s.querySelector('.talk-contact-number'),label=s.querySelector('.talk-contact-label'),note=s.querySelector('.talk-contact-note'),parts=[...s.querySelectorAll('[data-contact-motion]')],clip=s.querySelector('[data-contact-clip]');
  let last=null;
- function fit(){const {scale}=contactComposition(s.clientWidth,s.clientHeight);composition.style.transform=`translate(-50%,-50%) scale(${scale})`;setHeadingScale(composition,scale,s.clientWidth,s.clientHeight);if(last)draw(...last);}
+ function fit(){const {scale}=contactComposition(s.clientWidth,s.clientHeight);placeComposition(composition, scale);setHeadingScale(composition,scale,s.clientWidth,s.clientHeight);if(last)draw(...last);}
  function draw(progress,visible,reduced,u=15.85+progress*1.95){last=[progress,visible,reduced,u];if(!visible)return;
   const f=contactFrame(progress,reduced);s.dataset.progress=progress.toFixed(4);
   const handoff=clockContactFrame(u,reduced),g=clockContactGeometry(s.clientWidth,s.clientHeight,u,reduced),cs=g.contact.scale,cx=(g.x-g.contact.x)/cs,cy=(g.y-g.contact.y)/cs,photoScale=g.half/(344*cs);

@@ -3,7 +3,7 @@ import { optimizedAssetUrl } from './resources.js';
 import { requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cancelAnimationFrame, getQuality } from './performance.js';
 import { momentsFrame, momentsCenter, photoThrow, sparkleCount } from './moments-layout.js';
 import { reel } from './november-layout.js';
-import { fitScale, isPortrait } from './layout-fit.js';
+import { fitScale, isPortrait, placeComposition } from './layout-fit.js';
 const photos = [
   { x: 252.383 + 144, y: 1533.67 + 175, angle: 10.2346, index: 1 },
   { x: 1475 + 144, y: 1287.82 + 175, angle: -12.0972, index: 2 },
@@ -105,7 +105,7 @@ export function mountMoments(section, signal) {
     // Центр звезды и текста — x 988 в макете 1920 (на 28 px правее середины).
     // На узком экране это заметно, поэтому сдвигаем сцену, чтобы цифра была по центру.
     const shift = isPortrait(stage.clientWidth, stage.clientHeight) ? ' translateX(-28px)' : '';
-    composition.style.transform = `translate(-50%, -50%) scale(${scale})${shift}`;
+    placeComposition(composition, scale, `${shift}`);
     setHeadingScale(composition, scale, stage.clientWidth, stage.clientHeight);
     schedule();
   }

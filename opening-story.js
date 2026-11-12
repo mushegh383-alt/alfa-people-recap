@@ -1,14 +1,14 @@
 import { requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cancelAnimationFrame, getQuality } from './performance.js';
 import { createThanksNotes } from './scene-fill.js';
 import { incomeGlassPose, incomeGlassDigits, incomeGlassGeometry, incomePlanetHandoff } from './income-glass-layout.js';
-import { getIncomeGlassRenderer } from './income-glass-motion.js';
+import { getIncomeGlassRenderer, syncIncomeCapWindow } from './income-glass-motion.js';
 import { openingStoryFrame, storyPhase, storyDigits, storyUnit, storyAnchors, storyTravel, sceneDepth } from './opening-story-layout.js';
 import { mountEnvelope } from './envelope.js';
 import { mountPlanet } from './planet-story.js';
 import { mountMoments } from './moments.js';
 import { mountTalkContact } from './talk-contact.js';
 import { setHeadingScale } from './typography.js';
-import { fitScale } from './layout-fit.js';
+import { fitScale, placeComposition, screenRect } from './layout-fit.js';
 
 export function createOpeningStory(hero, personal, income, thanks, extra = {}) {
   const section = document.createElement('section');
@@ -171,7 +171,7 @@ export function mountOpeningStory(story, signal) {
     setHeadingScale(heroCamera,heroScale,width,height);setHeadingScale(personalCamera,personalScale,width,height);setHeadingScale(incomeStage,geometry.scale,width,height);setHeadingScale(thanksScene,thanksScale,width,height);
     thanksScene.style.setProperty('--thanks-scale', thanksScale);
     thanksNotes?.resize(thanksScale, thanksScene.clientWidth, thanksScene.clientHeight);
-    const heartBox = heart.getBoundingClientRect();
+    const heartBox = screenRect(heart);
     const pinBox = pin.getBoundingClientRect();
     heartCenter = { x: heartBox.x + heartBox.width / 2 - pinBox.x, y: heartBox.y + heartBox.height / 2 - pinBox.y };
     glow.style.left = `${heartCenter.x}px`; glow.style.top = `${heartCenter.y}px`;
@@ -209,7 +209,7 @@ export function mountOpeningStory(story, signal) {
     if (heroActive !== activeHero) { heroActive = activeHero; hero.dispatchEvent(new Event('story:hero-visibility')); }
     const move = reduced.matches ? 0 : f.heroDecor;
     if(f.hero>.001){
-    heroCamera.style.transform = `translate(-50%, -50%) scale(${heroScale * f.heroScale})`;
+    placeComposition(heroCamera, heroScale, ` scale(${f.heroScale})`);   // телефон: базовый масштаб через zoom (память), анимация — transform
     if (heroStamp) heroStamp.style.opacity = 1 - move;
     if (heroSubtitle) heroSubtitle.style.opacity = 1 - move;
     heroTitle.style.opacity = 1 - move;
@@ -222,7 +222,7 @@ export function mountOpeningStory(story, signal) {
     });
     }
     if(f.personal>.001){
-    personalCamera.style.transform = `translate(-50%, -50%) scale(${personalScale * f.personalScale})`;
+    placeComposition(personalCamera, personalScale, ` scale(${f.personalScale})`);   // телефон: базовый масштаб через zoom (память), анимация — transform
     photo.style.opacity = f.personalPhoto;
     photo.style.transform = reduced.matches ? 'none' : `scale(${.86 + .14 * f.personalPhoto}) rotate(${(1 - f.personalPhoto) * -5}deg)`;
     name.style.opacity = f.personalName;
@@ -258,6 +258,7 @@ export function mountOpeningStory(story, signal) {
       fallbackCaption.style.opacity = pose.caption;
       income.dataset.progress = f.incomeProgress.toFixed(4); income.dataset.digits = digits;
       getIncomeGlassRenderer(income)?.draw(pose, geometry, digits, width, height);
+      syncIncomeCapWindow(income);
     }
     thanks.classList.toggle('is-active', f.thanks > .75 && intersecting);
     thanks.classList.toggle('is-revealed', f.heart > 0);

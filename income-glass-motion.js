@@ -5,6 +5,22 @@ import { createIncomeGlassRenderer } from './income-glass-renderer.js';
 const prepared = new WeakMap();
 export const getIncomeGlassRenderer = section => prepared.get(section)?.renderer;
 
+// Телефон: WebGL-холст шара лежит поверх сцены (см. performance.css — под текстом он заставлял
+// Safari держать весь макет в огромных слоях). Золотой колпачок под холстом виден через вырез
+// по его форме.
+const capMask = new URL('./assets/income-glass/cap-mask.svg', import.meta.url).href;
+export function syncIncomeCapWindow(section) {
+  if (getQuality() !== 'lite') return;
+  const canvas = section.querySelector('.income-glass-canvas'), cap = section.querySelector('.income-glass-cap');
+  if (!canvas || !cap) return;
+  let mask = 'none';
+  if ((Number(cap.style.opacity) || 0) > .01) {
+    const r = cap.getBoundingClientRect(), v = canvas.getBoundingClientRect();
+    mask = `linear-gradient(#000 0 0), url("${capMask}") ${(r.left - v.left).toFixed(1)}px ${(r.top - v.top).toFixed(1)}px / ${r.width.toFixed(1)}px ${r.height.toFixed(1)}px no-repeat`;
+  }
+  if (canvas.dataset.capMask !== mask) { canvas.dataset.capMask = mask; canvas.style.webkitMask = mask; canvas.style.mask = mask; if (mask !== 'none') { canvas.style.webkitMaskComposite = 'xor'; canvas.style.maskComposite = 'exclude'; } }
+}
+
 export function prepareIncomeGlass(root, signal) {
   const section = root.querySelector('.income-glass');
   if (!section) return;
@@ -96,6 +112,7 @@ export function mountIncomeGlass(root, signal) {
     fallbackNumber.style.opacity = pose.number;
     fallbackCaption.style.opacity = pose.caption * .55;
     if (handoff.orb > 0) state.renderer?.draw(pose, geometry, digits, width, height);
+    syncIncomeCapWindow(section);
     if (Math.abs(target - current) >= .00035) schedule();
   }
   function schedule() {

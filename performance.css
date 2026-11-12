@@ -34,3 +34,17 @@ html[data-quality=lite] .story-pin::after {content:'';position:absolute;inset:0;
    масками — память GPU на этом экране росла до ~3.7 ГБ (замер в WebKit,
    режим iPhone), и iOS закрывал вкладку сразу после машины паркшеринга. */
 html[data-quality=lite] :is(.office-art-drawer,.office-front-track,.office-restored .office-number) {will-change:auto!important;}
+
+/* iPhone: внутри сцен, масштабированных из макета 1920 px, каждый отдельный GPU-слой
+   (will-change, бесконечная CSS-анимация) Safari растеризует в полный макетный размер ×3.
+   Это давало +0,6–1 ГБ на «Монетках», «Покупках», «Ачивках» и роняло вкладку. На телефоне
+   слои не держим (кроме самих панелей начальной истории — они размером с экран). */
+html[data-quality=lite] body *:not(.story-panel) { will-change: auto !important; }
+html[data-quality=lite] :is(.coins-mini, .coins-sparkle, .achievement-halo, .tower-sign) { animation: none !important; }
+/* «Ачивки» на телефоне: холст лучей поверх сцены (память), надпись рисуется на нём. */
+html[data-quality=lite] .achievement-rays-canvas { z-index: 5; }
+html[data-quality=lite] .achievement-flash { z-index: 6; }
+html[data-quality=lite] .achievement-heading { visibility: hidden; }
+html[data-quality=lite] .achievement-sparkles { visibility: hidden; }
+/* «Мой доход» на телефоне: стеклянный шар (WebGL) поверх сцены, колпачок — в вырезе маски. */
+html[data-quality=lite] .income-glass-canvas { z-index: 4; -webkit-mask-composite: xor; mask-composite: exclude; }
