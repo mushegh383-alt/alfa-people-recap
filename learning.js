@@ -1,4 +1,4 @@
-import { placeComposition } from './layout-fit.js';
+import { placeComposition, screenRect } from './layout-fit.js';
 import { createScrollVideo } from './performance.js';
 import { optimizedAssetUrl } from './resources.js';
 import { requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cancelAnimationFrame } from './performance.js';
@@ -38,6 +38,8 @@ export function mountBookChapter(root, signal) {
   const stage = chapter.querySelector('.book-chapter-stage'), book = chapter.querySelector('.learning-book'), video = book.querySelector('video');
   const composition = chapter.querySelector('.learning-composition'), heading = chapter.querySelector('.learning-heading'), backdrop = chapter.querySelector('.book-chapter-backdrop');
   const spending = chapter.querySelector('.spending');
+  const spendComposition = spending?.querySelector('.spending-composition');
+  const spendingComp = () => { if (!spendComposition) return null; const r = screenRect(spendComposition), st = screenRect(stage); return { left: r.left - st.left, top: r.top - st.top, s: r.width / 1920 }; };
   const stats = ['courses', 'hours'].map(key => ({ key, node: chapter.querySelector(`.learning-${key}`) }));
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let active = false, raf = 0, last = 0, progress, latest = 0;
@@ -50,7 +52,7 @@ export function mountBookChapter(root, signal) {
     const dt = last ? Math.min(64, now - last) : 16; last = now;
     progress = progress === undefined || reduced.matches ? target : progress + (target - progress) * (1 - Math.exp(-dt / 90));
     if (Math.abs(target - progress) < .0001) progress = target;
-    const f = bookFrame(progress, Boolean(spending), reduced.matches), g = spending && !reduced.matches ? bookSpendingPose(stage.clientWidth, innerHeight, progress, f.travel) : bookGeometry(stage.clientWidth, innerHeight, f.travel, Boolean(spending));
+    const f = bookFrame(progress, Boolean(spending), reduced.matches), g = spending && !reduced.matches ? bookSpendingPose(stage.clientWidth, innerHeight, progress, f.travel, spendingComp()) : bookGeometry(stage.clientWidth, innerHeight, f.travel, Boolean(spending));
     latest = f.time;
     book.style.width = book.style.height = `${g.size}px`;
     book.style.transform = `translate(${g.x - g.size / 2}px,${g.y - g.size / 2 + (reduced.matches && spending ? innerHeight : 0)}px) rotate(${g.rotation || 0}deg)`;

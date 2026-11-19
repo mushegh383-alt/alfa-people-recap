@@ -4,7 +4,7 @@
 // небо и глаза — по одному canvas (один слой GPU вместо десятков элементов).
 import { requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cancelAnimationFrame, canvasBudget, getQuality } from './performance.js';
 import { ease, sectionProgress, reel } from './november-layout.js';
-import { fitScale, placeComposition, screenRect } from './layout-fit.js';
+import { fitScale, placeComposition, screenRect, isPortrait } from './layout-fit.js';
 import { setHeadingScale } from './typography.js';
 import { endingSceneProgress } from './ending-chapter-layout.js';
 
@@ -145,6 +145,8 @@ function mountScene(section, signal) {
   // Созвездию холст на экране не нужен: небо рисуется во временный холст и становится картинкой.
   const paper = eyesMode ? canvas : document.createElement('canvas'), ctx = paper.getContext('2d');
   if (!eyesMode) canvas.hidden = true;
+  // «Глаза» в новом стиле: фон — нарисованный ночной лес.
+  if (eyesMode) backdrop.src = isPortrait(innerWidth, innerHeight) ? './assets/restyle/eyes-forest-phone.jpg' : './assets/restyle/eyes-forest-desk.jpg';
   const q = sel => section.querySelector(sel);
   const heading = q('.sky-heading'), number = q('.sky-number'), label = q('.sky-label'), note = q('.sky-note'), kicker = q('.sky-kicker');
   const lines = [...section.querySelectorAll('.zodiac-line')], stars = [...section.querySelectorAll('.zodiac-star-pop')], art = q('.zodiac-art'), comet = q('.zodiac-comet');
@@ -363,6 +365,10 @@ function mountTower(section, signal) {
   let active = false, raf = 0, p, last = 0, width = 1, height = 1, dpr = 1, scale = 1, sky = null, drawn = -1;
   // Красный логотип-вывеска на крыше.
   const logo = new Image(); logo.onload = () => { drawn = -1; schedule(); }; logo.src = './assets/brand/alfa-logo.svg';
+  // Новый стиль: здание — нарисованная картинка (окна в тёмный проём рисует код), фон — ночной город.
+  const towerImg = new Image(); towerImg.onload = () => { drawn = -1; schedule(); }; towerImg.src = './assets/restyle/office-tower.png';
+  const cityImg = new Image(); cityImg.onload = () => fit(); cityImg.src = isPortrait(innerWidth, innerHeight) ? './assets/restyle/office-bg-phone.jpg' : './assets/restyle/office-bg-desk.jpg';
+  const FACE = { l: .19, r: .81, t: .31, b: .93 };   // проём под окна на картинке здания (доли)
 
   function fit() {
     width = stage.clientWidth; height = stage.clientHeight;
@@ -380,8 +386,12 @@ function mountTower(section, signal) {
     s.fillStyle = glow; s.fillRect(0, 0, width, height);
     for (let i = 0; i < count; i++) { s.globalAlpha = .2 + r() * .6; s.fillStyle = r() > .88 ? '#fa7ab3' : '#f8e4c2'; s.beginPath(); s.arc(r() * width, r() * height * .8, r() ** 3 * 2 + .4, 0, Math.PI * 2); s.fill(); }
     s.globalAlpha = 1;
-    // Ночной город вокруг: тёмные высотки с редкими огнями (декорация, не данные).
     const ground = Y(TOWER.y + TOWER.h), towerL = X(TOWER.x) - 24 * scale, towerR = X(TOWER.x + TOWER.w) + 24 * scale;
+    if (cityImg.complete && cityImg.naturalWidth) {
+      const k = Math.max(width / cityImg.naturalWidth, height / cityImg.naturalHeight), iw = cityImg.naturalWidth * k, ih = cityImg.naturalHeight * k;
+      s.drawImage(cityImg, (width - iw) / 2, (height - ih) / 2, iw, ih);
+    } else {
+    // Ночной город вокруг: тёмные высотки с редкими огнями (декорация, не данные).
     for (const side of [-1, 1]) {
       let edge = side < 0 ? towerL : towerR;
       while (side < 0 ? edge > -40 : edge < width + 40) {
@@ -395,6 +405,7 @@ function mountTower(section, signal) {
       }
     }
     s.fillStyle = '#0a0205'; s.fillRect(0, ground, width, height - ground);
+    }
     // Розовый отсвет на земле — тоже в фоне: холст сверху не должен тонировать цифру под зданием.
     const tw = TOWER.w * scale, pool = s.createRadialGradient(width / 2, ground, 0, width / 2, ground, tw * 1.3);
     pool.addColorStop(0, 'rgba(250,122,179,.24)'); pool.addColorStop(1, 'rgba(250,122,179,0)');
@@ -411,6 +422,12 @@ function mountTower(section, signal) {
     const rise = reduced.matches ? 0 : (1 - ease(0, .2, p)) * 240;          // здание поднимается из темноты
     const left = X(TOWER.x), top = Y(TOWER.y + rise), w = TOWER.w * scale, h = TOWER.h * scale, ground = Y(TOWER.y + TOWER.h);
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, width, ground); ctx.clip();
+    const painted = towerImg.complete && towerImg.naturalWidth;
+    if (painted) {
+      const dw = w / (FACE.r - FACE.l), dh = h / (FACE.b - FACE.t);
+      ctx.restore(); ctx.drawImage(towerImg, left - FACE.l * dw, top - FACE.t * dh, dw, dh);
+      ctx.save(); ctx.beginPath(); ctx.rect(0, 0, width, ground); ctx.clip();
+    } else {
     // Корпус: тёмный фасад, красная кромка, ступенька-крыша.
     const facade = ctx.createLinearGradient(0, top, 0, top + h);
     facade.addColorStop(0, '#2b0b11'); facade.addColorStop(1, '#14050a');
@@ -420,6 +437,7 @@ function mountTower(section, signal) {
     ctx.strokeStyle = '#ef3124'; ctx.lineWidth = Math.max(1, 3 * scale); ctx.strokeRect(left, top, w, h);
     // Красные пилоны по краям фасада.
     ctx.fillStyle = '#ef3124'; ctx.fillRect(left - 14 * scale, top - 18 * scale, 14 * scale, h + 18 * scale); ctx.fillRect(left + w, top - 18 * scale, 14 * scale, h + 18 * scale);
+    }
     // Окна.
     const padX = 30 * scale, padY = 32 * scale, cw = (w - padX * 2) / TOWER.cols, ch = (h - padY * 2) / rows;
     const ww = cw * .66, wh = ch * .64, on = ease(.18, .66, p) * litOrder.length;
@@ -441,22 +459,29 @@ function mountTower(section, signal) {
       }
     }
     // Линии этажей — каждый месяц (≈ 2 ряда окон).
-    ctx.fillStyle = '#ef312433'; for (let r = 2; r < rows; r += 2) ctx.fillRect(left, top + h - padY - r * ch, w, Math.max(1, 2 * scale));
+    if (!painted) ctx.fillStyle = '#ef312433'; else ctx.fillStyle = 'rgba(0,0,0,0)'; for (let r = 2; r < rows; r += 2) ctx.fillRect(left, top + h - padY - r * ch, w, Math.max(1, 2 * scale));
     ctx.restore();
-    // Вход: светящиеся двери внизу по центру.
+    // Вход: светящиеся двери внизу по центру (у нарисованного здания дверь своя).
+    if (!painted) {
     const doorW = 120 * scale, doorH = 70 * scale, dx = left + w / 2 - doorW / 2, dy = ground - doorH;
     ctx.fillStyle = '#ef3124'; ctx.fillRect(dx - 10 * scale, dy - 10 * scale, doorW + 20 * scale, 10 * scale);
     const door = ctx.createLinearGradient(0, dy, 0, ground); door.addColorStop(0, '#f8e4c2'); door.addColorStop(1, '#fa7ab3');
     ctx.globalAlpha = .35 + .65 * ease(.1, .3, p); ctx.fillStyle = door; ctx.fillRect(dx, dy, doorW, doorH);
     ctx.fillStyle = '#2b0b11'; ctx.fillRect(dx + doorW / 2 - scale, dy, 2 * scale, doorH); ctx.globalAlpha = 1;
+    }
     // Логотип-вывеска на крыше: загорается с миганием, когда год «прожит».
     if (logo.complete && logo.naturalWidth) {
-      const lw = w * .7, lh = lw * 82 / 408, lx = left + (w - lw) / 2, ly = top - 60 * scale - 26 * scale - lh;
+      // На нарисованном здании вывеска висит на верхней части фасада (полоса под крышей).
+      const dh = h / (FACE.b - FACE.t), imgTop = top - FACE.t * dh;
+      const roof = painted ? imgTop : top - 60 * scale;
+      const lw = painted ? Math.min(w * .7, (.095 * dh) * 408 / 82) : w * .7, lh = lw * 82 / 408, lx = left + (w - lw) / 2;
+      const ly = painted ? imgTop + .262 * dh - lh / 2 : roof - 26 * scale - lh;
       const n = ease(.64, .76, p), lit = n > 0 && n < 1 ? (Math.sin(n * 47) > .1 ? 1 : .3) : n;
-      ctx.fillStyle = '#3a0f17'; ctx.fillRect(lx + lw * .2, ly + lh, 6 * scale, top - ly - lh); ctx.fillRect(lx + lw * .8 - 6 * scale, ly + lh, 6 * scale, top - ly - lh);
+      if (!painted) { ctx.fillStyle = '#3a0f17'; ctx.fillRect(lx + lw * .2, ly + lh, 6 * scale, roof - ly - lh); ctx.fillRect(lx + lw * .8 - 6 * scale, ly + lh, 6 * scale, roof - ly - lh); }
       if (lit > 0) {
         const halo = ctx.createRadialGradient(lx + lw / 2, ly + lh / 2, 0, lx + lw / 2, ly + lh / 2, lw * .7);
-        halo.addColorStop(0, `rgba(250,122,179,${.35 * lit})`); halo.addColorStop(1, 'rgba(250,122,179,0)');
+        // Тёплый свет вывески (был розовый): мягкое золотистое сияние на фасаде.
+        halo.addColorStop(0, `rgba(255,214,150,${.42 * lit})`); halo.addColorStop(.55, `rgba(255,170,90,${.12 * lit})`); halo.addColorStop(1, 'rgba(255,170,90,0)');
         ctx.fillStyle = halo; ctx.fillRect(lx - lw * .2, ly - lh * 1.5, lw * 1.4, lh * 4);
       }
       ctx.globalAlpha = .25 + .75 * lit; ctx.drawImage(logo, lx, ly, lw, lh); ctx.globalAlpha = 1;

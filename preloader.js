@@ -130,7 +130,8 @@ export async function prepareContent(root, data, signal) {
     const href=image.getAttribute('href')||image.getAttribute('xlink:href');if(href&&!href.startsWith('data:'))urls.push(href);
   }
   if(data.talkContact?.photo)urls.push(data.talkContact.photo);
-  const videos = [...root.querySelectorAll('video')];
+  // Видео без адреса (статичная картинка вместо ролика) не ждём.
+  const videos = [...root.querySelectorAll('video')].filter(video => video.getAttribute('src'));
   videos.forEach(video => urls.push(video.src, video.poster));
   if (data.intro && data.intro.mode !== 'video' && data.year === data.intro.mediaYear) {
     for (let i = 0; i < data.intro.frameCount; i++) urls.push(new URL(`${String(i).padStart(5, '0')}.webp`, data.intro.frameBase).href);

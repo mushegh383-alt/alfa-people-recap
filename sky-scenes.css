@@ -59,3 +59,17 @@
 .zodiac-runner-share { font: 70px/1 Agse, sans-serif; color: #f8e4c2; }
 html.is-portrait .zodiac-runners { flex-direction: column; align-items: center; gap: 26px; }
 html.is-portrait .zodiac-note { top: 1650px !important; }
+/* «Созвездие» на вертикальном экране: колонка плотнее, чтобы 2–3 место и совет помещались. */
+html.is-portrait #zodiac .zodiac-heading { top: 470px !important; }
+html.is-portrait #zodiac .sky-number { top: 760px !important; }
+html.is-portrait #zodiac .sky-label { top: 1090px !important; }
+html.is-portrait #zodiac .zodiac-runners { top: 1175px !important; }
+html.is-portrait #zodiac .sky-note { top: 1450px !important; }
+/* Офис на широком экране: цифра и подпись выше, подпись не уходит за низ экрана. */
+html:not(.is-portrait) .office-tower .tower-number { font-size: 230px; top: 1226px !important; }
+html:not(.is-portrait) .office-tower .tower-label { top: 1458px !important; }
+/* Созвездие на широком экране: блок цифр плотнее, 2–3 место не прижимаются к краю. */
+html:not(.is-portrait) #zodiac .sky-number { top: 905px !important; }
+html:not(.is-portrait) #zodiac .sky-label { top: 1228px !important; }
+html:not(.is-portrait) #zodiac .zodiac-runners { top: 1300px !important; }
+html:not(.is-portrait) #zodiac .sky-note { top: 1392px !important; }

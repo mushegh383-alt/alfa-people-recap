@@ -10,8 +10,10 @@ export const HEADROOM={envelope:420};
 export function createEnvelope(data) {
  const section=document.createElement('section'); section.className='postcards envelope-section';section.id='postcards';section.setAttribute('aria-label','Полученные и отправленные открытки');
  section.innerHTML=`<div class="envelope-stage"><div class="envelope-composition"><div class="envelope-media" aria-hidden="true"><video muted playsinline preload="none" tabindex="-1" disablepictureinpicture></video><img class="envelope-still" width="1200" height="675" alt="" /></div><div class="envelope-data envelope-received"><p class="envelope-number" aria-hidden="true"></p><h2 class="envelope-caption"></h2></div><div class="envelope-data envelope-sent"><p class="envelope-number" aria-hidden="true"></p><h2 class="envelope-caption"></h2></div><p class="sr-only envelope-summary"></p></div></div>`;
- const film=section.querySelector('video');film.src=data.postcards.video;film.muted=film.defaultMuted=true;
- section.querySelector('.envelope-still').src=optimizedAssetUrl(data.postcards.poster);
+ const film=section.querySelector('video');film.muted=film.defaultMuted=true;
+ // Статичный конверт: ролик не грузим, показываем картинку.
+ if(data.postcards.still){section.classList.add('is-envelope-still');section.querySelector('.envelope-still').src=data.postcards.still;}
+ else{film.src=data.postcards.video;section.querySelector('.envelope-still').src=optimizedAssetUrl(data.postcards.poster);}
  for(const kind of ['received','sent']) {
   const item=section.querySelector(`.envelope-${kind}`);item.dataset.value=String(data.postcards[kind]);
   item.querySelector('.envelope-number').textContent=data.postcards[kind];
@@ -37,8 +39,9 @@ export function mountEnvelope(root,signal,external=false) {
   const box=section.getBoundingClientRect(),target=external?externalProgress:sectionProgress(box.top,box.height,innerHeight),dt=lastTime?Math.min(64,now-lastTime):16;lastTime=now;
   p=p===undefined||reduced.matches||external?target:p+(target-p)*(1-Math.exp(-dt/75));if(Math.abs(target-p)<.0002)p=target;
   const f=envelopeFrame(p,reduced.matches);section.dataset.progress=p.toFixed(4);{const h=section.querySelector('.envelope-heading'),t=reduced.matches?1:Math.min(1,Math.max(0,p/.18));h.style.opacity=t;h.style.transform=`translateY(${(1-t)*40}px)`;}garland?.draw(reduced.matches?.76:p);section.dataset.phase=f.phase;section.classList.toggle('is-envelope-reduced',reduced.matches);
-  latest=f.video*Math.max(0,film.duration-.045);if(!reduced.matches)seek();
-  const ready=reduced.matches||displayed>.84;
+  const still=section.classList.contains('is-envelope-still');
+  latest=f.video*Math.max(0,film.duration-.045);if(!reduced.matches&&!still)seek();
+  const ready=reduced.matches||still||displayed>.84;
   entries.forEach((entry,i)=>{const reveal=(i?f.sent:f.received)*(ready?1:0);entry.style.opacity=reveal;entry.style.visibility=reveal>.001?'visible':'hidden';entry.style.transform=`translateY(${(1-reveal)*45}px) rotate(3.5deg)`;entry.querySelector('.envelope-number').textContent=reduced.matches?entry.dataset.value:reel(entry.dataset.value,i?f.sentDigits:f.receivedDigits);});
   if(Math.abs(target-p)>.0002)schedule();
  }

@@ -38,12 +38,16 @@ export function bookGeometry(width, height, travel, hasSpending) {
   };
 }
 
-export function bookSpendingPose(width, height, scroll, travel) {
+export function bookSpendingPose(width, height, scroll, travel, comp = null) {
   const progress = spendingScrollProgress(-scroll * height, 2.2 * height, height);
   const pose = spendingPose(progress, 8), fit = fitScale(width, height, 1920, 1300, 'spending');
   const end = bookGeometry(width, height, travel, true);
   // Exact same spiral, rotation, scale and reveal clock as the replaced tile.
-  const orbit = { x: width / 2 + (pose.x + 191.7 + 1.5 - 960) * fit, y: height / 2 + (pose.y + 191.7 + 100 - 650) * fit, size: 435 * fit * pose.scale };
+  // comp — реальное положение сцены «Покупок» на экране (её масштаб и сдвиги меняются
+  // под телефон и заголовок): так книга встаёт ровно в свою клетку сетки.
+  const orbit = comp
+    ? { x: comp.left + (1.5 + pose.x + 191.7) * comp.s, y: comp.top + (100 + pose.y + 191.7) * comp.s, size: 435 * comp.s * pose.scale }
+    : { x: width / 2 + (pose.x + 191.7 + 1.5 - 960) * fit, y: height / 2 + (pose.y + 191.7 + 100 - 650) * fit, size: 435 * fit * pose.scale };
   return {
     x: orbit.x + (end.x - orbit.x) * travel,
     y: orbit.y + (end.y - orbit.y) * travel,

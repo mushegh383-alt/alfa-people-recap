@@ -92,6 +92,12 @@ export function normalizeRecap(input) {
     } : null,
     ai: {
       requests: input.ai?.requests ?? 543, hours: input.ai?.hours ?? 129,
+      // Хрустальный шар (новый стиль) вместо видео планеты.
+      still: input.ai?.still ? assetUrl(input.ai.still, 'ai.still') : null,
+      stillMobile: input.ai?.stillMobile ? assetUrl(input.ai.stillMobile, 'ai.stillMobile') : null,
+      orb: input.ai?.orb ? assetUrl(input.ai.orb, 'ai.orb') : null,
+      orbAlt: input.ai?.orbAlt ? assetUrl(input.ai.orbAlt, 'ai.orbAlt') : null,
+      stand: input.ai?.stand ? assetUrl(input.ai.stand, 'ai.stand') : null,
       // Топ-3 агентов: [{ name, cover }]. Старое поле `agent` — первое место.
       agents: (Array.isArray(input.ai?.agents) && input.ai.agents.length ? input.ai.agents : [{ name: input.ai?.agent || "иллюстратор" }])
         .slice(0, 3).filter(a => a && typeof a.name === "string" && a.name.trim())
@@ -151,6 +157,9 @@ export function normalizeRecap(input) {
       revealVideoMobile: intro.revealVideoMobile ? assetUrl(intro.revealVideoMobile, 'intro.revealVideoMobile') : null,
       loopVideoMobile: intro.loopVideoMobile ? assetUrl(intro.loopVideoMobile, 'intro.loopVideoMobile') : null,
       poster: assetUrl(intro.poster, 'intro.poster'),
+      // Статичная обложка вместо роликов (новый стиль, пока без анимации).
+      still: intro.still ? assetUrl(intro.still, 'intro.still') : null,
+      stillMobile: intro.stillMobile ? assetUrl(intro.stillMobile, 'intro.stillMobile') : null,
     } : {
       mode: 'sequence',
       title: intro.title || 'ИТОГИ ALFA PEOPLE',
@@ -171,6 +180,8 @@ export function normalizeRecap(input) {
       count: moments.count,
       label: moments.label || 'Моментов\nвы опубликовали',
       photos: (Array.isArray(moments.photos) ? moments.photos : []).slice(0, 3).map((src, i) => assetUrl(src, `moments.photos.${i}`)),
+      // Звезда в новом стиле одной картинкой (вместо двух SVG с перекраской).
+      star: moments.star ? assetUrl(moments.star, 'moments.star') : null,
     } : null,
     achievements: achievements ? {
       count: achievements.count,
@@ -183,6 +194,8 @@ export function normalizeRecap(input) {
       receivedLabel: postcards.receivedLabel || 'Открыток вы получили',
       video: postcards.video == null ? null : assetUrl(postcards.video, 'postcards.video'),
       poster: postcards.poster == null ? null : assetUrl(postcards.poster, 'postcards.poster'),
+      // Статичный конверт вместо ролика (новый стиль, пока без анимации).
+      still: postcards.still ? assetUrl(postcards.still, 'postcards.still') : null,
       front: assetUrl(postcards.front, 'postcards.front'),
       alternate: assetUrl(postcards.alternate, 'postcards.alternate'),
     } : null,

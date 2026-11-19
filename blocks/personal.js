@@ -6,7 +6,7 @@ export function createPersonal(data) {
   section.dataset.designHeight = '2112';
   section.setAttribute('aria-labelledby', 'person-name');
   section.innerHTML = `
-    <div class="personal-glow" aria-hidden="true"><img src="./assets/optimized/image-651f9cd0e334.webp" alt="" /></div>
+    <div class="personal-glow" aria-hidden="true"><img src="./assets/restyle/personal-background.png" alt="" /></div>
     <div class="portrait-layer" data-parallax="0.025">
       <div class="portrait entrance" data-reveal><img width="1115.5" height="1014.904" /></div>
     </div>

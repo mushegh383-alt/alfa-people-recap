@@ -16,6 +16,7 @@ export function createMoments(data) {
   section.dataset.value = String(data.moments.count);
   section.innerHTML = `<div class="moments-stage"><div class="moments-composition"><div class="moments-camera"><div class="moments-vector" aria-hidden="true"><img class="moments-back" src="./assets/moments/star-back.svg" alt=""/><img class="moments-core" src="./assets/moments/star-core.svg" alt=""/><div class="moments-lens moments-lens-one"></div><div class="moments-lens moments-lens-two"></div><div class="moments-lens moments-lens-three"></div></div></div><div class="moments-info"><p class="moments-number" aria-hidden="true"></p><h2 class="moments-caption"></h2><p class="sr-only"></p></div></div></div>`;
   const composition = section.querySelector('.moments-composition');
+  if (data.moments.star) { section.querySelector('.moments-back').src = data.moments.star; section.querySelector('.moments-core').remove(); }
   for (const photo of photos) {
     const wrapper = document.createElement('div'); wrapper.className = 'moments-photo'; wrapper.dataset.photo = photo.index;
     Object.assign(wrapper.style, { left: `${photo.x - 144}px`, top: `${photo.y - 175}px` });
@@ -64,7 +65,7 @@ function recolorRed(ctx, width, height, lut = RED_LUT) {
 }
 async function rasterizeStar(img, signal) {
   const src = img.currentSrc || img.src;
-  if (!src || src.startsWith('blob:')) return;
+  if (!src || src.startsWith('blob:') || !/\.svg(\?|$)/.test(src)) return;   // готовые растры (новый стиль) не перекрашиваем
   // Без decode(): он растеризует SVG в исходном 3200×3400 (~43 МБ). drawImage
   // рисует вектор сразу в нужном размере. На телефоне 1792 px: при 1024 звезда на экранах с dpr 3 была пиксельной.
   const source = new Image();
@@ -114,7 +115,7 @@ export function mountMoments(section, signal) {
     const f = momentsFrame(progress, reduced.matches);
     camera.style.transform = `scale(${f.zoom})`;
     back.style.transform = `rotate(${f.backRotation}deg)`;
-    core.style.transform = `rotate(${f.coreRotation}deg)`;
+    if (core) core.style.transform = `rotate(${f.coreRotation}deg)`;
     pictures.forEach(({node, index, x, y, angle}) => {
       const growth = f.growth[index], reveal = f.photos[index], land = f.land[index], away = 1 - land, t = photoThrow[index];
       const tx = (x - momentsCenter.x) * growth * .34 + t.dx * away;

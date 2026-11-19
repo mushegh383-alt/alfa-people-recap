@@ -243,3 +243,12 @@ html.is-portrait .spending-heading { top: -720px; }
 .podium-1 .podium-medal { width: 112px; height: 112px; font-size: 80px; }
 .podium-name { margin: 26px 0 0; font: 700 52px/1 Styrene, sans-serif; letter-spacing: -.03em; color: #fff; text-shadow: 0 2px 10px #2c0018; }
 html:not(.is-portrait) .planet-podium { transform: scale(1.5); transform-origin: 50% 100%; }
+/* «покупки» ближе к сетке */
+.spending-heading { top: -190px; }
+html.is-portrait .spending-heading { top: -640px; }
+/* Топ-собеседник: имя целиком над фото — выше и поверх свечения рамки. */
+.talk-contact-heading { top: -40px; z-index: 3; }
+.talk-contact-name { margin-top: 14px; }
+/* Обложка: «ИТОГИ» в 1,5 раза крупнее общего размера заголовков. */
+.revision-six .hero-film .hero-title { font-size: calc(var(--recap-heading-logical, 260px) * 1.5) !important; }
+html:not(.is-portrait) .talk-contact-heading { top: 0; }

@@ -46,7 +46,8 @@ export function createSpending(data) {
     if (shape.kind === 'ring' && !artwork) face.innerHTML = '<div class="spending-ring-core"></div>';
     if (artwork || ['snowflake', 'alfa', 'burst', 'ornament'].includes(shape.kind)) {
       const image = document.createElement('img');
-      image.src = artwork ? `./assets/learning/${artwork}` : shape.kind === 'ornament' ? './assets/learning/ornament.webp' : `./assets/spending-${shape.kind}.svg`;
+      // Иконки в новом стиле (PNG) — те же места и анимация.
+      image.src = artwork ? `./assets/restyle/spending/${artwork.replace('.svg', '.png')}` : shape.kind === 'ornament' ? './assets/restyle/spending/ornament.png' : `./assets/restyle/spending/spending-${shape.kind}.png`;
       image.alt = '';
       if (shape.kind === 'burst' && !artwork) {
         const turn = document.createElement('div'); turn.className = 'spending-burst-turn'; turn.append(image); face.append(turn);

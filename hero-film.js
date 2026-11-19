@@ -30,6 +30,15 @@ export function createFilmHero(data) {
     subtitle.append(image, label);
   } else subtitle.textContent = data.intro.caption;
   // На вертикальном экране — вертикальные ролики, если они есть.
+  // Статичная обложка: роликов нет, показываем картинку (вертикальную на телефоне).
+  const still = isPortrait(innerWidth, innerHeight) && data.intro.stillMobile ? data.intro.stillMobile : data.intro.still;
+  if (still) {
+    section.classList.add('is-film-still', 'is-film-started');
+    section.dataset.filmPhase = 'done';
+    section.querySelector('.hero-film-poster').src = still;
+    section.querySelectorAll('video').forEach(v => v.remove());
+    return section;
+  }
   const portrait = isPortrait(innerWidth, innerHeight) && data.intro.revealVideoMobile;
   const revealSource = portrait ? data.intro.revealVideoMobile : data.intro.revealVideo;
   const loopSource = portrait ? data.intro.loopVideoMobile : data.intro.loopVideo;
@@ -45,6 +54,7 @@ export function createFilmHero(data) {
 }
 
 export function mountHeroFilm(hero, signal) {
+  if (hero.classList.contains('is-film-still')) return;
   const reveal = hero.querySelector('.hero-film-reveal');
   const loop = hero.querySelector('.hero-film-loop');
   const button = hero.querySelector('.hero-film-play');

@@ -10,7 +10,7 @@ export function createAchievements(data) {
       <p class="achievement-heading" aria-hidden="true">ачивки</p>
       <div class="achievement-focal">
         <div class="achievement-halo" aria-hidden="true"></div>
-        <img class="achievement-star" src="./assets/optimized/image-c4c3f6be875d.webp" alt="" />
+        <img class="achievement-star" src="./assets/restyle/ach-star.png" alt="" />
         <h2 class="achievement-caption" id="achievement-caption"></h2>
         <div class="achievement-sparkles" aria-hidden="true">${Array.from({ length: 14 }, (_, i) => `<i style="--a:${i * 360 / 14 + (i % 2) * 9}deg"></i>`).join('')}</div>
       </div>

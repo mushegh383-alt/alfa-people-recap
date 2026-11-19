@@ -569,3 +569,102 @@ html { scroll-behavior: auto; }
    fixed grain layer defines the page texture, so no image rectangle is exposed. */
 .hero-film .hero-video-slot { transform-origin: center; }
 .november .personal-glow { mix-blend-mode: screen; mask-image: linear-gradient(to right, transparent, #000 17%, #000 83%, transparent), linear-gradient(to bottom, transparent, #000 18%, #000 74%, transparent); mask-composite: intersect; }
+
+/* Статичная обложка (новый стиль): картинка вместо роликов. */
+.hero-film.is-film-still .hero-film-poster { opacity: 1; }
+/* «Ты» в новом стиле: ночное небо под фото (как на обложке); низ притемнён под подпись. */
+.story-panel-personal { background: linear-gradient(to bottom, #0a142e33, #0a142e00 40%, #070c1fa6 78%, #050816e0), url('./assets/restyle/personal-sky-desk.jpg') center / cover no-repeat, #0b1636; }
+html.is-portrait .story-panel-personal { background: linear-gradient(to bottom, #0a142e33, #0a142e00 35%, #070c1fa6 75%, #050816e6), url('./assets/restyle/personal-sky-phone.jpg') center / cover no-repeat, #0b1636; }
+/* Рамка «Ты» теперь с прозрачным фоном — смешивание «screen» для чёрного фона не нужно. */
+.november .personal-glow { mix-blend-mode: normal; }
+/* «Спасибки» в новом стиле: то же ночное небо, что у «Ты». */
+.november .opening-story .thanks { background: linear-gradient(#05081680, #05081600 40%, #05081659), url('./assets/restyle/thanks-bg-desk.jpg') center / cover no-repeat, #0b1636; }
+html.is-portrait.november .opening-story .thanks, html.is-portrait .november .opening-story .thanks { background: linear-gradient(#05081680, #05081600 40%, #05081659), url('./assets/restyle/thanks-bg-phone.jpg') center / cover no-repeat, #0b1636; }
+
+/* Статичный конверт (новый стиль): картинка вместо ролика. */
+.is-envelope-still .envelope-still { opacity: 1; object-fit: contain; }
+.is-envelope-still .envelope-media video { display: none; }
+.story-panel-postcards.is-crossfading:has(.is-envelope-still) { mix-blend-mode: normal; }
+/* Открытки в новом стиле: ночь с почтовым ящиком и конвертами в снегу. */
+.revision-six .opening-story .is-envelope-still .envelope-stage { background: linear-gradient(#05081680, #05081600 40%, #05081659), url('./assets/restyle/postcards-bg-desk.jpg') center / cover no-repeat, #0b1636; }
+html.is-portrait .revision-six .opening-story .is-envelope-still .envelope-stage, html.is-portrait.revision-six .opening-story .is-envelope-still .envelope-stage { background: linear-gradient(#05081680, #05081600 40%, #05081659), url('./assets/restyle/postcards-bg-phone.jpg') center / cover no-repeat, #0b1636; }
+/* «Моменты» в новом стиле: звезда одной картинкой (у неё поля — чуть крупнее), ночное небо. */
+.revision-six .moments-stage { background: linear-gradient(#05081680, #05081600 40%, #05081680), url('./assets/restyle/personal-sky-desk.jpg') center / cover no-repeat, #0b1636; }
+html.is-portrait .revision-six .moments-stage, html.is-portrait.revision-six .moments-stage { background: linear-gradient(#05081680, #05081600 40%, #05081680), url('./assets/restyle/personal-sky-phone.jpg') center / cover no-repeat, #0b1636; }
+html.is-portrait .moments:not(:has(.moments-core)) .moments-back { left: -400px; top: -55px; width: 2720px; height: 2890px; transform-origin: 1360px 1445px; }
+/* «Мой доход»: шар и анимация прежние, фон — ночное небо нового стиля. */
+.november .opening-story .income-glass-viewport { background: linear-gradient(#05081699, #05081620 45%, #05081699), url('./assets/restyle/personal-sky-desk.jpg') center / cover no-repeat, #0b1636; }
+html.is-portrait .november .opening-story .income-glass-viewport, html.is-portrait.november .opening-story .income-glass-viewport { background: linear-gradient(#05081699, #05081620 45%, #05081699), url('./assets/restyle/personal-sky-phone.jpg') center / cover no-repeat, #0b1636; }
+
+/* «Альфа ИИ» в новом стиле: хрустальный шар картинкой вместо видео планеты. */
+.planet-still { position: absolute; inset: 0; z-index: 0; opacity: 0; pointer-events: none; background: #0b1636 var(--still-desk) center / cover no-repeat; transform-origin: 50% 48%; }
+/* Свет из шара на переходе в часы: заливает экран красным и гаснет. */
+/* (вспышка больше не используется) */ .planet-still::after { content: none; position: absolute; inset: 0; opacity: var(--glow, 0); background: radial-gradient(circle at 50% 48%, #ff8a7a 0%, #ef3124 30%, #a3140fcc 60%, #02010100 85%); }
+html.is-portrait .planet-still { background-image: var(--still-phone); transform-origin: 50% 51%; }
+html.is-portrait .planet-still::after { background: radial-gradient(circle at 50% 51%, #ff8a7a 0%, #ef3124 30%, #a3140fcc 60%, #02010100 85%); }
+.is-planet-still .planet-media { display: none; }
+.planet-dial { position: absolute; left: 290px; top: 182px; width: 1340px; height: 1340px; opacity: 0; visibility: hidden; pointer-events: none; transform-origin: center; }
+
+.planet-orb { position: absolute; left: 0; top: 0; width: 1024px; height: 1024px; max-width: none; transform-origin: 0 0; opacity: 0; visibility: hidden; pointer-events: none; z-index: 0; }
+.planet-stand { position: absolute; left: 0; top: 0; height: auto; max-width: none; opacity: 0; visibility: hidden; pointer-events: none; z-index: 0; }
+/* Топ-контакт в новом стиле: то же небо, что под шаром и часами. */
+.revision-six .talk-contact { background: linear-gradient(#050816b3, #05081633 45%, #050816b3), url('./assets/restyle/personal-sky-desk.jpg') center / cover no-repeat, #0b1636; }
+html.is-portrait .revision-six .talk-contact, html.is-portrait.revision-six .talk-contact { background: linear-gradient(#050816b3, #05081633 45%, #050816b3), url('./assets/restyle/personal-sky-phone.jpg') center / cover no-repeat, #0b1636; }
+/* «Покупки» в новом стиле: пакет с подарками и коинами, текст по центру под ним. */
+.spending.is-restyled .spending-shapes { display: none; }
+.spending.is-restyled .spending-artboard { clip-path: none !important; }
+.spending.is-restyled .spending-bag { position: absolute; left: 610px; top: -60px; width: 700px; height: auto; pointer-events: none; }
+.spending.is-restyled .spending-number { left: 0 !important; top: 520px !important; width: 1920px !important; height: auto !important; line-height: 1 !important; text-align: center; }
+.spending.is-restyled .spending-digits { font-size: 300px !important; }
+.spending.is-restyled .spending-caption { left: 0 !important; top: 860px !important; width: 1920px !important; text-align: center; }
+.spending.is-restyled .spending-note { left: 0 !important; top: 940px !important; width: 1920px !important; text-align: center; }
+html.is-portrait .spending.is-restyled .spending-bag { left: 460px; top: 0; width: 1000px; }
+html.is-portrait .spending.is-restyled .spending-number { top: 820px !important; }
+html.is-portrait .spending.is-restyled .spending-digits { font-size: 420px !important; }
+html.is-portrait .spending.is-restyled .spending-caption { top: 1270px !important; }
+html.is-portrait .spending.is-restyled .spending-note { top: 1350px !important; }
+/* Ночное небо под монетками, покупками и финалом. */
+.november .coins .november-stage, .november .spending-stage, .ending-chapter-pin { background: linear-gradient(#05081699, #05081620 45%, #05081699), url('./assets/restyle/personal-sky-desk.jpg') center / cover no-repeat, #0b1636 !important; }
+html.is-portrait .november .coins .november-stage, html.is-portrait .november .spending-stage, html.is-portrait .ending-chapter-pin { background: linear-gradient(#05081699, #05081620 45%, #05081699), url('./assets/restyle/personal-sky-phone.jpg') center / cover no-repeat, #0b1636 !important; }
+.spending.is-restyled .spending-number, .spending.is-restyled .spending-note { opacity: 1 !important; }
+.spending.is-restyled .spending-caption > span, .spending.is-restyled .spending-digits { transform: none !important; }
+.spending.is-restyled .spending-bag { left: 520px !important; top: -140px !important; width: 880px !important; }
+.spending.is-restyled .spending-number { top: 470px !important; }
+.spending.is-restyled .spending-caption { top: 900px !important; }
+.spending.is-restyled .spending-note { top: 975px !important; }
+.spending.is-restyled .spending-number { font-size: 300px !important; top: 430px !important; }
+.spending.is-restyled .spending-caption { top: 790px !important; }
+.spending.is-restyled .spending-note { top: 862px !important; }
+html.is-portrait .spending.is-restyled .spending-number { top: 900px !important; font-size: 420px !important; }
+html.is-portrait .spending.is-restyled .spending-caption { top: 1380px !important; }
+html.is-portrait .spending.is-restyled .spending-note { top: 1460px !important; }
+html.is-portrait .spending.is-restyled .spending-number { top: 700px !important; }
+html.is-portrait .spending.is-restyled .spending-caption { top: 1180px !important; }
+html.is-portrait .spending.is-restyled .spending-note { top: 1260px !important; }
+/* Стыки между блоками: у всех один базовый цвет, а края каждой сцены мягко уходят в него —
+   без резких полос при прокрутке. */
+.november :is(.november-scene, .spending, .book-chapter, .ending-chapter, .sky-scene, .achievements) { background-color: #0b1636 !important; }
+.november :is(.november-stage, .spending-stage, .book-chapter-stage, .ending-chapter-pin, .sky-stage) { box-shadow: inset 0 140px 90px -60px #0b1636, inset 0 -140px 90px -60px #0b1636; }
+/* «На вас смотрят»: ночной лес, из темноты которого смотрят глаза. */
+#profile-views .sky-stage { background: #0b1636; }
+#profile-views .sky-backdrop { opacity: 1; visibility: visible; object-fit: cover; }
+/* Текст «На вас смотрят» читается поверх леса: тень в центре. */
+#profile-views .sky-stage::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(ellipse 60% 45% at 50% 48%, #050816b3, #05081600 75%); }
+.november :is(.november-stage, .spending-stage, .book-chapter-stage, .ending-chapter-pin, .sky-stage) { box-shadow: inset 0 190px 110px -70px #0b1636, inset 0 -190px 110px -70px #0b1636; }
+/* Стыки: тень изнутри перекрывали картинки сцены, поэтому край — отдельным слоем поверх. */
+.november :is(.november-stage, .spending-stage, .book-chapter-stage, .ending-chapter-pin, .sky-stage, .achievements-stage) { box-shadow: none; }
+.november :is(.november-stage, .spending-stage, .book-chapter-stage, .ending-chapter-pin, .sky-stage, .achievements-stage)::after { content: ''; position: absolute; inset: 0; z-index: 30; pointer-events: none; background: linear-gradient(#0b1636 0%, #0b163600 13%, #0b163600 87%, #0b1636 100%); }
+/* Обложка: «в Alfa people» сразу под «ИТОГИ» — в небе, не поверх цифр. */
+.hero-film .hero-subtitle { top: 352px !important; text-shadow: 0 2px 14px #050816cc; }
+html.is-portrait .hero-film .hero-subtitle { top: calc((1401px - var(--film-viewport-height, 1401px)) / 2 + 300px) !important; }
+/* Подписи у нижнего края больше не притухают: затемнение стыков — только самая кромка. */
+.november :is(.november-stage, .spending-stage, .book-chapter-stage, .ending-chapter-pin, .sky-stage, .achievements-stage)::after { background: linear-gradient(#0b1636 0%, #0b163600 6%, #0b163600 94%, #0b1636 100%); }
+/* «Коины» на телефоне: заголовок не прилипает к верху экрана. */
+html.is-portrait .coins .coins-heading { top: 330px !important; }
+/* Финал: подпись под именем талисмана читается поверх красных лучей. */
+.finale-seven-caption { text-shadow: 0 0 10px #050816, 0 2px 20px #050816e6; }
+/* Обложка: «ИТОГИ» крупнее. */
+.hero-film .hero-title { font-size: 300px !important; top: 92px !important; }
+.hero-film .hero-subtitle { top: 372px !important; }
+html.is-portrait .hero-film .hero-title { top: calc((1401px - var(--film-viewport-height, 1401px)) / 2 + 80px) !important; }
+html.is-portrait .hero-film .hero-subtitle { top: calc((1401px - var(--film-viewport-height, 1401px)) / 2 + 330px) !important; }

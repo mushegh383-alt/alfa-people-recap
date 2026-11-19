@@ -93,13 +93,15 @@ export async function prepareEndingSeven(root, signal) {
 
 async function loadFinaleSurfaces(slot, signal) {
   if (!slot) return;
-  const response = await fetch(assets+'cached/layers.json', {signal});
+  // Новый стиль: слои финала перерисованы в PNG (та же раскладка и анимация).
+  const layerDir = './assets/restyle/finale/';
+  const response = await fetch(layerDir+'layers.json', {signal});
   if (!response.ok) throw Error(`Finale surfaces: ${response.status}`);
   const {layers,lenses}=await response.json();
   for (const layer of layers) {
     const wrapper=document.createElement('div'); wrapper.className='ending-cached-layer';
     wrapper.dataset.vectorLayer='';wrapper.dataset.vectorIndex=layer.index;wrapper.dataset.vectorSide=layer.side;
-    const image=document.createElement('img');image.src=assets+'cached/'+layer.src;image.alt='';
+    const image=document.createElement('img');image.src=layerDir+layer.src;image.alt='';
     Object.assign(image.style,{left:`${layer.x-960}px`,top:`${layer.y-733.5}px`,width:`${layer.width}px`,height:`${layer.height}px`});
     wrapper.append(image);slot.append(wrapper);
   }

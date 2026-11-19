@@ -40,6 +40,11 @@ export async function prepareTalkContact(root,data,signal){
   for(const [key,value] of Object.entries({x:'1183',y:'417',width:'320',height:'259',href:'./assets/top-contact/envelope.png',preserveAspectRatio:'xMidYMid meet'}))env.setAttribute(key,value);
   env.dataset.contactPart='prop-one';camera.replaceWith(env);
  }
+ // Новый стиль: фиолетовая звезда и снежинка — растровые картинки вместо вектора с тяжёлыми фильтрами.
+ const swap=(part,attrs)=>{const el=svg.querySelector(`[data-contact-part="${part}"]`);if(!el)return;const img=document.createElementNS(ns,'image');for(const [k,v] of Object.entries(attrs))img.setAttribute(k,v);img.setAttribute('preserveAspectRatio','xMidYMid meet');img.dataset.contactPart=part;el.replaceWith(img);};
+ swap('bubble',{x:'60',y:'560',width:'1100',height:'827',href:'./assets/restyle/contact-star.png'});
+ swap('prop-two',{x:'1238',y:'942.881',width:'401',height:'401',transform:'rotate(-36.5634 1238 942.881)',href:'./assets/restyle/contact-snowflake.png'});
+ svg.querySelector('[data-contact-part="prop-one"]')?.setAttribute('href','./assets/restyle/contact-envelope.png');
  for(const part of [...svg.querySelectorAll('[data-contact-part]')]){
   const g=document.createElementNS(ns,'g');g.dataset.contactMotion=part.dataset.contactPart;part.before(g);g.append(part);
  }

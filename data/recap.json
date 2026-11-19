@@ -21,7 +21,8 @@
     "front": "./assets/postcard-front.png",
     "alternate": "./assets/postcard-alternate.png",
     "video": "./assets/envelope/envelope.mp4",
-    "poster": "./assets/envelope/open.png"
+    "poster": "./assets/envelope/open.png",
+    "still": "./assets/restyle/envelope-open.png"
   },
   "thanks": {
     "sent": 55,
@@ -56,11 +57,11 @@
     "caption": "в Alfa people",
     "captionArtwork": null,
     "mediaYear": 2026,
-    "revealVideo": "./assets/intro-film/intro-2026.mp4",
-    "loopVideo": "./assets/intro-film/intro-loop.mp4",
-    "revealVideoMobile": "./assets/intro-film/intro-2026-mobile.mp4",
-    "loopVideoMobile": "./assets/intro-film/intro-loop-mobile.mp4",
-    "poster": "./assets/intro-film/poster.png"
+    "revealVideo": "./assets/restyle/intro-desk.mp4",
+    "revealVideoMobile": "./assets/restyle/intro-phone.mp4",
+    "loopVideoMobile": "./assets/restyle/loop-phone.mp4",
+    "poster": "./assets/intro-film/poster.png",
+    "loopVideo": "./assets/restyle/loop-desk.mp4"
   },
   "coins": {
     "earned": 2500,
@@ -72,18 +73,6 @@
     "label": "Коинов вы потратили",
     "note": "в {year} году"
   },
-  "parksharing": {
-    "trips": 502,
-    "title": "Паркшеринг",
-    "note": "Спасибо, что приезжали в офис\nи были рядом с командой.",
-    "sequence": {
-      "base": "./assets/car-sequence/",
-      "frameCount": 100,
-      "fps": 24,
-      "width": 1536,
-      "height": 864
-    }
-  },
   "office": {
     "visits": 134,
     "label": "Вы были в офисе"
@@ -92,14 +81,26 @@
     "gameUrl": "./game/",
     "label": "Собирайте марки в игре\nи откройте 5 новогодних открыток",
     "heading": "Ваш Талисман {nextYear} года",
-    "talisman": "Синий Единорог"
+    "talisman": "Синий Единорог",
+    "talismanImage": "./assets/restyle/unicorn.jpg"
   },
   "moments": {
     "count": 12,
-    "label": "Моментов\nвы опубликовали"
+    "label": "Моментов\nвы опубликовали",
+    "star": "./assets/restyle/moments-star.png",
+    "photos": [
+      "./assets/restyle/moment-0.jpg",
+      "./assets/restyle/moment-1.jpg",
+      "./assets/restyle/moment-2.jpg"
+    ]
   },
   "ai": {
     "requests": 543,
+    "still": "./assets/restyle/personal-sky-desk.jpg",
+    "orb": "./assets/restyle/ai-orb-red.png",
+    "orbAlt": "./assets/restyle/ai-orb-blue.png",
+    "stand": "./assets/restyle/ai-stand.png",
+    "stillMobile": "./assets/restyle/personal-sky-phone.jpg",
     "agent": "иллюстратор",
     "hours": 129,
     "agents": [
@@ -153,5 +154,17 @@
     "title": "Обучение",
     "coursesLabel": "Курсов вы прошли\nв этом году",
     "hoursLabel": "Часов вы потратили\nна это"
+  },
+  "_parksharing_hidden": {
+    "trips": 502,
+    "title": "Паркшеринг",
+    "note": "Спасибо, что приезжали в офис\nи были рядом с командой.",
+    "sequence": {
+      "base": "./assets/car-sequence/",
+      "frameCount": 100,
+      "fps": 24,
+      "width": 1536,
+      "height": 864
+    }
   }
 }
