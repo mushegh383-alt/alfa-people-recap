@@ -113,11 +113,19 @@ export function mountMoments(section, signal) {
   function paint() {
     frame = 0; if (!active || document.hidden || signal.aborted) return;
     const f = momentsFrame(progress, reduced.matches);
+    const portrait = isPortrait(stage.clientWidth,stage.clientHeight);
     camera.style.transform = `scale(${f.zoom})`;
     back.style.transform = `rotate(${f.backRotation}deg)`;
     if (core) core.style.transform = `rotate(${f.coreRotation}deg)`;
     pictures.forEach(({node, index, x, y, angle}) => {
       const growth = f.growth[index], reveal = f.photos[index], land = f.land[index], away = 1 - land, t = photoThrow[index];
+      if (portrait) {
+        const t = reduced.matches ? 1 : Math.min(1,Math.max(0,(progress-.035*index)/.24));
+        const eased=1-(1-t)**3;
+        node.style.opacity=eased;
+        node.style.transform=`translateY(${(1-eased)*100}px) rotate(${[-9,8,-5][index]*(.65+.35*eased)}deg)`;
+        return;
+      }
       const tx = (x - momentsCenter.x) * growth * .34 + t.dx * away;
       const ty = (y - momentsCenter.y) * growth * .28 + t.dy * away;
       node.style.transform = `translate3d(${tx}px,${ty}px,0) rotate(${angle + (index % 2 ? -1 : 1) * growth * 5 + t.spin * away}deg) scale(${f.photoScale[index]})`;

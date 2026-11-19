@@ -196,8 +196,8 @@ function mount(section, signal) {
   function fit() { scale = fitScale(stage.clientWidth, stage.clientHeight, logical.width, logical.height, 'finale'); placeComposition(composition, scale); setTextScale(composition, scale, stage.clientWidth, stage.clientHeight); composition.style.setProperty('--ending-art-wide', Math.max(1, stage.clientWidth / (logical.width * scale))); composition.style.setProperty('--ending-art-tall', Math.max(1, stage.clientHeight / (logical.height * scale))); schedule(); }
   function paint(now) {
     raf = 0; if (!active || document.hidden || signal.aborted) return;
-    const target = endingSceneProgress(section, innerHeight, reduced.matches), dt = last ? Math.min(64, now - last) : 16; last = now;
-    p = p === undefined || reduced.matches ? target : p + (target - p) * (1 - Math.exp(-dt / 100));
+    const target = endingSceneProgress(section, stage.clientHeight, reduced.matches), dt = last ? Math.min(64, now - last) : 16; last = now;
+    p = p === undefined || document.documentElement.classList.contains('is-portrait') || reduced.matches ? target : p + (target - p) * (1 - Math.exp(-dt / 100));
     if (Math.abs(target - p) < .0001) p = target;
     px += (tx - px) * (1 - Math.exp(-dt / 150)); py += (ty - py) * (1 - Math.exp(-dt / 150));
     if (reduced.matches) px = py = 0;
@@ -279,7 +279,7 @@ function mountChapter(chapter, signal) {
     }
     const { handoff } = endingChapterFrame(chapter.getBoundingClientRect().top, innerHeight);
     const dt = last ? Math.min(64, now-last) : 16; last=now;
-    blend = blend===undefined ? handoff : blend + (handoff-blend)*(1-Math.exp(-dt/100));
+    blend = blend===undefined || document.documentElement.classList.contains('is-portrait') ? handoff : blend + (handoff-blend)*(1-Math.exp(-dt/100));
     if (Math.abs(handoff-blend)<.0001) blend=handoff;
     // Последовательно, а не одновременно: иначе марка с единорогом из финала
     // проступала поверх цифр офиса. Офис гаснет в первой половине, финал

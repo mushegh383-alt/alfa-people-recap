@@ -51,10 +51,11 @@ export function achievementsScrollProgress(sectionTop, sectionHeight, viewportHe
   return sectionTop <= end + 1 ? 1 : clamp((start - sectionTop) / (start - end));
 }
 
-export function achievementPlayback(sectionTop, sectionHeight, viewportHeight, hasCoins) {
+export function achievementPlayback(sectionTop, sectionHeight, viewportHeight, hasCoins, portrait = false) {
   const opening = achievementsScrollProgress(sectionTop, hasCoins ? viewportHeight * 1.5 : sectionHeight, viewportHeight);
   const time = -sectionTop / viewportHeight;
-  const t = hasCoins ? clamp((time - .80) / .55) : 0;
+  // In portrait the next scene slides up beneath the departing star.
+  const t = hasCoins ? (portrait ? clamp((time - .65) / .72) : clamp((time - .80) / .55)) : 0;
   const closing = t * t * (3 - 2 * t);
   // Уход больше не перематывает открытие назад: сцена «пролетает» сквозь звезду.
   return { progress: opening, closing };

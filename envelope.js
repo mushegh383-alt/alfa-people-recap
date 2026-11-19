@@ -12,7 +12,10 @@ export function createEnvelope(data) {
  section.innerHTML=`<div class="envelope-stage"><div class="envelope-composition"><div class="envelope-media" aria-hidden="true"><video muted playsinline preload="none" tabindex="-1" disablepictureinpicture></video><img class="envelope-still" width="1200" height="675" alt="" /></div><div class="envelope-data envelope-received"><p class="envelope-number" aria-hidden="true"></p><h2 class="envelope-caption"></h2></div><div class="envelope-data envelope-sent"><p class="envelope-number" aria-hidden="true"></p><h2 class="envelope-caption"></h2></div><p class="sr-only envelope-summary"></p></div></div>`;
  const film=section.querySelector('video');film.muted=film.defaultMuted=true;
  // Статичный конверт: ролик не грузим, показываем картинку.
- if(data.postcards.still){section.classList.add('is-envelope-still');section.querySelector('.envelope-still').src=data.postcards.still;}
+ if(data.postcards.still){section.classList.add('is-envelope-still');const image=section.querySelector('.envelope-still');
+  image.src=reduced.matches?data.postcards.still:'./assets/envelope/sequence/000.webp';
+  image.style.objectFit='contain';
+  image.dataset.poster=data.postcards.still;}
  else{film.src=data.postcards.video;section.querySelector('.envelope-still').src=optimizedAssetUrl(data.postcards.poster);}
  for(const kind of ['received','sent']) {
   const item=section.querySelector(`.envelope-${kind}`);item.dataset.value=String(data.postcards[kind]);
@@ -31,6 +34,28 @@ export function mountEnvelope(root,signal,external=false) {
  const entries=['received','sent'].map(kind=>section.querySelector(`.envelope-${kind}`));
  let raf=0,active=false,p,latest=0,displayed=0,lastTime=0,externalProgress=0;
  const garland=createPostcardGarland(section);
+ const image=section.querySelector('.envelope-still');
+ let wanted=-1, shown=-1, loading=false;
+ async function paintEnvelope(){
+  if(loading || !active || signal.aborted || wanted===shown || wanted<0)return;
+  const index=wanted;
+  loading=true;
+  const frame=new Image();
+  frame.src='./assets/envelope/sequence/'+String(index).padStart(3,'0')+'.webp';
+  try {
+   await frame.decode();
+   if(active && !signal.aborted){
+    image.src=frame.src;
+    image.dataset.frame=String(index);
+    shown=index;
+   }
+  }catch{
+   if(!signal.aborted)image.src=image.dataset.poster;
+  }finally{
+   loading=false;
+   if(index!==wanted)paintEnvelope();
+  }
+ }
  function fit(){const scale=fitScale(stage.clientWidth,stage.clientHeight,1920,2059+HEADROOM.envelope,'envelope');placeComposition(composition, scale, ` translateY(${HEADROOM.envelope/2}px)`);setHeadingScale(composition,scale,stage.clientWidth,stage.clientHeight);garland?.resize(scale,HEADROOM.envelope/2);p===undefined||garland?.draw(p);schedule();}
  const transport=createScrollVideo(film,signal,()=>{displayed=film.currentTime/Math.max(.01,film.duration-.045);schedule();});
  function seek(){transport.seek(latest,active);}
@@ -41,6 +66,7 @@ export function mountEnvelope(root,signal,external=false) {
   const f=envelopeFrame(p,reduced.matches);section.dataset.progress=p.toFixed(4);{const h=section.querySelector('.envelope-heading'),t=reduced.matches?1:Math.min(1,Math.max(0,p/.18));h.style.opacity=t;h.style.transform=`translateY(${(1-t)*40}px)`;}garland?.draw(reduced.matches?.76:p);section.dataset.phase=f.phase;section.classList.toggle('is-envelope-reduced',reduced.matches);
   const still=section.classList.contains('is-envelope-still');
   latest=f.video*Math.max(0,film.duration-.045);if(!reduced.matches&&!still)seek();
+  if(still){wanted=Math.round(f.video*99);paintEnvelope();}
   const ready=reduced.matches||still||displayed>.84;
   entries.forEach((entry,i)=>{const reveal=(i?f.sent:f.received)*(ready?1:0);entry.style.opacity=reveal;entry.style.visibility=reveal>.001?'visible':'hidden';entry.style.transform=`translateY(${(1-reveal)*45}px) rotate(3.5deg)`;entry.querySelector('.envelope-number').textContent=reduced.matches?entry.dataset.value:reel(entry.dataset.value,i?f.sentDigits:f.receivedDigits);});
   if(Math.abs(target-p)>.0002)schedule();

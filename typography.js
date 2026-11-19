@@ -28,7 +28,7 @@ const TEXT_ROLES={
 };
 export function textMinimum(width,height){
  const clamp=(a,v,b)=>Math.max(a,Math.min(b,v));
- if(width/Math.max(1,height)<.8)return{kicker:15,caption:17,note:14};
+ if(width/Math.max(1,height)<.8)return{kicker:15,caption:clamp(17,width*.048,21),note:clamp(15,width*.04,18)};
  return{kicker:clamp(16,width*.0135,26),caption:clamp(18,width*.019,32),note:clamp(15,width*.0145,24)};
 }
 export function setTextScale(element,scale,width,height){
@@ -47,10 +47,12 @@ export function setTextScale(element,scale,width,height){
   if(base&&grow>1.01){
    node.style.setProperty('font-size',`${target.toFixed(1)}px`,'important');
    if(node.dataset.baseWidth){
-    const w=Number(node.dataset.baseWidth),l=Number(node.dataset.baseLeft),align=node.dataset.baseAlign;
-    node.style.setProperty('width',`${(w*grow).toFixed(1)}px`,'important');
+    const naturalWidth=Number(node.dataset.baseWidth);
+    const fittedWidth=width/height<.8?Math.min(naturalWidth*grow,(width-32)/scale):naturalWidth*grow;
+    const w=naturalWidth,l=Number(node.dataset.baseLeft),align=node.dataset.baseAlign;
+    node.style.setProperty('width',`${fittedWidth.toFixed(1)}px`,'important');
     if(!node.dataset.baseStatic){
-     const shift=align==='center'?(grow-1)*w/2:align==='right'||align==='end'?(grow-1)*w:0;
+     const shift=align==='center'?(fittedWidth-w)/2:align==='right'||align==='end'?(fittedWidth-w):0;
      node.style.setProperty('left',`${(l-shift).toFixed(1)}px`,'important');
     }
    }

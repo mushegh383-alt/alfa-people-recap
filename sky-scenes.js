@@ -279,8 +279,8 @@ function mountScene(section, signal) {
 
   function update(now) {
     raf = 0; if (!active || document.hidden || signal.aborted) return;
-    const b = section.getBoundingClientRect(), target = reduced.matches ? 1 : sectionProgress(b.top, b.height, innerHeight), dt = last ? Math.min(64, now - last) : 16; last = now;
-    p = p === undefined || reduced.matches ? target : p + (target - p) * (1 - Math.exp(-dt / 75));
+    const b = section.getBoundingClientRect(), target = reduced.matches ? 1 : sectionProgress(b.top, b.height, stage.clientHeight), dt = last ? Math.min(64, now - last) : 16; last = now;
+    p = p === undefined || document.documentElement.classList.contains('is-portrait') || reduced.matches ? target : p + (target - p) * (1 - Math.exp(-dt / 75));
     if (Math.abs(target - p) < .0002) p = target;
     section.dataset.progress = p.toFixed(4);
     let keepGoing = Math.abs(target - p) > .0002;
@@ -474,8 +474,12 @@ function mountTower(section, signal) {
       // На нарисованном здании вывеска висит на верхней части фасада (полоса под крышей).
       const dh = h / (FACE.b - FACE.t), imgTop = top - FACE.t * dh;
       const roof = painted ? imgTop : top - 60 * scale;
-      const lw = painted ? Math.min(w * .7, (.095 * dh) * 408 / 82) : w * .7, lh = lw * 82 / 408, lx = left + (w - lw) / 2;
-      const ly = painted ? imgTop + .262 * dh - lh / 2 : roof - 26 * scale - lh;
+      // Верхняя площадка в PNG: x 32–72%, y 6–16%.
+      const dw = w / (FACE.r - FACE.l);
+      const lw = painted ? Math.min(dw * .34, dh * .079 * 408 / 82) : w * .7;
+      const lh = lw * 82 / 408;
+      const lx = painted ? left + (.519 - FACE.l) * dw - lw / 2 : left + (w - lw) / 2;
+      const ly = painted ? imgTop + .112 * dh - lh / 2 : roof - 26 * scale - lh;
       const n = ease(.64, .76, p), lit = n > 0 && n < 1 ? (Math.sin(n * 47) > .1 ? 1 : .3) : n;
       if (!painted) { ctx.fillStyle = '#3a0f17'; ctx.fillRect(lx + lw * .2, ly + lh, 6 * scale, roof - ly - lh); ctx.fillRect(lx + lw * .8 - 6 * scale, ly + lh, 6 * scale, roof - ly - lh); }
       if (lit > 0) {
@@ -492,8 +496,8 @@ function mountTower(section, signal) {
 
   function update(now) {
     raf = 0; if (!active || document.hidden || signal.aborted) return;
-    const target = endingSceneProgress(section, innerHeight, reduced.matches), dt = last ? Math.min(64, now - last) : 16; last = now;
-    p = p === undefined || reduced.matches ? target : p + (target - p) * (1 - Math.exp(-dt / 75));
+    const target = endingSceneProgress(section, stage.clientHeight, reduced.matches), dt = last ? Math.min(64, now - last) : 16; last = now;
+    p = p === undefined || document.documentElement.classList.contains('is-portrait') || reduced.matches ? target : p + (target - p) * (1 - Math.exp(-dt / 75));
     if (Math.abs(target - p) < .0002) p = target;
     section.dataset.progress = p.toFixed(4);
     if (p !== drawn) {

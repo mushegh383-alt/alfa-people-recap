@@ -2,7 +2,7 @@ import { requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cance
 import { createThanksNotes } from './scene-fill.js';
 import { incomeGlassPose, incomeGlassDigits, incomeGlassGeometry, incomePlanetHandoff } from './income-glass-layout.js';
 import { getIncomeGlassRenderer, syncIncomeCapWindow } from './income-glass-motion.js';
-import { openingStoryFrame, storyPhase, storyDigits, storyUnit, storyAnchors, storyTravel, sceneDepth } from './opening-story-layout.js';
+import { openingStoryFrame, storyPhase, storyDigits, storyUnit, storyAnchors, storyTravel } from './opening-story-layout.js';
 import { mountEnvelope } from './envelope.js';
 import { mountPlanet } from './planet-story.js';
 import { mountMoments } from './moments.js';
@@ -110,35 +110,12 @@ export function mountOpeningStory(story, signal) {
       el.setAttribute('aria-hidden', String(!visible));
     }
   }
-  const lastDepth = new WeakMap();
-  function applyDepth(u) {
-    // Размытие панели — только на мощных устройствах и не для сцен с видео или
-    // backdrop-filter внутри (открытки, моменты): там оно пересчитывается каждый кадр.
-    const depth = sceneDepth(u), heavyOk = getQuality() === 'full';
-    for (const [key, d] of Object.entries(depth)) {
-      const el = panels[key];
-      if (!el) continue;
-      const still = reduced.matches || el.style.visibility === 'hidden' || (Math.abs(d.scale - 1) < .0005 && d.blur < .05);
-      const transform = still ? '' : `translate3d(0, ${d.lift.toFixed(3)}%, 0) scale(${d.scale.toFixed(4)})`;
-      const light = key === 'moments' || key === 'postcards';   // только масштаб, без фильтров
-      // На телефоне без фильтров вообще: brightness() на сцене с WebGL-шаром или
-      // видео заставлял iOS Safari рисовать всю сцену программно и ронял вкладку.
-      const filter = still || light || d.blur < .05 || getQuality() === 'lite' ? '' : heavyOk ? `blur(${d.blur.toFixed(2)}px) brightness(${d.dim.toFixed(3)})` : `brightness(${d.dim.toFixed(3)})`;
-      const sig = transform + '|' + filter + '|' + el.style.visibility;
-      if (lastDepth.get(el) === sig) continue;
-      lastDepth.set(el, sig);
-      el.style.transform = transform; el.style.filter = filter;
-      // Слой держим всё время, пока панель видна: включение/выключение will-change
-      // посреди сцены заставляло заново растеризовать её (провалы по ~100 мс).
-      el.style.willChange = el.style.visibility === 'hidden' ? '' : 'transform';
-    }
-  }
   // When the pinned story releases, it recedes like a card under the next chapter
   // instead of simply scrolling away.
   let lastRelease = -1;
   function applyRelease() {
     const raw = (scrollY - top) / Math.max(1, height) - storyTravel;
-    const r = reduced.matches ? 0 : Math.max(0, Math.min(1, raw));
+    const r = reduced.matches || width / height < .8 ? 0 : Math.max(0, Math.min(1, raw));
     if (Math.abs(r - lastRelease) < .001) return;
     lastRelease = r;
     const e = r * r * (3 - 2 * r);
@@ -184,7 +161,7 @@ export function mountOpeningStory(story, signal) {
     if (!intersecting && !forceDraw) return;
     const dt = Math.min(64, Math.max(1, now - (previousTime || now - 16)));
     previousTime = now;
-    if (current === null || reduced.matches || forceDraw || Math.abs(target - current) < .0003) current = target;
+    if (width / height < .8 || current === null || reduced.matches || forceDraw || Math.abs(target - current) < .0003) current = target;
     else current += (target - current) * (1 - Math.exp(-dt / (target>10.85?145:75)));
     forceDraw = false;
     const f = openingStoryFrame(current, reduced.matches);
@@ -198,7 +175,7 @@ export function mountOpeningStory(story, signal) {
     panel('contact',f.contact,dominant);contactMotion?.draw(f.contactProgress,f.contact>.001&&intersecting,reduced.matches,current);
     panel('income', f.income, dominant); panel('thanks', f.thanks, dominant);
     panel('postcards', f.postcards, dominant); panel('moments', f.moments, dominant);
-    applyDepth(current);
+    // Full-screen backgrounds crossfade edge to edge. Each scene animates its own artwork.
     applyRelease();
     envelopeMotion?.draw(f.postcardsProgress, f.postcards > .001 && intersecting);
     momentsMotion?.draw(f.momentsProgress, f.moments > .001 && intersecting);
@@ -298,7 +275,7 @@ export function mountOpeningStory(story, signal) {
   observer.observe(story);
   const resize = new ResizeObserver(fit); resize.observe(pin);
   window.addEventListener('scroll', schedule, { passive: true, signal });
-  window.addEventListener('resize', fit, { passive: true, signal });
+  // ResizeObserver tracks the stable sticky viewport, including rotations.
   window.addEventListener('pointermove', event => {
     if (event.pointerType !== 'mouse' || !intersecting) return;
     pointer.x = event.clientX / Math.max(1, width) - .5;

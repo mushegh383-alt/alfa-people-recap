@@ -7,9 +7,9 @@ html.is-portrait .hero-film .hero-subtitle { top: calc((1401px + var(--film-view
 html.is-portrait .hero-film .hero-subtitle { text-shadow: 0 2px 18px #000, 0 0 40px #000; }
 
 /* Моменты: полароиды подтягиваем внутрь видимой полосы, иначе они за краем экрана. */
-html.is-portrait .moments-photo[data-photo="0"] { left: 460px !important; top: 330px !important; }
-html.is-portrait .moments-photo[data-photo="1"] { left: 1170px !important; top: 300px !important; }
-html.is-portrait .moments-photo[data-photo="2"] { left: 520px !important; top: 1880px !important; }
+html.is-portrait .moments-photo[data-photo="0"] { left: 548px !important; top: 1855px !important; }
+html.is-portrait .moments-photo[data-photo="1"] { left: 827px !important; top: 1925px !important; }
+html.is-portrait .moments-photo[data-photo="2"] { left: 1104px !important; top: 1830px !important; }
 
 /* Траты коинов: на десктопе цифра слева, подпись справа от кольца —
    на телефоне цифра над кольцом, подпись под ним, обе по центру. */
@@ -25,10 +25,13 @@ html.is-portrait .moments :is(.moments-back,.moments-core,.moments-camera),
 html.is-portrait .moments.is-moments-active .moments-sparkles i { will-change: auto; }
 html.is-portrait .moments-lens { backdrop-filter: none; -webkit-backdrop-filter: none; background: radial-gradient(ellipse, #18031019, transparent 70%); }
 
-/* Память: на телефоне коины не наезжают на ачивки — сцены сменяют друг друга,
-   и ачивки успевают освободить память. Анимации коинов — только на экране. */
+/* Компактная смена закреплённых сцен в портретном режиме. */
 html.is-portrait .november .november-scene.coins.follows-achievements { margin-top: 0; background: #020101; }
 html.is-portrait .november .november-scene.coins.follows-achievements .november-stage { background: #020101; }
+@media (prefers-reduced-motion: no-preference) {
+  html.is-portrait .november .achievements.has-coins-next { height: 180svh; }
+  html.is-portrait .november .november-scene.coins.follows-achievements { margin-top: -24svh; }
+}
 .november-scene.coins:not(.is-on-screen) :is(.coins-mini, .coins-sparkle) { animation-play-state: paused; }
 
 
@@ -57,3 +60,22 @@ html.is-portrait .coins-blue-orbit > i:nth-of-type(8) { left: 1150px !important;
 /* К-толк: блок «250 / Часов вы общались» стоял на 55 px макета правее центра —
    на узком экране это заметно. Выравниваем по центру экрана, как заголовок. */
 html.is-portrait .talk-contact-data { margin-left: -55px; }
+
+html.is-portrait .moments-photo { width: 322px; height: 390px; }
+html.is-portrait .moments-photo[data-photo="1"] { z-index: 5; }
+html.is-portrait .moments-flash { display: none; }
+html.is-portrait .moments-caption { line-height: 1.15; }
+html.is-portrait { overflow-anchor: none; }
+
+.scene-next {
+  position: fixed; right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom)); z-index: 45;
+  min-height: 44px; padding: 0 17px; border-radius: 24px;
+  border: 1px solid #ffffff65; background: #17131bea; color: white;
+  font: 700 14px/1 Styrene, sans-serif; cursor: pointer;
+}
+.scene-next[aria-disabled="true"] { opacity: .65; }
+.scene-next:focus-visible { outline: 3px solid white; outline-offset: 3px; }
+body:has(dialog[open],.talisman-modal:not([hidden])) .scene-next { visibility: hidden; }
+
+.swipe-scenes { touch-action: pan-x pinch-zoom; }

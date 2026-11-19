@@ -40,14 +40,17 @@ export function mountAchievementsMotion(root, signal) {
     frame = 0;
     if (signal.aborted || !inView || document.hidden) return;
     const box = section.getBoundingClientRect();
-    const playback = achievementPlayback(box.top, box.height, innerHeight, hasCoins);
+    const viewport = stage.clientHeight;
+    const portrait = isPortrait(stage.clientWidth, viewport);
+    const direct = portrait || reducedMotion.matches;
+    const playback = achievementPlayback(box.top, box.height, viewport, hasCoins, portrait);
     const target = reducedMotion.matches ? 1 : playback.progress;
-    const starTarget = reducedMotion.matches ? 1 : achievementTransition(box.top, innerHeight).star;
+    const starTarget = reducedMotion.matches ? 1 : achievementTransition(box.top, viewport).star;
     const delta = lastTime ? Math.min(64, Math.max(1, now - lastTime)) : 16;
     lastTime = now;
-    if (progress === undefined || reducedMotion.matches) progress = target;
+    if (progress === undefined || direct) progress = target;
     else progress += (target - progress) * (1 - Math.exp(-delta / 65));
-    if (entrance === undefined || reducedMotion.matches) entrance = starTarget;
+    if (entrance === undefined || direct) entrance = starTarget;
     else entrance += (starTarget - entrance) * (1 - Math.exp(-delta / 100));
     const settling = Math.abs(target - progress) > .0001 || Math.abs(starTarget - entrance) > .0001 || closingNow === undefined || Math.abs((reducedMotion.matches ? 0 : playback.closing) - closingNow) > .0005;
     if (!settling) { progress = target; entrance = starTarget; }
@@ -57,7 +60,7 @@ export function mountAchievementsMotion(root, signal) {
     const closingTarget = reducedMotion.matches ? 0 : playback.closing;
     // Вход в блок (в том числе снизу, при обратном скролле) — сразу в нужную фазу,
     // без «вспышки» целой звезды перед повторным улётом.
-    if (closingNow === undefined) closingNow = closingTarget;
+    if (closingNow === undefined || direct) closingNow = closingTarget;
     closingNow += (closingTarget - closingNow) * (1 - Math.exp(-delta / 65));
     if (Math.abs(closingTarget - closingNow) < .0005) closingNow = closingTarget;
     const out = achievementClosing(closingNow, getQuality() === 'lite' || isPortrait(innerWidth, innerHeight));

@@ -35,10 +35,11 @@ export function createThanksNotes(section) {
   const layer = {
     ctx: ctx2,
     resize(scale) {
-      W = host.clientWidth; H = host.clientHeight; S = scale; dpr = canvasBudget(W, H).ratio;
+      W = host.clientWidth; H = host.clientHeight; S = scale;
+      dpr = W/H < .8 ? Math.min(devicePixelRatio || 1, 3, Math.sqrt(3500000 / Math.max(1,W*H))) : canvasBudget(W,H).ratio;
       canvas.width = Math.max(1, Math.round(W * dpr)); canvas.height = Math.max(1, Math.round(H * dpr));
       // Левый верхний угол экрана в координатах макета: (−(W/2 − 958·s)/s, −(H/2 − 739·s)/s).
-      Object.assign(canvas.style, { left: `${-(W / 2 - 958 * S) / S}px`, top: `${-(H / 2 - 739 * S) / S}px`, width: `${W}px`, height: `${H}px`, transform: `scale(${1 / S})`, transformOrigin: '0 0' });
+      Object.assign(canvas.style, { left: `${-(W / 2 - 958 * S) / S}px`, top: `${-(H / 2 - 739 * S) / S}px`, width: `${W / S}px`, height: `${H / S}px`, transform: 'none', transformOrigin: '0 0' });
     },
     begin() { ctx2.setTransform(1, 0, 0, 1, 0, 0); ctx2.clearRect(0, 0, canvas.width, canvas.height); ctx2.setTransform(dpr * S, 0, 0, dpr * S, dpr * (W / 2 - 958 * S), dpr * (H / 2 - 739 * S)); },
     release() { canvas.width = canvas.height = 1; },

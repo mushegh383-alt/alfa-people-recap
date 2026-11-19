@@ -46,23 +46,28 @@ export function mountBookChapter(root, signal) {
   const transport=createScrollVideo(video,signal,schedule);
   function seek(){transport.seek(latest,active);}
 
+  let previousFit;
   function update(now) {
     raf = 0; if (!active || signal.aborted || document.hidden) return;
-    const b = chapter.getBoundingClientRect(), target = -b.top / innerHeight;
+    const b = chapter.getBoundingClientRect(), target = -b.top / stage.clientHeight;
     const dt = last ? Math.min(64, now - last) : 16; last = now;
-    progress = progress === undefined || reduced.matches ? target : progress + (target - progress) * (1 - Math.exp(-dt / 90));
+    progress = progress === undefined || document.documentElement.classList.contains('is-portrait') || reduced.matches ? target : progress + (target - progress) * (1 - Math.exp(-dt / 90));
     if (Math.abs(target - progress) < .0001) progress = target;
-    const f = bookFrame(progress, Boolean(spending), reduced.matches), g = spending && !reduced.matches ? bookSpendingPose(stage.clientWidth, innerHeight, progress, f.travel, spendingComp()) : bookGeometry(stage.clientWidth, innerHeight, f.travel, Boolean(spending));
+    const f = bookFrame(progress, Boolean(spending), reduced.matches), g = spending && !reduced.matches ? bookSpendingPose(stage.clientWidth, stage.clientHeight, progress, f.travel, spendingComp()) : bookGeometry(stage.clientWidth, stage.clientHeight, f.travel, Boolean(spending));
     latest = f.time;
     book.style.width = book.style.height = `${g.size}px`;
-    book.style.transform = `translate(${g.x - g.size / 2}px,${g.y - g.size / 2 + (reduced.matches && spending ? innerHeight : 0)}px) rotate(${g.rotation || 0}deg)`;
+    book.style.transform = `translate(${g.x - g.size / 2}px,${g.y - g.size / 2 + (reduced.matches && spending ? stage.clientHeight : 0)}px) rotate(${g.rotation || 0}deg)`;
     book.style.opacity = g.opacity ?? f.appear;
     book.style.visibility = (g.opacity ?? f.appear) > .001 ? 'visible' : 'hidden';
     placeComposition(composition, g.fit);
-    setHeadingScale(composition, g.fit, stage.clientWidth, innerHeight);
+    const fitKey = [g.fit, stage.clientWidth, stage.clientHeight].join('/');
+    if (fitKey !== previousFit) {
+      setHeadingScale(composition, g.fit, stage.clientWidth, stage.clientHeight);
+      previousFit = fitKey;
+    }
     backdrop.style.opacity = spending ? f.exit : 1;
     if (spending) {
-      spending.style.transform = reduced.matches ? '' : `translateY(${-f.exit * innerHeight * .18}px) scale(${1 + f.exit * .35})`;
+      spending.style.transform = reduced.matches ? '' : `translateY(${-f.exit * stage.clientHeight * .18}px) scale(${1 + f.exit * .35})`;
       spending.style.opacity = reduced.matches ? 1 : 1 - f.exit;
       spending.style.visibility = reduced.matches || f.exit < .9999 ? 'visible' : 'hidden';
       spending.inert = !reduced.matches && f.exit > .8;

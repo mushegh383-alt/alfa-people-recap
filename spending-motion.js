@@ -35,15 +35,15 @@ export function mountSpendingMotion(root, signal) {
     if (!inView || document.hidden || signal.aborted) return;
     // In the book chapter, the original 220vh coin animation runs unchanged
     // inside the shared sticky viewport. The remaining scroll opens the book.
-    const box = chapter ? { top: chapter.getBoundingClientRect().top, height: innerHeight * (reducedMotion.matches ? 1 : 2.2) } : section.getBoundingClientRect();
-    const target = reducedMotion.matches ? 1 : spendingScrollProgress(box.top, box.height, innerHeight);
-    const enterTarget = reducedMotion.matches ? 1 : spendingEntrance(box.top, innerHeight);
+    const box = chapter ? { top: chapter.getBoundingClientRect().top, height: stage.clientHeight * (reducedMotion.matches ? 1 : 2.2) } : section.getBoundingClientRect();
+    const target = reducedMotion.matches ? 1 : spendingScrollProgress(box.top, box.height, stage.clientHeight);
+    const enterTarget = reducedMotion.matches ? 1 : spendingEntrance(box.top, stage.clientHeight);
     // During the overlap, both scenes share the same viewport instead of
     // bringing the next artboard up from the bottom as a separate page.
     stage.style.transform = !reducedMotion.matches && section.classList.contains('follows-coins') ? `translateY(${-Math.max(0, box.top)}px)` : '';
     const delta = lastTime ? Math.min(64, Math.max(1, now - lastTime)) : 16;
     lastTime = now;
-    if (progress === undefined || reducedMotion.matches) { progress = target; entrance = enterTarget; }
+    if (progress === undefined || reducedMotion.matches || document.documentElement.classList.contains('is-portrait')) { progress = target; entrance = enterTarget; }
     else {
       progress += (target - progress) * (1 - Math.exp(-delta / 75));
       entrance += (enterTarget - entrance) * (1 - Math.exp(-delta / 90));
