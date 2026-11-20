@@ -74,8 +74,9 @@ function finishClock(svg, bridge) {
  const arc = part('Ellipse 8989');
  arc.removeAttribute('filter');
  const arcLine = arc.querySelector('circle');
- arcLine.setAttribute('r','1354'); arcLine.setAttribute('stroke-width','17');
- arcLine.setAttribute('stroke',caseFinish);
+ arcLine.setAttribute('r','1260');
+ arcLine.setAttribute('stroke-width','208');
+ arcLine.setAttribute('stroke','#fffaf4');
  for (const [id,x,y,colors] of [
   ['Line 1',963,847,['#793e3c','#fff1cf','#ffbf8a','#844149']],
   ['Line 3',522,472,['#242034','#d4cad1','#746e89','#262437']]

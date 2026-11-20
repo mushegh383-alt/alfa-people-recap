@@ -1,3 +1,4 @@
+import { envelopeSequence } from './envelope.js?local=28';
 import { preloadAssets, resourceUrl, resourceJSON } from './resources.js';
 const overlay = document.querySelector('#preloader');
 const percent = overlay.querySelector('.preloader-percent');
@@ -133,6 +134,9 @@ export async function prepareContent(root, data, signal) {
   // Видео без адреса (статичная картинка вместо ролика) не ждём.
   const videos = [...root.querySelectorAll('video')].filter(video => video.getAttribute('src'));
   videos.forEach(video => urls.push(video.src, video.poster));
+  if (root.querySelector('.is-envelope-still') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    urls.push(...envelopeSequence);
+  }
   if (data.intro && data.intro.mode !== 'video' && data.year === data.intro.mediaYear) {
     for (let i = 0; i < data.intro.frameCount; i++) urls.push(new URL(`${String(i).padStart(5, '0')}.webp`, data.intro.frameBase).href);
   }
@@ -145,7 +149,7 @@ export async function prepareContent(root, data, signal) {
     urls.push('./assets/optimized/achievement-texture.webp');
   }
   await preloadAssets(urls, { signal, onProgress: progress => setProgress(progress * 94) });
-  status.textContent = 'Готовим первый экран';
+  status.textContent = 'Готовим анимации';
   signal.throwIfAborted();
   // На телефоне декодируем заранее только первый экран: остальные картинки
   // декодируются, когда до них доходят. Иначе разом ~200 МБ растров в памяти.

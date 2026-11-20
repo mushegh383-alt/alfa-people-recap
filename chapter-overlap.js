@@ -40,7 +40,11 @@ export function mountChapterOverlaps(slides, signal) {
   function update() {
     for (const {section,stage,track} of fades) {
       const top = section.getBoundingClientRect().top;
-      (track || stage).style.opacity = reduced.matches ? '' : ease(.03,.96,1-top/Math.max(1,stage.clientHeight));
+      const progress = 1-top/Math.max(1,stage.clientHeight);
+      const entersFromBook = section.matches('.ending-chapter, #office');
+      const opacity = entersFromBook ? ease(.64,1.02,progress) : ease(.03,.96,progress);
+      (track || stage).style.opacity = reduced.matches ? '' : opacity;
+      if (entersFromBook) stage.style.setProperty('--office-entry-y', reduced.matches ? '0%' : `${(1-opacity)*14}%`);
     }
   }
   window.addEventListener('scroll',update,{passive:true,signal});

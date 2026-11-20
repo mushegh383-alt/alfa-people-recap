@@ -43,7 +43,7 @@ export function mountAchievementsMotion(root, signal) {
     const viewport = stage.clientHeight;
     const portrait = isPortrait(stage.clientWidth, viewport);
     const direct = section.classList.contains('overlap-entry') || portrait || reducedMotion.matches;
-    const playback = achievementPlayback(box.top, box.height, viewport, hasCoins, portrait, root.classList.contains('swipe-scenes') ? 0 : 1);
+    const playback = achievementPlayback(box.top, box.height, viewport, hasCoins, portrait, root.classList.contains('mobile-scroll') ? 0 : 1);
     // The section carries the scroll distance. Its artwork stays at the
     // viewport centre while the preceding scene dissolves beneath it.
     const approach = Math.max(0, Math.min(viewport, box.top));
@@ -121,6 +121,7 @@ export function mountAchievementsMotion(root, signal) {
       if (digit.textContent !== information.digits[index]) digit.textContent = information.digits[index];
     });
     lines.forEach((line, index) => {
+      line.style.opacity = information.lines[index];
       line.style.transform = `translateY(${(1 - information.lines[index]) * 120}%)`;
     });
     section.dataset.progress = progress.toFixed(4);

@@ -1,11 +1,13 @@
 import { setHeadingScale } from './typography.js';
 import { createScrollVideo } from './performance.js';
-import { optimizedAssetUrl } from './resources.js';
+import { optimizedAssetUrl, resourceUrl } from './resources.js';
 import { requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cancelAnimationFrame } from './performance.js';
 import { envelopeFrame, sectionProgress, reel } from './november-layout.js';
 import { fitScale, placeComposition } from './layout-fit.js';
 import { createPostcardPrints } from './scene-fill.js?prints=4';
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+export const envelopeSequence = Array.from({length:100}, (_, index) =>
+  './assets/envelope/sequence/' + String(index).padStart(3,'0') + '.webp');
 export const HEADROOM={envelope:420};
 export function createEnvelope(data) {
  const section=document.createElement('section'); section.className='postcards envelope-section';section.id='postcards';section.setAttribute('aria-label','Полученные и отправленные открытки');
@@ -13,7 +15,7 @@ export function createEnvelope(data) {
  const film=section.querySelector('video');film.muted=film.defaultMuted=true;
  // Статичный конверт: ролик не грузим, показываем картинку.
  if(data.postcards.still){section.classList.add('is-envelope-still');const image=section.querySelector('.envelope-still');
-  image.src=reduced.matches?data.postcards.still:'./assets/envelope/sequence/000.webp';
+  image.src=reduced.matches?data.postcards.still:envelopeSequence[0];
   image.style.objectFit='contain';
   image.dataset.poster=data.postcards.still;}
  else{film.src=data.postcards.video;section.querySelector('.envelope-still').src=optimizedAssetUrl(data.postcards.poster);}
@@ -41,7 +43,7 @@ export function mountEnvelope(root,signal,external=false) {
   let task=frames.get(index);
   if(!task){
    const frame=new Image();
-   frame.src='./assets/envelope/sequence/'+String(index).padStart(3,'0')+'.webp';
+   frame.src=resourceUrl(envelopeSequence[index]);
    task=frame.decode().then(()=>frame.src).catch(()=>null);
    frames.set(index,task);
   }
@@ -63,7 +65,7 @@ export function mountEnvelope(root,signal,external=false) {
   });
   for(let offset=1;offset<=3;offset++){
    const next=index+offset*direction;
-   if(next>=0 && next<100)loadFrame(next);
+   if(next>=0 && next<envelopeSequence.length)loadFrame(next);
   }
  }
  function fit(){const scale=fitScale(stage.clientWidth,stage.clientHeight,1920,2059+HEADROOM.envelope,'envelope');placeComposition(composition, scale, ` translateY(${HEADROOM.envelope/2}px)`);setHeadingScale(composition,scale,stage.clientWidth,stage.clientHeight);prints?.resize(scale,HEADROOM.envelope/2);p===undefined||prints?.draw(reduced.matches ? .595 : p);schedule();}
@@ -76,7 +78,7 @@ export function mountEnvelope(root,signal,external=false) {
   const f=envelopeFrame(p,reduced.matches);section.dataset.progress=p.toFixed(4);{const h=section.querySelector('.envelope-heading'),t=reduced.matches?1:Math.min(1,Math.max(0,p/.18));h.style.opacity=t;h.style.transform=`translateY(${(1-t)*40}px)`;}prints?.draw(reduced.matches ? .595 : p);section.dataset.phase=f.phase;section.classList.toggle('is-envelope-reduced',reduced.matches);
   const still=section.classList.contains('is-envelope-still');
   latest=f.video*Math.max(0,film.duration-.045);if(!reduced.matches&&!still)seek();
-  if(still)paintEnvelope(Math.round(f.video*99));
+  if(still)paintEnvelope(Math.round(f.video*(envelopeSequence.length-1)));
   const ready=reduced.matches||still||displayed>.84;
   entries.forEach((entry,i)=>{const reveal=(i?f.sent:f.received)*(ready?1:0);entry.style.opacity=reveal;entry.style.visibility=reveal>.001?'visible':'hidden';entry.style.transform=`translateY(${(1-reveal)*45}px) rotate(3.5deg)`;entry.querySelector('.envelope-number').textContent=reduced.matches?entry.dataset.value:reel(entry.dataset.value,i?f.sentDigits:f.receivedDigits);});
   if(Math.abs(target-p)>.0002)schedule();

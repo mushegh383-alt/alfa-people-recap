@@ -67,8 +67,6 @@ html.is-portrait .moments-flash { display: none; }
 html.is-portrait .moments-caption { line-height: 1.15; }
 html.is-portrait { overflow-anchor: none; }
 
-.swipe-scenes { touch-action: pan-x pinch-zoom; }
-
 .postcard-prints { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:3; }
 .postcard-prints img { position:absolute; top:0; left:0; opacity:0; height:auto; border-radius:2px; box-shadow:0 3px 8px #10142e44; }
 html:not(.is-portrait) .envelope-stage .postcard-prints { z-index:0; }
@@ -95,7 +93,7 @@ html:not(.is-portrait) .is-envelope-still .envelope-caption { margin-top:-27px; 
   .achievements-track .achievements-stage { opacity:0; }
 }
 .achievements-stage .achievement-rays-canvas { position:absolute; width:100%; height:100%; }
-.swipe-scenes .ending-chapter::before { display:none; }
+.mobile-scroll .ending-chapter::before { display:none; }
 .chapter-track { display:contents; }
 @media (prefers-reduced-motion:no-preference) {
   .november :is(.overlap-entry,.overlap-exit) { z-index:2; background:transparent !important; }
@@ -173,16 +171,19 @@ html.is-portrait .story-panel-contact .talk-contact::before {
   background-image:linear-gradient(#050816b3,#05081633 45%,#050816b3),url('./assets/restyle/personal-sky-phone.jpg');
 }
 @media (prefers-reduced-motion:no-preference) {
-  .november:not(.swipe-scenes) #profile-views { height:368svh; }
-  .november:not(.swipe-scenes) .achievements.has-coins-next { height:340svh; }
-  html.is-portrait .november:not(.swipe-scenes) .achievements.has-coins-next { height:280svh; }
+  .november:not(.mobile-scroll) #profile-views { height:368svh; }
+  .november:not(.mobile-scroll) .achievements.has-coins-next { height:340svh; }
+  html.is-portrait .november:not(.mobile-scroll) .achievements.has-coins-next { height:280svh; }
 }
 .scene-reading-note {
   display:block; margin:18px auto 0; color:#ffeede; font:500 39px/1.1 Formular,sans-serif;
   letter-spacing:-.025em; white-space:normal; text-wrap:balance; text-align:center;
   opacity:var(--note-opacity,1); text-shadow:0 2px 9px #15132bd9;
 }
-.achievement-caption .scene-reading-note { width:840px; position:relative; left:50%; translate:-50%; }
+.revision-six .achievement-caption { left:453px; width:900px; }
+.achievement-caption .scene-reading-note { max-width:100%; }
+.achievement-caption .achievement-caption-line { overflow:visible; white-space:normal; }
+.ending-chapter-pin > #office, #office.overlap-entry .sky-composition { translate:0 var(--office-entry-y,0%); }
 .moments-caption .scene-reading-note { font-size:36px; }
 .learning-composition > .scene-reading-note { position:absolute; bottom:7%; left:20%; width:60%; }
 .income-glass-viewport > .scene-reading-note {
@@ -214,3 +215,6 @@ html.is-portrait :is(.learning-composition,.tower-label) > .scene-reading-note {
 .office-tower .tower-label { color:#fff; text-shadow:0 2px 8px #0a142a,0 0 15px #0a142a; }
 .office-tower .tower-label .scene-reading-note { color:#fff1de; text-shadow:inherit; }
 html:not(.is-portrait) .november .office-tower .tower-label { top:1414px !important; }
+
+.scroll-hint:not(.is-visible) .scroll-hint-line i { animation-play-state:paused; }
+.scroll-hint-text { white-space:normal; line-height:1.35; }

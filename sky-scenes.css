@@ -3,7 +3,7 @@
 /* Free scrolling gets a reading interval after the constellation finishes.
    Swipe navigation holds the completed frame on its own clock. */
 @media (prefers-reduced-motion:no-preference) {
-  .november:not(.swipe-scenes) #zodiac { height:375svh; }
+  .november:not(.mobile-scroll) #zodiac { height:375svh; }
 }
 .sky-stage { background: #020101; }
 @media (prefers-reduced-motion: no-preference) {
