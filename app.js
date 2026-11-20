@@ -35,6 +35,7 @@ import { createZodiac, createProfileViews, mountSkyScenes } from './sky-scenes.j
 import { mountTalismanCard } from './talisman-card.js?local=21';
 
 const shell = document.querySelector('#recap-shell');
+shell.classList.toggle('is-android', /Android/i.test(navigator.userAgent));
 shell.classList.add('november');
 shell.classList.add('revision-six');
 let motionController;

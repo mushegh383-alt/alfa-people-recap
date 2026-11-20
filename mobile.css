@@ -265,3 +265,7 @@ html.is-portrait .revision-six .achievement-caption { top:915px; }
 html.is-portrait .revision-six .planet-ai h2:not(.planet-label) {
   text-shadow:0 2px 14px #101b39, 0 0 32px #101b39b3;
 }
+
+html.is-portrait .revision-six.is-android .thanks-stats { top:548px; }
+html.is-portrait .revision-six.is-android .achievement-number { top:85px; }
+html.is-portrait .revision-six.is-android .achievement-caption { top:1090px; }
