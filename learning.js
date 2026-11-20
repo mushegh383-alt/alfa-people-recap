@@ -12,9 +12,9 @@ export function createBookChapter(data) {
   const hasSpending = Boolean(data.spending), plan = bookChapterPlan(hasSpending);
   chapter.className = `book-chapter${hasSpending ? ' has-spending' : ' standalone-book'}`;
   chapter.dataset.route = hasSpending ? 'from-spending' : 'standalone';
-  chapter.style.setProperty('--chapter-height', `${plan.height * 100}svh`);
+  chapter.style.setProperty('--chapter-height', `calc(${plan.height} * var(--recap-screen))`);
   chapter.innerHTML = `<span class="learning-anchor" id="learning" aria-hidden="true"></span><div class="book-chapter-stage"><div class="book-chapter-backdrop"></div><div class="learning-book" aria-hidden="true"><video muted playsinline preload="none" disablepictureinpicture tabindex="-1"></video><img class="learning-open-poster" alt="" /></div><section class="learning-scene" aria-label="Обучение"><div class="learning-composition"><h2 class="november-heading learning-heading"></h2><div class="learning-stat learning-courses"><p class="learning-number" aria-hidden="true"></p><p class="learning-label"></p><span class="sr-only"></span></div><div class="learning-stat learning-hours"><p class="learning-number" aria-hidden="true"></p><p class="learning-label"></p><span class="sr-only"></span></div></div></section></div>`;
-  chapter.querySelector('.learning-anchor').style.top = `${plan.anchor * 100}svh`;
+  chapter.querySelector('.learning-anchor').style.top = `calc(${plan.anchor} * var(--recap-screen))`;
   const stage = chapter.querySelector('.book-chapter-stage');
   if (hasSpending) stage.prepend(createSpending(data));
   const video = chapter.querySelector('video');

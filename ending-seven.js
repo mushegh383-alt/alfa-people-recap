@@ -2,7 +2,7 @@ import { setTextScale } from './typography.js';
 import { requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cancelAnimationFrame, markSoftGlows, getQuality } from './performance.js';
 import { endingSevenFrames, finaleFrame, endingVectorPose } from './ending-seven-layout.js';
 import { createOffice as createOriginalOffice } from './blocks/ending.js';
-import { endingChapterFrame, endingSceneProgress, toEndingAnchor } from './ending-chapter-layout.js';
+import { endingChapterFrame, endingSceneProgress, toEndingAnchor } from './ending-chapter-layout.js?local=31';
 import { ease } from './november-layout.js';
 import { fitScale, placeComposition } from './layout-fit.js';
 import { createOfficeTower } from './sky-scenes.js?local=21';
@@ -277,7 +277,7 @@ function mountChapter(chapter, signal) {
       for (const section of [office, finale]) { section.style.opacity = '1'; section.style.transform = 'none'; section.style.visibility='visible'; section.inert=false; }
       blend=undefined; return;
     }
-    const { handoff } = endingChapterFrame(chapter.getBoundingClientRect().top, innerHeight);
+    const { handoff } = endingChapterFrame(chapter.getBoundingClientRect().top, chapter.querySelector('.ending-chapter-pin').clientHeight);
     const dt = last ? Math.min(64, now-last) : 16; last=now;
     blend = blend===undefined || document.documentElement.classList.contains('is-portrait') ? handoff : blend + (handoff-blend)*(1-Math.exp(-dt/100));
     if (Math.abs(handoff-blend)<.0001) blend=handoff;

@@ -20,7 +20,7 @@ export function endingSceneProgress(section, viewport, reduced = false) {
 export function toEndingAnchor(root, hash) {
   const chapter = root.querySelector('.ending-chapter');
   if (!chapter || !['#office','#finale'].includes(hash) || matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
-  const offset = hash === '#finale' ? (endingChapterHeight - 1) * innerHeight : 0;
+  const offset = hash === '#finale' ? chapter.offsetHeight - chapter.querySelector('.ending-chapter-pin').clientHeight : 0;
   window.scrollTo({ top: chapter.getBoundingClientRect().top + scrollY + offset, behavior: 'instant' });
   return true;
 }

@@ -6,7 +6,8 @@ function sceneStops(root) {
   const y = el => el.getBoundingClientRect().top + scrollY;
   const story = root.querySelector('.opening-story');
   if (story) {
-    const height = story.querySelector('.story-pin').clientHeight;
+    const rate = Number(getComputedStyle(story).getPropertyValue('--opening-scroll-rate')) || 1;
+    const height = story.querySelector('.story-pin').clientHeight * rate;
     for (const [selector, unit] of Object.entries(storyAnchors)) {
       if (story.querySelector(selector)) stops.push({id:selector.slice(1), y:y(story) + unit * height});
     }

@@ -29,8 +29,8 @@ html.is-portrait .moments-lens { backdrop-filter: none; -webkit-backdrop-filter:
 html.is-portrait .november .november-scene.coins.follows-achievements { margin-top: 0; background: #020101; }
 html.is-portrait .november .november-scene.coins.follows-achievements .november-stage { background: #020101; }
 @media (prefers-reduced-motion: no-preference) {
-  html.is-portrait .november .achievements.has-coins-next { height: 180svh; }
-  html.is-portrait .november .november-scene.coins.follows-achievements { margin-top: -24svh; }
+  html.is-portrait .november .achievements.has-coins-next { height: calc(1.8 * var(--recap-screen)); }
+  html.is-portrait .november .november-scene.coins.follows-achievements { margin-top: calc(-0.24 * var(--recap-screen)); }
 }
 .november-scene.coins:not(.is-on-screen) :is(.coins-mini, .coins-sparkle) { animation-play-state: paused; }
 
@@ -89,7 +89,7 @@ html:not(.is-portrait) .is-envelope-still .envelope-caption { margin-top:-27px; 
 .november .achievements { z-index:2; background:transparent !important; }
 .achievements-track { position:absolute; inset:0; pointer-events:none; }
 @media (prefers-reduced-motion:no-preference) {
-  .achievements-track { top:-100svh; }
+  .achievements-track { top:calc(-1 * var(--recap-screen)); }
   .achievements-track .achievements-stage { opacity:0; }
 }
 .achievements-stage .achievement-rays-canvas { position:absolute; width:100%; height:100%; }
@@ -98,9 +98,9 @@ html:not(.is-portrait) .is-envelope-still .envelope-caption { margin-top:-27px; 
 @media (prefers-reduced-motion:no-preference) {
   .november :is(.overlap-entry,.overlap-exit) { z-index:2; background:transparent !important; }
   .chapter-track { display:block; position:absolute; inset:0; pointer-events:none; }
-  .overlap-entry > .chapter-track { top:-100svh; }
-  .overlap-exit > .chapter-track { bottom:-100svh; }
-  .achievements-track.chapter-track { top:-100svh; }
+  .overlap-entry > .chapter-track { top:calc(-1 * var(--recap-screen)); }
+  .overlap-exit > .chapter-track { bottom:calc(-1 * var(--recap-screen)); }
+  .achievements-track.chapter-track { top:calc(-1 * var(--recap-screen)); }
   .ending-chapter.overlap-entry::before { display:none; }
   .november .chapter-track :is(.sky-stage,.achievements-stage,.november-stage,.book-chapter-stage,.ending-chapter-pin)::after { content:none; }
   #profile-views.is-on-screen .sky-stage, .ending-chapter .ending-seven-stage { pointer-events:auto; }
@@ -171,17 +171,15 @@ html.is-portrait .story-panel-contact .talk-contact::before {
   background-image:linear-gradient(#050816b3,#05081633 45%,#050816b3),url('./assets/restyle/personal-sky-phone.jpg');
 }
 @media (prefers-reduced-motion:no-preference) {
-  .november:not(.mobile-scroll) #profile-views { height:368svh; }
-  .november:not(.mobile-scroll) .achievements.has-coins-next { height:340svh; }
-  html.is-portrait .november:not(.mobile-scroll) .achievements.has-coins-next { height:280svh; }
+  .november:not(.mobile-scroll) #profile-views { height:calc(3.68 * var(--recap-screen)); }
+  .november:not(.mobile-scroll) .achievements.has-coins-next { height:calc(3.4 * var(--recap-screen)); }
+  html.is-portrait .november:not(.mobile-scroll) .achievements.has-coins-next { height:calc(2.8 * var(--recap-screen)); }
 }
 .scene-reading-note {
   display:block; margin:18px auto 0; color:#ffeede; font:500 39px/1.1 Formular,sans-serif;
   letter-spacing:-.025em; white-space:normal; text-wrap:balance; text-align:center;
   opacity:var(--note-opacity,1); text-shadow:0 2px 9px #15132bd9;
 }
-.revision-six .achievement-caption { left:453px; width:900px; }
-.achievement-caption .scene-reading-note { max-width:100%; }
 .achievement-caption .achievement-caption-line { overflow:visible; white-space:normal; }
 .ending-chapter-pin > #office, #office.overlap-entry .sky-composition { translate:0 var(--office-entry-y,0%); }
 .moments-caption .scene-reading-note { font-size:36px; }
@@ -204,7 +202,7 @@ html.is-portrait .story-panel-contact .talk-contact::before {
   background:radial-gradient(ellipse at center, #0b1733d9 24%, #0b1733a6 49%, #0b173347 69%, #0b173300 86%);
   filter:blur(12px);
 }
-.talisman-modal-preview { aspect-ratio:1535 / 2047; width:min(86vw,calc((100svh - 150px) * .75)); background:#122746; }
+.talisman-modal-preview { aspect-ratio:1535 / 2047; width:min(86vw,calc((100dvh - 150px) * .75)); background:#122746; }
 .talisman-modal-preview img { object-fit:contain; }
 @media (prefers-reduced-motion:no-preference) {
   .november .opening-story.overlap-exit { z-index:0; }
@@ -252,3 +250,18 @@ html.is-portrait .revision-six .planet-ai h2:not(.planet-label) {
 }
 html.is-portrait .revision-six .opening-story .income-glass-title { top:-38px; }
 html.is-portrait .revision-six .opening-story .income-glass-rank { top:-140px; }
+
+/* Use one stable viewport for pinned artwork and its scroll distance. */
+:root { --recap-screen:100svh; --opening-scroll-rate:1; }
+html.is-portrait { --recap-screen:100lvh; }
+@media (prefers-reduced-motion:no-preference) {
+  html.is-portrait { --opening-scroll-rate:1.25; }
+  html.is-portrait .november.mobile-scroll .achievements.has-coins-next { height:calc(2.35 * var(--recap-screen)); }
+  html.is-portrait .november.mobile-scroll #coins { height:calc(2.75 * var(--recap-screen)); }
+}
+.revision-six .achievement-caption { left:253px; width:1300px; overflow:visible; }
+.achievement-caption .scene-reading-note { max-width:100%; overflow:visible; }
+html.is-portrait .revision-six .achievement-caption { top:915px; }
+html.is-portrait .revision-six .planet-ai h2:not(.planet-label) {
+  text-shadow:0 2px 14px #101b39, 0 0 32px #101b39b3;
+}

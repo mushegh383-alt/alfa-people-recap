@@ -1,7 +1,7 @@
 /* Figma 2964:4685, local revision of 6 November. Scope ends at top-1 service. */
 @font-face { font-family: Styrene; src: url('./assets/styrene-a-bold.otf') format('opentype'); font-style: normal; font-weight: 700; font-display: swap; }
 @font-face { font-family: Styrene; src: url('./assets/styrene-a-regular.otf') format('opentype'); font-style: normal; font-weight: 400; font-display: swap; }
-.revision-six .opening-story { height: 1130svh; }
+.revision-six .opening-story { height: calc(11.3 * var(--recap-screen)); }
 .revision-six .story-dark { background: #020101; }
 .revision-six .story-panel-thanks { z-index: 3; }
 .revision-six .story-panel-postcards { z-index: 4; }
@@ -60,7 +60,7 @@
 .moments.is-moments-active .moments-photo {will-change:transform;}
 @media (prefers-reduced-motion: reduce) { .revision-six .thanks-burst-idle { animation: none; } }
 /* One continuous film: ornament → AI planet → agent → clock. */
-.revision-six .opening-story { height: 1680svh; }
+.revision-six .opening-story { height: calc(16.8 * var(--recap-screen)); }
 .story-panel-planet { z-index: 7; }
 .planet-story { position: absolute; inset: 0; overflow: clip; }
 .planet-composition { position: absolute; left:50%; top:50%; width:1920px; height:2287px; transform-origin:center; }
@@ -86,7 +86,7 @@
 /* Shared visible title size; every fitted camera supplies its own compensation. */
 .revision-six :is(.hero-title,.person-name,.thanks-title,.income-glass-title,.november-heading,.talk-contact-name),
 .revision-six .planet-copy h2:not(.planet-label) {font-size:var(--recap-heading-logical,260px)!important;letter-spacing:-.03em;}
-.revision-six .opening-story {height:1920svh;}
+.revision-six .opening-story {height:calc(19.2 * var(--recap-screen));}
 .story-panel-contact {z-index:8;}
 .talk-contact {position:absolute;inset:0;overflow:clip;}
 .talk-contact-composition {position:absolute;left:50%;top:50%;width:1920px;height:1647px;transform-origin:center;}
@@ -120,7 +120,7 @@
 /* One sticky stage owns both coin spending and the learning book. */
 .book-chapter {position:relative;height:var(--chapter-height);background:#020101;isolation:isolate;z-index:3;}
 .learning-anchor {position:absolute;left:0;pointer-events:none;}
-.book-chapter-stage {position:sticky;top:0;width:100%;height:100svh;overflow:clip;isolation:isolate;}
+.book-chapter-stage {position:sticky;top:0;width:100%;height:var(--recap-screen);overflow:clip;isolation:isolate;}
 .revision-six .book-chapter .spending {position:absolute;inset:0;margin:0;height:100%;transform-origin:50% 80%;z-index:0;}
 .book-chapter .spending-stage {position:absolute;inset:0;height:100%;}
 .book-chapter-backdrop {position:absolute;inset:0;background:#020101;z-index:1;opacity:0;pointer-events:none;}
@@ -138,13 +138,13 @@
 .book-reduced .learning-open-poster {display:block;}
 .book-reduced video {visibility:hidden;}
 @media (prefers-reduced-motion:reduce) {
- .book-chapter {height:100svh;}
- .book-chapter.has-spending {height:200svh;}
+ .book-chapter {height:var(--recap-screen);}
+ .book-chapter.has-spending {height:calc(2 * var(--recap-screen));}
  .book-chapter-stage {position:relative;height:100%;}
- .revision-six .book-chapter .spending {height:100svh;}
+ .revision-six .book-chapter .spending {height:var(--recap-screen);}
  .book-chapter-backdrop {display:none;}
- .has-spending .learning-scene {top:100svh;height:100svh;}
- .standalone-book .learning-scene {height:100svh;}
+ .has-spending .learning-scene {top:var(--recap-screen);height:var(--recap-screen);}
+ .standalone-book .learning-scene {height:var(--recap-screen);}
 }
 /* Моменты: вспышка фотоаппарата и искры при появлении */
 .moments-flash {position:absolute;inset:0;z-index:6;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 48%,#fffffff2 0%,#ffffff66 38%,#fa7ab300 75%);visibility:hidden;}
@@ -168,7 +168,7 @@ html[data-quality=lite] .achievement-sparkles i {filter:none;}
 @keyframes achievement-breathe {50% {transform:translate(-50%,-50%) scale(1.08);opacity:.75;}}
 
 /* Коины поднимаются сквозь исчезающую звезду, а не выезжают после чёрной паузы. */
-.november .november-scene.coins.follows-achievements {margin-top:-60svh;background:transparent;z-index:2;}
+.november .november-scene.coins.follows-achievements {margin-top:calc(-0.6 * var(--recap-screen));background:transparent;z-index:2;}
 @media (prefers-reduced-motion: reduce) {.november .november-scene.coins.follows-achievements {margin-top:0;background:#020101;}}
 /* Коины: наполнение сцены */
 .coins-deco {position:absolute;inset:0;pointer-events:none;}
@@ -198,9 +198,9 @@ html[data-quality=lite] .coins-mini.is-far img, html[data-quality=lite] .coins-m
 /* Мягкий переход паркшеринг → офис: снег уходит в черноту по мере ухода сцены,
    а офис проступает из той же черноты, а не обрывается белым краем. */
 .november .parksharing.november-scene { isolation: isolate; }
-.november .parksharing.november-scene::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 100svh; z-index: 5; pointer-events: none;
+.november .parksharing.november-scene::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: var(--recap-screen); z-index: 5; pointer-events: none;
   background: linear-gradient(to bottom, #02010100 0%, #02010100 25%, #02010199 60%, #020101 100%); }
-.ending-chapter::before { content: ''; position: absolute; left: 0; right: 0; top: -1px; height: 90svh; z-index: 20; pointer-events: none;
+.ending-chapter::before { content: ''; position: absolute; left: 0; right: 0; top: -1px; height: calc(0.9 * var(--recap-screen)); z-index: 20; pointer-events: none;
   background: linear-gradient(to bottom, #020101 0%, #020101cc 30%, #02010166 60%, #02010100 100%); }
 /* «Спасибки»: на широких экранах общий размер заголовка (180 px на экране) в
    координатах сцены выходил больше макетных 248 px, и слово наезжало на цифры. */

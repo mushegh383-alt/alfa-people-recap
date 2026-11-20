@@ -13,7 +13,7 @@ import { fitScale, placeComposition, screenRect } from './layout-fit.js';
 export function createOpeningStory(hero, personal, income, thanks, extra = {}) {
   const section = document.createElement('section');
   section.className = 'opening-story';
-  section.style.height = `${(storyTravel + 1) * 100}svh`;
+  section.style.height = `calc(var(--recap-screen) * (1 + ${storyTravel} * var(--opening-scroll-rate)))`;
   section.classList.toggle('has-film-intro', hero.classList.contains('hero-film'));
   section.setAttribute('aria-label', 'Ваш год: итоги, спасибки, открытки, моменты, топ-1 сервис, Alfa AI и топ-собеседник');
   section.innerHTML = `<div class="story-pin"><div class="story-dark" aria-hidden="true"></div><div class="story-heart-glow" aria-hidden="true"></div></div>`;
@@ -90,6 +90,7 @@ export function mountOpeningStory(story, signal) {
   const thanksNotes = createThanksNotes(thanks);
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const pointer = { x: 0, y: 0 };
+  let scrollRate = 1;
   let geometry, width, height, top, heroScale, personalScale, heartCenter;
   let frame = 0, previousTime = 0, current = null, heroActive = null, intersecting = true;
   let forceDraw = true;
@@ -115,7 +116,7 @@ export function mountOpeningStory(story, signal) {
   // instead of simply scrolling away.
   let lastRelease = -1;
   function applyRelease() {
-    const raw = (scrollY - top) / Math.max(1, height) - storyTravel;
+    const raw = (scrollY - top) / Math.max(1, height) - storyTravel * scrollRate;
     const r = story.classList.contains('overlap-exit') || reduced.matches || width / height < .8 ? 0 : Math.max(0, Math.min(1, raw));
     if (Math.abs(r - lastRelease) < .001) return;
     lastRelease = r;
@@ -129,6 +130,7 @@ export function mountOpeningStory(story, signal) {
   function fit() {
     width = pin.clientWidth; height = pin.clientHeight;
     top = story.getBoundingClientRect().top + scrollY;
+    scrollRate = Number(getComputedStyle(story).getPropertyValue('--opening-scroll-rate')) || 1;
     heroScale = hero.classList.contains('hero-film') ? fitScale(width, height, 1920, heroHeight, 'hero') : fitScale(width, height, 1920, heroHeight, 'hero', 24, 24);
     if (hero.classList.contains('hero-film')) {
       hero.style.setProperty('--film-viewport-width', `${width / heroScale}px`);
@@ -158,7 +160,7 @@ export function mountOpeningStory(story, signal) {
   function draw(now) {
     frame = 0;
     if (signal.aborted || document.hidden) return;
-    const target = storyUnit(scrollY, top, height);
+    const target = storyUnit(scrollY, top, height * scrollRate);
     if (!intersecting && !forceDraw) return;
     const dt = Math.min(64, Math.max(1, now - (previousTime || now - 16)));
     previousTime = now;
@@ -289,7 +291,7 @@ export function mountOpeningStory(story, signal) {
   reduced.addEventListener('change', () => { forceDraw = true; schedule(); }, { signal });
   function toAnchor(hash, behavior = 'instant') {
     if (!(hash in storyAnchors)) return false;
-    window.scrollTo({ top: top + storyAnchors[hash] * height, behavior });
+    window.scrollTo({ top: top + storyAnchors[hash] * height * scrollRate, behavior });
     return true;
   }
   document.addEventListener('click', event => {

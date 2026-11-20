@@ -1,4 +1,4 @@
-import { mountSceneNavigation } from './scene-navigation.js?local=28';
+import { mountSceneNavigation } from './scene-navigation.js?local=31';
 import { mountChapterOverlaps } from './chapter-overlap.js?local=27';
 import { startPerformanceMonitor, selectMediaSources, manageVideoMemory, manageSectionMemory } from './performance.js';
 import { createEnvelope, mountEnvelope } from './envelope.js?local=28';
@@ -21,16 +21,16 @@ import { mountThanksMotion } from './thanks-motion.js';
 import { createPostcards } from './blocks/postcards.js';
 import { mountPostcardsMotion } from './postcards-motion.js';
 import { createAchievements } from './blocks/achievements.js?local=14';
-import { mountAchievementsMotion } from './achievements-motion.js?local=29';
-import { createEndingChapter, prepareEndingSeven, prepareFinaleBackdrop, mountEndingMotion } from './ending-seven.js?local=29';
-import { toEndingAnchor } from './ending-chapter-layout.js';
+import { mountAchievementsMotion } from './achievements-motion.js?local=31';
+import { createEndingChapter, prepareEndingSeven, prepareFinaleBackdrop, mountEndingMotion } from './ending-seven.js?local=31';
+import { toEndingAnchor } from './ending-chapter-layout.js?local=31';
 import { createOfficeAnimation } from './office-animation.js';
 import { mountEndingMotion as mountOriginalOfficeMotion } from './ending-motion.js';
-import { createOpeningStory, mountOpeningStory } from './opening-story.js?local=30';
+import { createOpeningStory, mountOpeningStory } from './opening-story.js?local=31';
 import { createPlanetStory, preparePlanet } from './planet-story.js?local=30';
 import { createMoments, prepareMoments } from './moments.js?local=16';
 import { createTalkContact, prepareTalkContact } from './talk-contact.js?local=21';
-import { createBookChapter, mountBookChapter } from './learning.js?local=29';
+import { createBookChapter, mountBookChapter } from './learning.js?local=31';
 import { createZodiac, createProfileViews, mountSkyScenes } from './sky-scenes.js?local=29';
 import { mountTalismanCard } from './talisman-card.js?local=21';
 

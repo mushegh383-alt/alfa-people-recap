@@ -82,7 +82,7 @@ img { display: block; }
 .load-error { position: fixed; inset: 40% 15% auto; text-align: center; font: 20px/1.5 Arial, sans-serif; }
 
 /* Original income collage; the thanks slide remains fitted to the viewport. */
-.thanks { position: relative; width: 100%; height: 100svh; min-height: 0; isolation: isolate; padding: 0; }
+.thanks { position: relative; width: 100%; height: var(--recap-screen); min-height: 0; isolation: isolate; padding: 0; }
 .income { position: absolute; left: 88px; top: 3196px; width: 1745px; height: 1830px; isolation: isolate; }
 .income-left { position: absolute; inset: 0 auto auto 0; width: 705px; height: 1724px; background: var(--red); }
 .income-bottom-right { position: absolute; left: 958px; top: 1092px; width: 787px; height: 632px; background: var(--red); }
@@ -194,9 +194,9 @@ img { display: block; }
 .postcards-spark span { position: absolute; border-radius: 20.299px; }
 
 /* Figma 2861:123: original contour rays, star and multiply texture. */
-.achievements { position: relative; z-index: 1; width: 100%; height: 150svh; isolation: isolate; }
-.postcards + .achievements { margin-top: -18svh; }
-.achievements-stage { position: sticky; top: 0; width: 100%; height: 100svh; overflow: clip; isolation: isolate; }
+.achievements { position: relative; z-index: 1; width: 100%; height: calc(1.5 * var(--recap-screen)); isolation: isolate; }
+.postcards + .achievements { margin-top: calc(-0.18 * var(--recap-screen)); }
+.achievements-stage { position: sticky; top: 0; width: 100%; height: var(--recap-screen); overflow: clip; isolation: isolate; }
 .achievements-composition { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1084px; transform-origin: center; }
 .achievement-focal { position: absolute; left: 451px; top: 38px; width: 1062px; height: 1046px; overflow: clip; opacity: 0; transform-origin: 531px 523px; }
 .achievement-star { position: absolute; left: 0; top: 0; max-width: none; }
@@ -207,12 +207,12 @@ img { display: block; }
 .achievement-digits { display: inline-block; font-size: var(--achievement-count-size, 700px); white-space: nowrap; }
 .achievement-digits span { display: inline-block; paint-order: stroke fill; }
 @media (prefers-reduced-motion: reduce) {
-  .achievements { height: 100svh; }
+  .achievements { height: var(--recap-screen); }
 }
 
 /* Promote only the scene currently near the viewport; release off-screen surfaces. */
 .hero.is-hero-active .hero-decor, .income.is-active .income-orbit, .income.is-active .income-orbit img, .income.is-active .income-star-scroll, .thanks.is-active .thanks-burst-motion, .thanks.is-active .thanks-heart-motion, .postcards.is-motion-active .postcard-face, .postcards.is-motion-active .postcards-decoration, .achievements.is-motion-active .achievement-focal, .achievements.is-motion-active .achievement-number { will-change: transform; }
-.achievement-rays-canvas { position: fixed; inset: 0; width: 100vw; height: 100svh; pointer-events: none; visibility: hidden; }
+.achievement-rays-canvas { position: fixed; inset: 0; width: 100vw; height: var(--recap-screen); pointer-events: none; visibility: hidden; }
 .achievements.is-motion-active .achievement-rays-canvas { visibility: visible; }
 .hero .entrance { transition-duration: 500ms, 750ms; }
 .hero-character .entrance { transition-delay: 120ms; }
@@ -221,16 +221,16 @@ img { display: block; }
 .hero-flake-two .entrance { transition-delay: 340ms; }
 .hero-flake-one .entrance { transition-delay: 420ms; }
 .hero-logo .entrance { transition-delay: 500ms; }
-.postcards.has-achievements-next::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 28svh; background: linear-gradient(transparent, #110d0a); pointer-events: none; }
+.postcards.has-achievements-next::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: calc(0.28 * var(--recap-screen)); background: linear-gradient(transparent, #110d0a); pointer-events: none; }
 
 /* Source coin masks remain independent, so the stack can open without redrawing it. */
-.achievements.has-coins-next { height: 240svh; }
-.coins { position: relative; z-index: 2; width: 100%; height: 180svh; isolation: isolate; }
-.coins.follows-achievements { margin-top: -100svh; }
-.coins.has-spending-next { height: 240svh; }
-.coins-stage { position: sticky; top: 0; width: 100%; height: 100svh; overflow: clip; isolation: isolate; }
+.achievements.has-coins-next { height: calc(2.4 * var(--recap-screen)); }
+.coins { position: relative; z-index: 2; width: 100%; height: calc(1.8 * var(--recap-screen)); isolation: isolate; }
+.coins.follows-achievements { margin-top: calc(-1 * var(--recap-screen)); }
+.coins.has-spending-next { height: calc(2.4 * var(--recap-screen)); }
+.coins-stage { position: sticky; top: 0; width: 100%; height: var(--recap-screen); overflow: clip; isolation: isolate; }
 .coins-paper { position: absolute; inset: 0; opacity: 0; pointer-events: none; mask-image: linear-gradient(to bottom, transparent, #000 var(--coins-paper-feather, 0px)); }
-.coins-paper img { position: absolute; left: 50%; top: 50%; width: 100svh; height: 100vw; object-fit: cover; transform: translate(-50%, -50%) rotate(90deg); }
+.coins-paper img { position: absolute; left: 50%; top: 50%; width: var(--recap-screen); height: 100vw; object-fit: cover; transform: translate(-50%, -50%) rotate(90deg); }
 .coins-composition { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1560px; transform-origin: center; opacity: 0; }
 .coins-title { position: absolute; left: 50%; top: 0; width: 1600px; font: 700 250px/normal Nauryz, sans-serif; color: white; text-align: center; letter-spacing: -7.5px; white-space: nowrap; transform: translateX(-50%); opacity: 0; }
 .coins-stack { position: absolute; left: 487px; top: 170.48px; width: 947px; height: 1172.528px; }
@@ -245,17 +245,17 @@ img { display: block; }
 .coins-decoration img { max-width: none; }
 .coins.is-motion-active .coin-layer, .coins.is-motion-active .coins-number { will-change: transform; }
 @media (prefers-reduced-motion: reduce) {
-  .achievements.has-coins-next, .coins { height: 100svh; }
+  .achievements.has-coins-next, .coins { height: var(--recap-screen); }
   .coins.follows-achievements { margin-top: 0; }
 }
 .achievements.has-coins-next[data-closing="1.0000"] .achievement-focal, .achievements.has-coins-next[data-closing="1.0000"] .achievement-number { will-change: auto; }
 
 /* Figma 2861:301: two symbol rows frame the live amount and its caption. */
-.spending { position: relative; z-index: 3; width: 100%; height: 180svh; isolation: isolate; }
-.spending.follows-coins { margin-top: -100svh; }
-.spending-stage { position: sticky; top: 0; width: 100%; height: 100svh; overflow: clip; isolation: isolate; }
+.spending { position: relative; z-index: 3; width: 100%; height: calc(1.8 * var(--recap-screen)); isolation: isolate; }
+.spending.follows-coins { margin-top: calc(-1 * var(--recap-screen)); }
+.spending-stage { position: sticky; top: 0; width: 100%; height: var(--recap-screen); overflow: clip; isolation: isolate; }
 .spending-paper { position: absolute; inset: 0; opacity: 0; pointer-events: none; mask-image: linear-gradient(to bottom, transparent, #000 var(--spending-paper-feather, 0px)); }
-.spending-paper img { position: absolute; left: 50%; top: 50%; width: 100svh; height: 100vw; object-fit: cover; transform: translate(-50%, -50%) rotate(90deg); }
+.spending-paper img { position: absolute; left: 50%; top: 50%; width: var(--recap-screen); height: 100vw; object-fit: cover; transform: translate(-50%, -50%) rotate(90deg); }
 .spending-composition { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1300px; transform-origin: center; opacity: 0; }
 .spending-artboard { position: absolute; left: 1.5px; top: 100px; width: 1917px; height: 1099.428px; }
 .spending-shapes { position: absolute; inset: 0; }
@@ -273,13 +273,13 @@ img { display: block; }
 .spending-caption > span { display: block; transform: translateY(120%); }
 .spending.is-motion-active .spending-shape, .spending.is-motion-active .spending-digits { will-change: transform; }
 @media (prefers-reduced-motion: reduce) {
-  .spending, .coins.has-spending-next { height: 100svh; }
+  .spending, .coins.has-spending-next { height: var(--recap-screen); }
   .spending.follows-coins { margin-top: 0; }
 }
 
 /* Original Figma ending layers: parksharing, office and the talisman postcard. */
-.ending-scene { position: relative; width: 100%; height: 150svh; background: #ef3124; isolation: isolate; }
-.ending-stage { position: sticky; top: 0; width: 100%; height: 100svh; overflow: clip; }
+.ending-scene { position: relative; width: 100%; height: calc(1.5 * var(--recap-screen)); background: #ef3124; isolation: isolate; }
+.ending-stage { position: sticky; top: 0; width: 100%; height: var(--recap-screen); overflow: clip; }
 .ending-composition { position: absolute; left: 50%; top: 50%; width: 1920px; transform-origin: center; overflow: clip; }
 .parksharing-composition { height: 2044px; }
 .park-panel { position: absolute; left: 35px; top: 159px; max-width: none; }
@@ -314,7 +314,7 @@ img { display: block; }
 .office-shadow { position: absolute; left: 290px; top: 1328px; width: 1302px; height: 161px; background: #d9d9d9; box-shadow: 0 -19px 42.4px 1px rgb(67 21 18 / .13); }
 .office-front-image { mask: url('./assets/office-front-mask.svg') 145px 1328px / 1589px 265.5px no-repeat; }
 .office-caption { position: absolute; left: 660px; top: 1403px; font: 500 80px/.95 Formular, sans-serif; color: #f8e4c2; letter-spacing: -4.8px; overflow: hidden; white-space: nowrap; }
-.finale { height: 160svh; }
+.finale { height: calc(1.6 * var(--recap-screen)); }
 .finale-composition { height: 2300px; overflow: visible; }
 .final-tree { position: absolute; left: 1150px; top: 149px; width: 1100px; height: 1100px; object-fit: cover; opacity: 0; }
 .final-ornament-upper { position: absolute; left: 24px; top: 6px; width: 744.279px; height: 744.279px; display: grid; place-items: center; opacity: 0; }
@@ -340,7 +340,7 @@ img { display: block; }
 .final-action[aria-disabled="true"] { cursor: default; }
 .final-action:focus-visible { outline: 10px solid #f8e4c2; outline-offset: 12px; }
 .ending-scene.is-motion-active .park-number, .ending-scene.is-motion-active .office-number, .ending-scene.is-motion-active .final-talisman, .ending-scene.is-motion-active .final-envelope { will-change: transform; }
-@media (prefers-reduced-motion: reduce) { .ending-scene, .finale { height: 100svh; } }
+@media (prefers-reduced-motion: reduce) { .ending-scene, .finale { height: var(--recap-screen); } }
 
 /* The landing stays laid out while loading, so every scene measures correctly. */
 body.is-loading { overflow: hidden; overscroll-behavior: none; }
@@ -348,8 +348,8 @@ body.is-loading #recap-shell, body.is-loading .skip-link { visibility: hidden; }
 
 /* Local draft 2 — Figma 2922:108706. Fixed viewport, real text inside glass. */
 .recap-intro.has-income-next::after { content: ''; position: absolute; inset: 0; z-index: 3; background: #110d0a; opacity: var(--income-shade, 0); pointer-events: none; }
-.income-glass { position: relative; height: 260svh; background: #110d0a; isolation: isolate; }
-.income-glass-viewport { position: sticky; top: 0; height: 100svh; overflow: clip; background: #110d0a; }
+.income-glass { position: relative; height: calc(2.6 * var(--recap-screen)); background: #110d0a; isolation: isolate; }
+.income-glass-viewport { position: sticky; top: 0; height: var(--recap-screen); overflow: clip; background: #110d0a; }
 .income-glass-viewport::before { content: ''; position: absolute; inset: 0; background: url('./assets/thanks-texture.png') center / cover no-repeat; mask-image: linear-gradient(to bottom, rgb(0 0 0 / var(--income-orb, 0)), #000 180px); pointer-events: none; }
 .income-glass-arrival { position: absolute; inset: 0; background: var(--red); opacity: var(--income-arrival-red, 1); pointer-events: none; }
 .income-glass-viewport::after { content: ''; position: absolute; inset: 0; z-index: 5; background: url('./assets/optimized/achievement-texture.webp') center / cover no-repeat; mix-blend-mode: multiply; opacity: calc(.72 * var(--income-paper, 0)); mask-image: linear-gradient(to bottom, rgb(0 0 0 / var(--income-orb, 0)), #000 180px); pointer-events: none; }
@@ -368,11 +368,11 @@ body.is-loading #recap-shell, body.is-loading .skip-link { visibility: hidden; }
 .has-glass-renderer .income-glass-fallback { display: none; }
 .income-glass:not(.has-glass-renderer) .income-glass-canvas { display: none; }
 .is-glass-active .income-glass-world, .is-glass-active .income-glass-title { will-change: transform; }
-@media (prefers-reduced-motion: reduce) { .income-glass { height: 110svh; } }
+@media (prefers-reduced-motion: reduce) { .income-glass { height: calc(1.1 * var(--recap-screen)); } }
 
 /* Local experiment: one pinned viewport for the four opening chapters. */
-.opening-story { position: relative; height: 670svh; background: #110d0a; }
-.story-pin { position: sticky; top: 0; height: 100svh; isolation: isolate; overflow: clip; background: var(--red); }
+.opening-story { position: relative; height: calc(6.7 * var(--recap-screen)); background: #110d0a; }
+.story-pin { position: sticky; top: 0; height: var(--recap-screen); isolation: isolate; overflow: clip; background: var(--red); }
 .story-dark { position: absolute; inset: 0; background: #110d0a url('./assets/thanks-texture.png') center / cover no-repeat; opacity: var(--story-dark, 0); pointer-events: none; }
 .story-panel { position: absolute; inset: 0; opacity: 0; visibility: hidden; transform-origin: center; }
 .story-panel-hero { z-index: 1; }
@@ -394,7 +394,7 @@ body.is-loading #recap-shell, body.is-loading .skip-link { visibility: hidden; }
 .opening-story .thanks { position: absolute; inset: 0; height: 100%; background: transparent; }
 .opening-story .thanks-burst, .opening-story .thanks-stat, .opening-story .thanks-heart-motion { transition: none; }
 .opening-story .thanks-heart-entrance { animation: none !important; }
-.story-heart-glow { position: absolute; width: clamp(100px, 22svh, 260px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, #ff3927b3, #ef312430 45%, transparent 72%); filter: blur(20px); opacity: 0; z-index: 4; pointer-events: none; }
+.story-heart-glow { position: absolute; width: clamp(100px, calc(0.22 * var(--recap-screen)), 260px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, #ff3927b3, #ef312430 45%, transparent 72%); filter: blur(20px); opacity: 0; z-index: 4; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .opening-story .hero-idle, .opening-story .thanks-heart-mask { animation: none; } }
 
 /* November opening, Figma 2943:1939. The supplied footage replaces the collage. */
@@ -446,7 +446,7 @@ body.is-loading #recap-shell, body.is-loading .skip-link { visibility: hidden; }
 .november .income-glass-cap { left: 1056.25px; top: 252.16px; transform: none; filter: drop-shadow(0 0 18px #f4ba6570); }
 .november .income-glass-canvas { filter: none; }
 .november .thanks { background: #020101; }
-.november .thanks-composition { top: calc(50% + 4.5svh); width: 1916px; height: 1710px; }
+.november .thanks-composition { top: calc(50% + calc(0.045 * var(--recap-screen))); width: 1916px; height: 1710px; }
 .november .thanks-art { width: 1916px; height: 1710px; z-index: 2; }
 .november .thanks-texture, .november .thanks-burst-motion { display: none; }
 .november .thanks-heart-motion { left: 23.72px; top: -29.56px; width: 2075.211px; height: 1556.408px; }
@@ -467,10 +467,10 @@ body.is-loading #recap-shell, body.is-loading .skip-link { visibility: hidden; }
 .november .final-tree { left: 846px; top: 90px; width: 1720px; height: 1720px; }
 .november .final-ornament-upper { left: -254px; }
 .november .final-stamp { width: 707.264px; height: 946.946px; }
-.november .finale { min-height: 180svh; }
+.november .finale { min-height: calc(1.8 * var(--recap-screen)); }
 
-.november .envelope-section { height: 300svh; margin: 0; background: #020101; }
-.envelope-stage, .november-stage { position: sticky; top: 0; width: 100%; height: 100svh; overflow: clip; background: #020101; }
+.november .envelope-section { height: calc(3 * var(--recap-screen)); margin: 0; background: #020101; }
+.envelope-stage, .november-stage { position: sticky; top: 0; width: 100%; height: var(--recap-screen); overflow: clip; background: #020101; }
 .envelope-composition, .november-composition { position: absolute; left: 50%; top: 50%; transform-origin: center; }
 .envelope-composition { width: 1920px; height: 2059px; }
 .envelope-media { position: absolute; left: 68.5px; top: 0; width: 1783px; height: 2059px; overflow: hidden; }
@@ -481,7 +481,7 @@ body.is-loading #recap-shell, body.is-loading .skip-link { visibility: hidden; }
 .envelope-data { position: absolute; left: 480px; top: 275px; width: 960px; color: #ed141c; text-align: center; opacity: 0; visibility: hidden; transform-origin: center; }
 .envelope-number { font: 700px/normal Agse, sans-serif; letter-spacing: -.03em; white-space: nowrap; }
 .envelope-caption { font: 700 48px/.917 Nauryz, sans-serif; white-space: pre-line; letter-spacing: -1.92px; }
-.november .november-scene { position: relative; width: 100%; height: 220svh; margin: 0; background: #020101; }
+.november .november-scene { position: relative; width: 100%; height: calc(2.2 * var(--recap-screen)); margin: 0; background: #020101; }
 .november-composition { width: 1920px; height: 1740px; }
 .november-composition > img, .november-composition > p, .november-composition > h2, .november-composition > div { position: absolute; }
 .november-heading { color: #fff; font: 700 250px/normal Nauryz, sans-serif; letter-spacing: -7.5px; text-align: center; white-space: nowrap; }
@@ -492,7 +492,7 @@ body.is-loading #recap-shell, body.is-loading .skip-link { visibility: hidden; }
 .coins-blue-image { position: absolute; transform: rotate(32.14deg); }
 .coins-pink-orbit { mix-blend-mode: plus-lighter; }
 .november-coin { transform-origin: center; }
-.november .parksharing.november-scene { height: 220svh; }
+.november .parksharing.november-scene { height: calc(2.2 * var(--recap-screen)); }
 .november .parksharing .november-composition { width: 2068px; height: 1950px; }
 .car-motion { position: absolute; left: 82px; top: 201px; width: 1924px; height: 1082.25px; z-index: 2; transform-origin: center; isolation: isolate; }
 .car-sequence { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -502,7 +502,7 @@ body.is-loading #recap-shell, body.is-loading .skip-link { visibility: hidden; }
 .november .parksharing .november-number { color: #ed141c; z-index: 3; }
 .november-park-label { color: #f51e23; font: 700 48px/.917 Nauryz, sans-serif; text-align: center; white-space: pre-line; letter-spacing: -1.92px; z-index: 3; }
 .november-park-note { color: #020101; z-index: 3; }
-@media (prefers-reduced-motion: reduce) { .november .november-scene { height: 110svh; } .november .envelope-section { height: 180svh; } }
+@media (prefers-reduced-motion: reduce) { .november .november-scene { height: calc(1.1 * var(--recap-screen)); } .november .envelope-section { height: calc(1.8 * var(--recap-screen)); } }
 .november .income-glass-stage { height: 1810px; }
 .november .income-glass-world, .november .income-glass-fallback-world { transform-origin: 878.5px 1109.5px; }
 .november .income-glass-fallback { top: 418px; }
@@ -524,12 +524,12 @@ html { scroll-behavior: auto; }
 .november .parksharing .november-stage { background: radial-gradient(ellipse 200% 100% at 50% 133%, #fff 80%, #020101 80.2%); }
 
 /* Keep the restored spiral and its final information inside one artboard. */
-.november .spending { height: 220svh; background: #020101; }
+.november .spending { height: calc(2.2 * var(--recap-screen)); background: #020101; }
 .november .spending-stage { background: #020101; }
 .november .spending-paper { display: none; }
 .november .spending-number { top: 370px; font-size: 360px; line-height: 1; color: #f8e4c2; -webkit-text-stroke: 0; }
 .november .spending-caption { left: 1000px; width: 840px; color: #f8e4c2; }
-@media (prefers-reduced-motion: reduce) { .november .spending { height: 100svh; } }
+@media (prefers-reduced-motion: reduce) { .november .spending { height: var(--recap-screen); } }
 
 /* One static, seamless grain layer keeps footage, live type and artwork in the
    same printed finish. It does not capture input or animate during scrolling. */

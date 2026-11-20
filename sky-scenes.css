@@ -1,9 +1,9 @@
 /* «Созвездие» и «Стена глаз»: липкая сцена на чёрном, как остальные слайды. */
-.sky-scene { position: relative; z-index: 2; width: 100%; height: 260svh; background: #020101; }
+.sky-scene { position: relative; z-index: 2; width: 100%; height: calc(2.6 * var(--recap-screen)); background: #020101; }
 /* Free scrolling gets a reading interval after the constellation finishes.
    Swipe navigation holds the completed frame on its own clock. */
 @media (prefers-reduced-motion:no-preference) {
-  .november:not(.mobile-scroll) #zodiac { height:375svh; }
+  .november:not(.mobile-scroll) #zodiac { height:calc(3.75 * var(--recap-screen)); }
 }
 .sky-stage { background: #020101; }
 @media (prefers-reduced-motion: no-preference) {
@@ -43,7 +43,7 @@
 .eyes-heading, .eyes-label, .eyes-note { z-index: 2; }
 
 @media (prefers-reduced-motion: reduce) {
-  .sky-scene { height: 110svh; }
+  .sky-scene { height: calc(1.1 * var(--recap-screen)); }
   .sky-scene.is-on-screen .zodiac-star.is-bright .zodiac-sparkle { animation: none; }
 }
 /* Знак — главный акцент сцены: вдвое крупнее общего размера заголовков. */
@@ -56,7 +56,7 @@
 .office-tower .tower-sign { line-height: 1; }
 @keyframes tower-neon { 0%, 100% { opacity: 1; } 91% { opacity: .35; } 93% { opacity: 1; } 95% { opacity: .5; } 96% { opacity: 1; } }
 .office-tower .tower-number { font-size: 280px; }
-@media (prefers-reduced-motion: reduce) { .ending-chapter .sky-scene.office-tower { position: relative; height: 100svh; } .office-tower .tower-sign.is-lit { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .ending-chapter .sky-scene.office-tower { position: relative; height: var(--recap-screen); } .office-tower .tower-sign.is-lit { animation: none; } }
 /* Вывеска на горизонтальном экране — фиксированного размера над крышей; на телефоне
    её подгоняет по ширине typography.js. Неон ярче: розовое ядро и красный ореол. */
 
