@@ -6,7 +6,7 @@ import { planetMediaPose, planetComposition, clockLayerFrame, clockFace } from '
 import { incomePlanetHandoff } from './income-glass-layout.js';
 import { setHeadingScale } from './typography.js';
 import { filmTime } from './scroll-film-timing.js';
-import { clockContactFrame, clockContactGeometry, clockContactPath } from './clock-contact-transition.js';
+import { clockContactFrame, clockContactGeometry, clockContactPath } from './clock-contact-transition.js?local=21';
 export function planetFrame(u, reduced=false) {
  const keys=[[10.85,0],[11.3,2.7],[11.6,3.4],[12.15,4.1],[12.9,5.3],[13.5,6.2],[14.25,7.6],[14.8,8.4],[15.8,8.99]];
  const time=filmTime(keys,u);
@@ -53,6 +53,41 @@ export function createPlanetStory(data){
  return s;
 }
 const ns='http://www.w3.org/2000/svg';
+// The highlights turn with the hands; the case keeps a fixed upper-left light.
+function finishClock(svg, bridge) {
+ const defs = svg.querySelector('defs');
+ function paint(id, kind, attrs, colors) {
+  const gradient = document.createElementNS(ns, kind + 'Gradient');
+  gradient.id = 'recap-clock-' + id;
+  for (const [key, value] of Object.entries(attrs)) gradient.setAttribute(key, value);
+  for (const [offset, color] of colors) {
+   const stop = document.createElementNS(ns, 'stop');
+   stop.setAttribute('offset', offset); stop.setAttribute('stop-color', color); gradient.append(stop);
+  }
+  defs.append(gradient);
+  return 'url(#' + gradient.id + ')';
+ }
+ const caseFinish = paint('case','linear',{x1:'14%',y1:'0%',x2:'85%',y2:'100%'},
+  [[0,'#722b43'],[.12,'#ffb28a'],[.19,'#fff0cd'],[.3,'#e37265'],[.51,'#9b1743'],[.69,'#f79ba2'],[.77,'#ffcfad'],[1,'#681531']]);
+ bridge.setAttribute('stroke',caseFinish);
+ const part = id => svg.querySelector('[id="' + id + '"]');
+ const arc = part('Ellipse 8989');
+ arc.removeAttribute('filter');
+ const arcLine = arc.querySelector('circle');
+ arcLine.setAttribute('r','1354'); arcLine.setAttribute('stroke-width','17');
+ arcLine.setAttribute('stroke',caseFinish);
+ for (const [id,x,y,colors] of [
+  ['Line 1',963,847,['#793e3c','#fff1cf','#ffbf8a','#844149']],
+  ['Line 3',522,472,['#242034','#d4cad1','#746e89','#262437']]
+ ]) {
+  const hand=part(id);
+  const finish=paint(id.replace(' ',''),'linear',{gradientUnits:'userSpaceOnUse',x1:x+8,y1:y-10,x2:x-8,y2:y+10},
+   [[0,colors[0]],[.21,colors[1]],[.47,colors[2]],[1,colors[3]]]);
+  hand.setAttribute('stroke',finish); hand.setAttribute('stroke-linecap','round');
+ }
+ part('Ellipse 8990').setAttribute('fill',paint('pin','radial',{cx:'.3',cy:'.23',r:'.8'},
+  [[0,'#fff9dd'],[.22,'#ffd3a0'],[.67,'#ce7468'],[.89,'#7b3748'],[1,'#462333']]));
+}
 export async function preparePlanet(root,signal){
  const slot=root.querySelector('.planet-clock-art');if(!slot)return;
  const r=await fetch(optimizedAssetUrl('./assets/planet/clock.svg'),{signal});if(!r.ok)throw Error('Не удалось загрузить часы');
@@ -60,6 +95,7 @@ export async function preparePlanet(root,signal){
  const bezel=svg.querySelector('[id="Ellipse 8993"]'),bridge=document.createElementNS(ns,'path');
  for(const attr of bezel.attributes)if(!['cx','cy','r'].includes(attr.name))bridge.setAttribute(attr.name,attr.value);
  bridge.dataset.contactFrame='';bridge.setAttribute('d',clockContactPath(clockContactGeometry(1920,2287,15.5)));bezel.replaceWith(bridge);
+ finishClock(svg,bridge);
  // Keep the lower protractor flowing across the viewport, but stop its unseen
  // back half from extending several screens below the authored composition.
  const defs=svg.querySelector('defs'),gradient=document.createElementNS(ns,'linearGradient');
@@ -146,7 +182,15 @@ export function mountPlanet(root,signal){
    }
    if(orbB&&orbB!==orbA){orbB.style.transform=transform;orbB.style.opacity=(shown*t2).toFixed(3);orbB.style.visibility=shown*t2>.001?'visible':'hidden';}
   }
-  if(dial){const d=ease(14.15,14.55,u)*(1-ease(15.45,15.85,u));dial.style.opacity=d;dial.style.transform='none';dial.style.visibility=d>.001?'visible':'hidden';}
+  if (dial) {
+   const opacity = ease(14.15,14.55,u) * handoff.face;
+   const dx = (geometry.x - geometry.clockOrigin.x) / geometry.clockScale - clockFace.x;
+   const dy = (geometry.y - geometry.clockOrigin.y) / geometry.clockScale - clockFace.y;
+   const scale = geometry.half / (geometry.clockScale * clockFace.radius);
+   dial.style.opacity = opacity;
+   dial.style.transform = `translate(${dx}px,${dy}px) scale(${scale})`;
+   dial.style.visibility = opacity > .001 ? 'visible' : 'hidden';
+  }
   section.dataset.time=target.toFixed(3);section.dataset.phase=u<12.4?'ai':u<14?'agent':'clock';
   for(const [el,opacity] of [[ai,f.ai],[agent,f.agent],[hours,ease(14.95,15.4,u)*handoff.information]]){el.style.opacity=opacity;el.style.visibility=opacity>.001?'visible':'hidden';el.style.transform=`translateY(${f.offset+(reduced?0:(1-opacity)*45)}px)`;el.inert=opacity<.5;}
   for(const [node,text] of [[ai.querySelector('.planet-number'),reel(ai.dataset.value,f.digitsAI)],[hours.querySelector('.planet-number'),reel(hours.dataset.value,f.digitsClock)]])if(node.textContent!==text)node.textContent=text;

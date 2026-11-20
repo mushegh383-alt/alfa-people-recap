@@ -81,8 +81,8 @@
     "gameUrl": "./game/",
     "label": "Собирайте марки в игре\nи откройте 5 новогодних открыток",
     "heading": "Ваш Талисман {nextYear} года",
-    "talisman": "Синий Единорог",
-    "talismanImage": "./assets/restyle/unicorn.jpg"
+    "talisman": "Гном с сердцем",
+    "talismanImage": "./assets/restyle/gnome-stamp.webp"
   },
   "moments": {
     "count": 12,

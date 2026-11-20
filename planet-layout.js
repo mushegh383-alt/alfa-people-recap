@@ -1,6 +1,6 @@
 import { ease } from './november-layout.js';
 import { incomePlanetHandoff } from './income-glass-layout.js';
-import { clockContactGeometry } from './clock-contact-transition.js';
+import { clockContactGeometry } from './clock-contact-transition.js?local=21';
 import { fitScale } from './layout-fit.js';
 
 // Calibrated against the decoded 1920 × 1082 video, not its letterbox.

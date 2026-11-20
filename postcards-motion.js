@@ -1,7 +1,7 @@
 import { requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cancelAnimationFrame } from './performance.js';
 import { animateDigits } from './motion.js';
 import { postcardLayout, postcardPose, postcardsFrame, postcardsScrollProgress } from './postcards-layout.js';
-import { achievementTransition } from './achievements-layout.js';
+import { achievementTransition } from './achievements-layout.js?local=21';
 
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 

@@ -46,14 +46,14 @@ export function achievementTransition(sectionTop, viewportHeight) {
 }
 
 export function achievementsScrollProgress(sectionTop, sectionHeight, viewportHeight) {
-  const start = viewportHeight * .55;
+  const start = viewportHeight * .88;
   const end = viewportHeight - sectionHeight;
   return sectionTop <= end + 1 ? 1 : clamp((start - sectionTop) / (start - end));
 }
 
-export function achievementPlayback(sectionTop, sectionHeight, viewportHeight, hasCoins, portrait = false) {
+export function achievementPlayback(sectionTop, sectionHeight, viewportHeight, hasCoins, portrait = false, readingTravel = 0) {
   const opening = achievementsScrollProgress(sectionTop, hasCoins ? viewportHeight * 1.5 : sectionHeight, viewportHeight);
-  const time = -sectionTop / viewportHeight;
+  const time = -sectionTop / viewportHeight - readingTravel;
   // In portrait the next scene slides up beneath the departing star.
   const t = hasCoins ? (portrait ? clamp((time - .65) / .72) : clamp((time - .80) / .55)) : 0;
   const closing = t * t * (3 - 2 * t);

@@ -1,8 +1,9 @@
 import { setTextScale } from './typography.js';
 import { requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cancelAnimationFrame, getQuality } from './performance.js';
-import { achievementInformation, achievementPlayback, achievementTransition, achievementsFrame, achievementClosing, achievementsSceneScale } from './achievements-layout.js';
-import { createRaysRenderer } from './achievements-renderer.js';
+import { achievementInformation, achievementPlayback, achievementsFrame, achievementClosing, achievementsSceneScale } from './achievements-layout.js?local=21';
+import { createRaysRenderer } from './achievements-renderer.js?local=14';
 import { fitScale, isPortrait, placeComposition, screenRect } from './layout-fit.js';
+import { ease } from './november-layout.js';
 
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -24,7 +25,6 @@ export function mountAchievementsMotion(root, signal) {
   let frame = 0;
   let inView = false;
   let progress;
-  let entrance;
   let lastTime = 0;
   const rays = createRaysRenderer(section.querySelector('.achievement-rays-canvas'), signal, schedule, { luminous: root.classList.contains('november') });
   function fit() {
@@ -42,21 +42,21 @@ export function mountAchievementsMotion(root, signal) {
     const box = section.getBoundingClientRect();
     const viewport = stage.clientHeight;
     const portrait = isPortrait(stage.clientWidth, viewport);
-    const direct = portrait || reducedMotion.matches;
-    const playback = achievementPlayback(box.top, box.height, viewport, hasCoins, portrait);
+    const direct = section.classList.contains('overlap-entry') || portrait || reducedMotion.matches;
+    const playback = achievementPlayback(box.top, box.height, viewport, hasCoins, portrait, root.classList.contains('swipe-scenes') ? 0 : 1);
+    // The section carries the scroll distance. Its artwork stays at the
+    // viewport centre while the preceding scene dissolves beneath it.
+    const approach = Math.max(0, Math.min(viewport, box.top));
+    stage.style.opacity = reducedMotion.matches ? 1 : ease(.06,.56,1-approach/viewport);
     const target = reducedMotion.matches ? 1 : playback.progress;
-    const starTarget = reducedMotion.matches ? 1 : achievementTransition(box.top, viewport).star;
     const delta = lastTime ? Math.min(64, Math.max(1, now - lastTime)) : 16;
     lastTime = now;
     if (progress === undefined || direct) progress = target;
     else progress += (target - progress) * (1 - Math.exp(-delta / 65));
-    if (entrance === undefined || direct) entrance = starTarget;
-    else entrance += (starTarget - entrance) * (1 - Math.exp(-delta / 100));
-    const settling = Math.abs(target - progress) > .0001 || Math.abs(starTarget - entrance) > .0001 || closingNow === undefined || Math.abs((reducedMotion.matches ? 0 : playback.closing) - closingNow) > .0005;
-    if (!settling) { progress = target; entrance = starTarget; }
-    // Надпись для холста посчитаем после того, как обновим её стиль (ниже).
-    let raysOffset = stage.getBoundingClientRect().top;
+    const settling = Math.abs(target - progress) > .0001 || closingNow === undefined || Math.abs((reducedMotion.matches ? 0 : playback.closing) - closingNow) > .0005;
+    if (!settling) progress = target;
     const information = achievementInformation(progress, counter.dataset.value, lines.length);
+    focal.style.setProperty('--note-opacity', information.lines.at(-1) ?? 1);
     const closingTarget = reducedMotion.matches ? 0 : playback.closing;
     // Вход в блок (в том числе снизу, при обратном скролле) — сразу в нужную фазу,
     // без «вспышки» целой звезды перед повторным улётом.
@@ -64,12 +64,12 @@ export function mountAchievementsMotion(root, signal) {
     closingNow += (closingTarget - closingNow) * (1 - Math.exp(-delta / 65));
     if (Math.abs(closingTarget - closingNow) < .0005) closingNow = closingTarget;
     const out = achievementClosing(closingNow, getQuality() === 'lite' || isPortrait(innerWidth, innerHeight));
-    const transform = `translateY(${(1 - entrance) * 60}px) rotate(${(1 - entrance) * -3 - (1 - information.shape) * 12 + out.spin}deg) scale(${(.85 + entrance * .15) * (.65 + information.shape * .35) * out.zoom})`;
+    const transform = `rotate(${out.spin}deg) scale(${out.zoom})`;
     for (const element of [focal, number]) {
       element.style.transform = transform;
     }
-    focal.style.opacity = entrance * information.shape * out.fade;
-    number.style.opacity = entrance * information.number * out.fade;
+    focal.style.opacity = out.fade;
+    number.style.opacity = information.number * out.fade;
     // Погасшую звезду не рисуем вовсе: её увеличенный слой не держит память.
     focal.style.visibility = number.style.visibility = out.fade < .01 ? 'hidden' : 'visible';
     canvas.style.transform = closingNow ? `scale(${out.rays.scale}) rotate(${out.rays.spin}deg)` : '';
@@ -77,15 +77,15 @@ export function mountAchievementsMotion(root, signal) {
     canvas.style.visibility = out.rays.opacity < .01 ? 'hidden' : '';
     flash.style.opacity = out.flash;
     // «ачивки» выезжает из-за звезды вместе с её появлением и уходит вверх на пролёте.
-    heading.style.opacity = entrance * information.shape * out.fade;
-    heading.style.transform = `translate(-50%, ${(1 - information.shape) * 160 - closingNow * 260}px) scale(${.9 + .1 * information.shape})`;
+    heading.style.opacity = information.shape * out.fade;
+    heading.style.transform = `translate(-50%, ${-closingNow * 260}px)`;
     // На телефоне холст лучей лежит ПОВЕРХ сцены: под текстом он заставлял Safari держать
     // весь макет в отдельных огромных слоях (+0,6 ГБ, вылеты). «Ачивки» тогда рисуем на холсте.
     let label = null;
     if (getQuality() === 'lite') {
       // Итоговая прозрачность — с учётом родителей; холст сам полупрозрачен, это делим обратно.
       let alpha = Number(heading.style.opacity) || 0;
-      for (let el = heading.parentElement; el && el !== section; el = el.parentElement) alpha *= Number(getComputedStyle(el).opacity);
+      for (let el = heading.parentElement; el && el !== stage; el = el.parentElement) alpha *= Number(getComputedStyle(el).opacity);
       alpha /= Math.max(.01, Number(canvas.style.opacity) || 1);
       if (alpha > .005) {
         const r = screenRect(heading), cs = getComputedStyle(heading);
@@ -115,7 +115,7 @@ export function mountAchievementsMotion(root, signal) {
       }
       rays.sparks(sparks);
     }
-    rays.draw(progress, raysOffset, label);
+    rays.draw(progress, 0, label);
     counter.style.transform = `translateY(${(1 - information.number) * 80}px) scale(${.94 + information.number * .06})`;
     digits.forEach((digit, index) => {
       if (digit.textContent !== information.digits[index]) digit.textContent = information.digits[index];
@@ -124,7 +124,7 @@ export function mountAchievementsMotion(root, signal) {
       line.style.transform = `translateY(${(1 - information.lines[index]) * 120}%)`;
     });
     section.dataset.progress = progress.toFixed(4);
-    section.dataset.entrance = entrance.toFixed(4);
+    section.dataset.entrance = stage.style.opacity;
     section.dataset.closing = playback.closing.toFixed(4);
     section.dataset.information = progress < .34 ? 'shape' : progress < .70 ? 'counter' : progress < 1 ? 'caption' : 'complete';
     if (settling) schedule();
@@ -135,8 +135,9 @@ export function mountAchievementsMotion(root, signal) {
     section.classList.toggle('is-motion-active', inView);
     if (!inView) {
       cancelAnimationFrame(frame); frame = 0; lastTime = 0;
-      progress = entrance = closingNow = undefined;
+      progress = closingNow = undefined;
       rays.clear();
+      stage.style.opacity = '0';
       focal.style.opacity = number.style.opacity = 0;
     }
     else schedule();

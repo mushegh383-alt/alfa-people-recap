@@ -1,6 +1,15 @@
 /* «Созвездие» и «Стена глаз»: липкая сцена на чёрном, как остальные слайды. */
 .sky-scene { position: relative; z-index: 2; width: 100%; height: 260svh; background: #020101; }
+/* Free scrolling gets a reading interval after the constellation finishes.
+   Swipe navigation holds the completed frame on its own clock. */
+@media (prefers-reduced-motion:no-preference) {
+  .november:not(.swipe-scenes) #zodiac { height:375svh; }
+}
 .sky-stage { background: #020101; }
+@media (prefers-reduced-motion: no-preference) {
+  .november #profile-views.sky-paired { background:transparent !important; }
+  #profile-views.sky-paired .sky-stage { opacity:0; }
+}
 .sky-canvas, .sky-backdrop { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 /* Холст — поверх текста (см. sky-scenes.js: так iPhone не раздувает память); фон — картинкой под ним. */
 .sky-canvas { z-index: 3; }

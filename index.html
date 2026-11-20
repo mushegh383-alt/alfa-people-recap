@@ -11,14 +11,14 @@
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./preloader.css" />
     <link rel="preload" href="./assets/styrene-a-bold.otf" as="font" type="font/otf" crossorigin />
-    <link rel="stylesheet" href="./revision-six.css" />
+    <link rel="stylesheet" href="./revision-six.css?local=15" />
     <link rel="stylesheet" href="./ending-seven.css" />
     <link rel="stylesheet" href="./performance.css" />
     <link rel="stylesheet" href="./motion-polish.css" />
-    <link rel="stylesheet" href="./sky-scenes.css" />
-    <link rel="stylesheet" href="./mobile.css" />
+    <link rel="stylesheet" href="./sky-scenes.css?local=19" />
+    <link rel="stylesheet" href="./mobile.css?local=24" />
     <script type="module">
-      import('./app.js').catch(error => {
+      import('./app.js?local=25').catch(error => {
         console.error('Application loading:', error);
         const loader = document.querySelector('#preloader');
         loader.querySelector('.preloader-status').textContent = 'Не удалось запустить итоги. Попробуйте ещё раз.';

@@ -5,7 +5,7 @@ import { createOffice as createOriginalOffice } from './blocks/ending.js';
 import { endingChapterFrame, endingSceneProgress, toEndingAnchor } from './ending-chapter-layout.js';
 import { ease } from './november-layout.js';
 import { fitScale, placeComposition } from './layout-fit.js';
-import { createOfficeTower } from './sky-scenes.js';
+import { createOfficeTower } from './sky-scenes.js?local=21';
 const assets = './assets/ending-seven/';
 const ns = 'http://www.w3.org/2000/svg';
 const blurredBackdrops = new Map();

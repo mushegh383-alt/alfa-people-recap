@@ -1,13 +1,14 @@
-import { mountSceneButton } from './scene-button.js';
+import { mountSceneNavigation } from './scene-navigation.js?local=21';
+import { mountChapterOverlaps } from './chapter-overlap.js?local=21';
 import { startPerformanceMonitor, selectMediaSources, manageVideoMemory, manageSectionMemory } from './performance.js';
-import { createEnvelope, mountEnvelope } from './envelope.js';
+import { createEnvelope, mountEnvelope } from './envelope.js?local=15';
 import { createNovemberCoins, createNovemberPark } from './november-blocks.js';
 import { createSpending } from './blocks/spending.js';
-import { mountSpendingMotion } from './spending-motion.js';
-import { mountNovemberScenes } from './november-motion.js';
+import { mountSpendingMotion } from './spending-motion.js?local=20';
+import { mountNovemberScenes } from './november-motion.js?local=20';
 import { prepareCarSequence, mountCarSequence } from './sequence-player.js';
 import { showLoading, prepareContent, openRecap, showLoadError, onRetry, waitForPreparation } from './preloader.js';
-import { loadRecap, normalizeRecap } from './data.js';
+import { loadRecap, normalizeRecap } from './data.js?local=25';
 import { createHero } from './blocks/hero.js';
 import { mountHeroMotion, prepareHeroMotion } from './hero-motion.js';
 import { createPersonal } from './blocks/personal.js';
@@ -19,19 +20,19 @@ import { createThanks } from './blocks/thanks.js';
 import { mountThanksMotion } from './thanks-motion.js';
 import { createPostcards } from './blocks/postcards.js';
 import { mountPostcardsMotion } from './postcards-motion.js';
-import { createAchievements } from './blocks/achievements.js';
-import { mountAchievementsMotion } from './achievements-motion.js';
+import { createAchievements } from './blocks/achievements.js?local=14';
+import { mountAchievementsMotion } from './achievements-motion.js?local=21';
 import { createEndingChapter, prepareEndingSeven, prepareFinaleBackdrop, mountEndingMotion } from './ending-seven.js';
 import { toEndingAnchor } from './ending-chapter-layout.js';
 import { createOfficeAnimation } from './office-animation.js';
 import { mountEndingMotion as mountOriginalOfficeMotion } from './ending-motion.js';
-import { createOpeningStory, mountOpeningStory } from './opening-story.js';
-import { createPlanetStory, preparePlanet } from './planet-story.js';
-import { createMoments, prepareMoments } from './moments.js';
-import { createTalkContact, prepareTalkContact } from './talk-contact.js';
-import { createBookChapter, mountBookChapter } from './learning.js';
-import { createZodiac, createProfileViews, mountSkyScenes } from './sky-scenes.js';
-import { mountTalismanCard } from './talisman-card.js';
+import { createOpeningStory, mountOpeningStory } from './opening-story.js?local=21';
+import { createPlanetStory, preparePlanet } from './planet-story.js?local=21';
+import { createMoments, prepareMoments } from './moments.js?local=16';
+import { createTalkContact, prepareTalkContact } from './talk-contact.js?local=21';
+import { createBookChapter, mountBookChapter } from './learning.js?local=21';
+import { createZodiac, createProfileViews, mountSkyScenes } from './sky-scenes.js?local=21';
+import { mountTalismanCard } from './talisman-card.js?local=21';
 
 const shell = document.querySelector('#recap-shell');
 shell.classList.add('november');
@@ -93,6 +94,23 @@ async function render(input) {
     }
     if (data.parksharing) slides.append(createNovemberPark(data));
     slides.append(...createEndingChapter(data));
+    const notes = [
+      ['.moments-caption', 'Вся лента года в ваших кадрах.'],
+      ['.achievement-caption', 'Ещё один повод собой гордиться.'],
+      ['.coins-copy', 'Можно выбрать подарок себе или коллеге.'],
+      ['.learning-composition', 'Теперь есть чему научить коллег.'],
+      ['.tower-label, .office-caption', 'Столько поводов сказать «привет» вживую.'],
+      ['.income-glass-viewport', 'День зарплаты — хороший повод заглянуть.'],
+    ];
+    for (const [selector, text] of notes) {
+      const parent = shell.querySelector(selector);
+      if (!parent) continue;
+      const note = document.createElement('span');
+      note.className = 'scene-reading-note';
+      note.textContent = text;
+      parent.append(note);
+    }
+    mountChapterOverlaps(slides, signal);
     selectMediaSources(shell);
     resize();
     await prepareMoments(shell, data, signal);
@@ -111,7 +129,7 @@ async function render(input) {
     if (signal.aborted) return;
     document.querySelector('.load-error').hidden = true;
     openRecap();
-    mountSceneButton(shell, signal);
+    mountSceneNavigation(shell, signal);
     startPerformanceMonitor(signal);
     manageVideoMemory(shell, signal);
     manageSectionMemory(shell, signal);
@@ -142,7 +160,9 @@ async function render(input) {
         if (storyMotion?.toAnchor(initialAnchor)) { initialAnchor = ''; return; }
         if (toEndingAnchor(shell, initialAnchor)) { initialAnchor = ''; return; }
         const anchor = initialAnchor === '#spending' ? target.closest('.book-chapter') || target : target;
-        window.scrollTo({ top: anchor.getBoundingClientRect().top + window.scrollY, behavior: 'instant' });
+        const spendingStop = initialAnchor === '#spending' && anchor.matches('.book-chapter') && !matchMedia('(prefers-reduced-motion: reduce)').matches
+          ? 1.17 * anchor.querySelector('.book-chapter-stage').clientHeight : 0;
+        window.scrollTo({ top: anchor.getBoundingClientRect().top + window.scrollY + spendingStop, behavior: 'instant' });
         initialAnchor = '';
       });
     }

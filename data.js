@@ -119,8 +119,8 @@ export function normalizeRecap(input) {
     office: office ? { visits: office.visits, label: office.label || 'Вы были в офисе' } : null,
     finale: finale ? {
       heading: (finale.heading || 'Ваш талисман {nextYear} года').replaceAll('{nextYear}', String(input.year + 1)),
-      talisman: finale.talisman || 'Синий Единорог',
-      talismanImage: assetUrl(finale.talismanImage || './assets/ending-seven/unicorn.webp', 'finale.talismanImage'),
+      talisman: finale.talisman || 'Гном с сердцем',
+      talismanImage: assetUrl(finale.talismanImage || './assets/restyle/gnome-stamp.webp', 'finale.talismanImage'),
       label: finale.label || 'играйте в нашу игру\nи откройте 5 уникальных открыток',
       buttonLabel: finale.buttonLabel || 'играть',
       gameUrl: finale.gameUrl == null ? null : assetUrl(finale.gameUrl, 'finale.gameUrl'),
@@ -226,7 +226,7 @@ export function normalizeRecap(input) {
 }
 
 export async function loadRecap(signal) {
-  const response = await fetch(config.dataUrl, { signal, credentials: 'same-origin', headers: { Accept: 'application/json' } });
+  const response = await fetch(config.dataUrl, { signal, credentials: 'same-origin', cache: 'no-store', headers: { Accept: 'application/json' } });
   if (!response.ok) throw new Error(`Recap request failed: ${response.status}`);
   return normalizeRecap(await response.json());
 }

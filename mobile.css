@@ -38,8 +38,8 @@ html.is-portrait .november .november-scene.coins.follows-achievements .november-
 /* Коины на телефоне: вертикальная композиция «коиновый дождь» — заголовок наверху,
    крупная стопка в центре, подпись под ней, мини-коины и искры по всей высоте экрана
    (видимая полоса макета на 375×812: x 410…1510, y −320…2060). */
-html.is-portrait .coins .coins-heading { top: 10px !important; }
-html.is-portrait .coins .coins-copy { top: 1640px !important; }
+html.is-portrait .coins .coins-heading { top: 115px !important; }
+html.is-portrait .coins .coins-copy { top: 1580px !important; }
 html.is-portrait .november .coins-pink-orbit { width: 1000px; height: 330px; top: 1010px; }
 html.is-portrait .coins-glow { width: 1150px; height: 1500px; }
 html.is-portrait .coins-blue-orbit > div:nth-of-type(1) { left: 475px !important; top: 62px !important; width: 170px !important; height: 116px !important; }
@@ -67,15 +67,150 @@ html.is-portrait .moments-flash { display: none; }
 html.is-portrait .moments-caption { line-height: 1.15; }
 html.is-portrait { overflow-anchor: none; }
 
-.scene-next {
-  position: fixed; right: max(16px, env(safe-area-inset-right));
-  bottom: max(16px, env(safe-area-inset-bottom)); z-index: 45;
-  min-height: 44px; padding: 0 17px; border-radius: 24px;
-  border: 1px solid #ffffff65; background: #17131bea; color: white;
-  font: 700 14px/1 Styrene, sans-serif; cursor: pointer;
-}
-.scene-next[aria-disabled="true"] { opacity: .65; }
-.scene-next:focus-visible { outline: 3px solid white; outline-offset: 3px; }
-body:has(dialog[open],.talisman-modal:not([hidden])) .scene-next { visibility: hidden; }
-
 .swipe-scenes { touch-action: pan-x pinch-zoom; }
+
+.postcard-prints { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:3; }
+.postcard-prints img { position:absolute; top:0; left:0; opacity:0; height:auto; border-radius:2px; box-shadow:0 3px 8px #10142e44; }
+html:not(.is-portrait) .envelope-stage .postcard-prints { z-index:0; }
+html:not(.is-portrait) .is-envelope-still .envelope-composition { z-index:1; }
+html:not(.is-portrait) .is-envelope-still .envelope-heading {
+  top:-288px;
+  font-size:calc(var(--recap-heading-logical) * .78) !important;
+}
+html:not(.is-portrait) .is-envelope-still .envelope-data { left:573px; top:381px; width:770px; }
+html:not(.is-portrait) .is-envelope-still .envelope-number { font-size:min(var(--envelope-count-size),540px); }
+html:not(.is-portrait) .is-envelope-still .envelope-caption { margin-top:-27px; line-height:1.02; }
+@media (prefers-reduced-motion:reduce) {
+  html:not(.is-portrait) .envelope-stage .postcard-prints { display:none; }
+}
+@media (prefers-reduced-motion:no-preference) {
+  .revision-six .thanks.is-active.is-revealed .thanks-heart-mask { animation: recap-heartbeat 1.65s ease-in-out infinite; transform-origin:50% 55%; }
+  @keyframes recap-heartbeat { 0%,38%,100% {transform:scale(1)} 11% {transform:scale(1.065)} 22% {transform:scale(1.012)} 29% {transform:scale(1.037)} }
+}
+.chapter-curtain { position:fixed; inset:0; z-index:44; background:#101222; opacity:0; pointer-events:none; }
+.november .achievements { z-index:2; background:transparent !important; }
+.achievements-track { position:absolute; inset:0; pointer-events:none; }
+@media (prefers-reduced-motion:no-preference) {
+  .achievements-track { top:-100svh; }
+  .achievements-track .achievements-stage { opacity:0; }
+}
+.achievements-stage .achievement-rays-canvas { position:absolute; width:100%; height:100%; }
+.swipe-scenes .ending-chapter::before { display:none; }
+.chapter-track { display:contents; }
+@media (prefers-reduced-motion:no-preference) {
+  .november :is(.overlap-entry,.overlap-exit) { z-index:2; background:transparent !important; }
+  .chapter-track { display:block; position:absolute; inset:0; pointer-events:none; }
+  .overlap-entry > .chapter-track { top:-100svh; }
+  .overlap-exit > .chapter-track { bottom:-100svh; }
+  .achievements-track.chapter-track { top:-100svh; }
+  .ending-chapter.overlap-entry::before { display:none; }
+  .november .chapter-track :is(.sky-stage,.achievements-stage,.november-stage,.book-chapter-stage,.ending-chapter-pin)::after { content:none; }
+  #profile-views.is-on-screen .sky-stage, .ending-chapter .ending-seven-stage { pointer-events:auto; }
+  .chapter-track .talisman-open, .chapter-track button, .chapter-track a { pointer-events:auto; }
+}
+
+/* Centre the visible number and its caption together on the blue disc. */
+.moments-info { left:988px; top:1390px; translate:-50% -50%; }
+.moments:not(:has(.moments-core)) .moments-info { left:49.4%; top:49%; }
+.moments-number { height:auto; line-height:.85; text-box:trim-both cap alphabetic; }
+.moments-caption { margin:32px auto 0; text-box:trim-both cap alphabetic; }
+
+@media (prefers-reduced-motion:no-preference) {
+  html[data-scene-direction]::view-transition-old(root),
+  html[data-scene-direction]::view-transition-new(root) { animation:none; mix-blend-mode:normal; }
+  html[data-scene-direction="forward"]::view-transition-new(root),
+  html[data-scene-direction="back"]::view-transition-old(root) {
+    z-index:1;
+    animation:recap-iris 460ms cubic-bezier(.45,0,.25,1) both;
+  }
+  html[data-scene-direction="back"]::view-transition-old(root) { animation-direction:reverse; }
+  @keyframes recap-iris {
+    from { clip-path:circle(0% at 50% 50%); }
+    to { clip-path:circle(72% at 50% 50%); }
+  }
+}
+
+/* Enamel tiles with a rolled lip and a cast shadow, lit like the painted ornaments. */
+.spending-solid:not([data-artwork]) .spending-face {
+  inset:4%;
+  box-shadow:inset 3px 5px 5px #fff3dc9c, inset -4px -11px 12px #2d061485,
+    0 8px 0 color-mix(in srgb,var(--shape-glow) 42%,#241322), 2px 14px 16px #08091e75;
+}
+.spending-solid:not([data-artwork]) .spending-face::before {
+  content:''; position:absolute; inset:0; border-radius:inherit;
+  background:radial-gradient(ellipse at 22% 10%,#fff4df63,transparent 46%),
+    linear-gradient(140deg,transparent 43%,#40062664);
+}
+.spending-solid:is([data-shape="0"], [data-shape="1"]) .spending-face::after {
+  content:''; position:absolute; inset:11%; background:center / contain no-repeat;
+  filter:drop-shadow(2px 5px 3px #32122666);
+}
+.spending-solid[data-shape="0"] .spending-face::after { background-image:url('./assets/restyle/spending/fir-bauble.webp'); }
+.spending-solid[data-shape="1"] .spending-face::after { background-image:url('./assets/restyle/spending/pearl-snowflake.webp'); }
+.spending-solid[data-shape="3"] .spending-face::after {
+  content:''; position:absolute; inset:15%; border-radius:50%;
+  background:radial-gradient(circle at 50% 50%,#ffe4d9 0 3%,transparent 7%),
+    repeating-conic-gradient(from 8deg,#70214d63 0deg,#ffebd378 9deg,#ffb0cd24 14deg,#8b275760 30deg);
+  box-shadow:inset 1px 2px 5px #ffcbdbab,1px 4px 5px #68214485;
+}
+.spending-solid[data-shape="5"] .spending-face::before {
+  background:radial-gradient(ellipse at 28% 20%,#fffafe 0%,#deffffa8 4%,transparent 17%),
+    radial-gradient(circle at 34% 28%,#c5fcff85,transparent 43%,#07599e8a 73%,#182c62 94%,#85dfff);
+}
+
+.coins .coins-heading, .coins .coins-copy, .coins .november-number { text-align:center; }
+.coins .november-number { left:calc(50% - 525px) !important; width:1050px !important; }
+.coins .coins-heading { z-index:2; }
+.coins .coins-copy { z-index:2; }
+
+/* Let the clock stay visible through the circular portrait reveal. */
+#recap-shell .story-panel-contact .talk-contact { background:transparent; }
+.revision-six .story-panel-contact .talk-contact::before {
+  content:""; position:absolute; inset:0; opacity:var(--contact-sky,0);
+  background:linear-gradient(#050816b3,#05081633 45%,#050816b3),url('./assets/restyle/personal-sky-desk.jpg') center / cover,#0b1636;
+}
+html.is-portrait .story-panel-contact .talk-contact::before {
+  background-image:linear-gradient(#050816b3,#05081633 45%,#050816b3),url('./assets/restyle/personal-sky-phone.jpg');
+}
+@media (prefers-reduced-motion:no-preference) {
+  .november:not(.swipe-scenes) #profile-views { height:368svh; }
+  .november:not(.swipe-scenes) .achievements.has-coins-next { height:340svh; }
+  html.is-portrait .november:not(.swipe-scenes) .achievements.has-coins-next { height:280svh; }
+}
+.scene-reading-note {
+  display:block; margin:18px auto 0; color:#ffeede; font:500 39px/1.1 Formular,sans-serif;
+  letter-spacing:-.025em; white-space:normal; text-wrap:balance; text-align:center;
+  opacity:var(--note-opacity,1); text-shadow:0 2px 9px #15132bd9;
+}
+.achievement-caption .scene-reading-note { width:840px; position:relative; left:50%; translate:-50%; }
+.moments-caption .scene-reading-note { font-size:36px; }
+.learning-composition > .scene-reading-note { position:absolute; bottom:7%; left:20%; width:60%; }
+.income-glass-viewport > .scene-reading-note {
+  position:absolute; z-index:3; bottom:max(5%,env(safe-area-inset-bottom));
+  left:10%; width:80%; margin:0; font-size:clamp(15px,2.3vmin,26px);
+}
+.finale-seven-caption {
+  color:#fff4e3; line-height:1.1; padding:12px 20px 17px;
+  isolation:isolate;
+  text-shadow:0 1px 3px rgb(9 20 42 / 38%);
+}
+.finale-seven-caption::before {
+  content:'';
+  position:absolute;
+  inset:-16px -42px;
+  z-index:-1;
+  pointer-events:none;
+  background:radial-gradient(ellipse at center, #0b1733d9 24%, #0b1733a6 49%, #0b173347 69%, #0b173300 86%);
+  filter:blur(12px);
+}
+.talisman-modal-preview { aspect-ratio:1535 / 2047; width:min(86vw,calc((100svh - 150px) * .75)); background:#122746; }
+.talisman-modal-preview img { object-fit:contain; }
+@media (prefers-reduced-motion:no-preference) {
+  .november .opening-story.overlap-exit { z-index:0; }
+  .november .recap-slides:has(> #zodiac.overlap-entry:first-child) { background:transparent; }
+}
+
+html.is-portrait :is(.learning-composition,.tower-label) > .scene-reading-note { font-size:47px; }
+.office-tower .tower-label { color:#fff; text-shadow:0 2px 8px #0a142a,0 0 15px #0a142a; }
+.office-tower .tower-label .scene-reading-note { color:#fff1de; text-shadow:inherit; }
+html:not(.is-portrait) .november .office-tower .tower-label { top:1414px !important; }

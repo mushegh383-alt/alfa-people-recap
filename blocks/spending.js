@@ -1,4 +1,4 @@
-import { spendingShapes } from '../spending-layout.js';
+import { spendingShapes } from '../spending-layout.js?local=20';
 
 export function createSpending(data) {
   const section = document.createElement('section');

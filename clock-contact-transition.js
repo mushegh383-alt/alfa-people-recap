@@ -7,7 +7,7 @@ export const contactPhoto={x:608+344*Math.cos(radians)-344*Math.sin(radians),y:3
 export function contactComposition(width,height){const scale=fitScale(width,height,1920,1647,'contact',24,24);return {scale,x:(width-1920*scale)/2,y:(height-1647*scale)/2};}
 export function clockContactFrame(u,reduced=false){
  const p=reduced?(u<16.15?0:1):ease(15.65,16.95,u);
- return {p,photo:ease(.08,.45,p),face:1-ease(.06,.5,p),information:1-ease(0,.28,p),hands:1-ease(0,.4,p),erase:ease(.22,.88,p),frame:1-ease(.76,1,p),turn:p*540};
+ return {p,photo:ease(.03,.62,p),face:1-ease(.28,.78,p),information:1-ease(0,.28,p),hands:1-ease(0,.4,p),erase:ease(.22,.88,p),frame:1-ease(.76,1,p),turn:p*540};
 }
 export function clockContactGeometry(width,height,u,reduced=false){
  const {p}=clockContactFrame(u,reduced),clockScale=fitScale(width,height,1920,2287,'planet',24,24),contact=contactComposition(width,height);

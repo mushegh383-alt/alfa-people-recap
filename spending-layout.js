@@ -63,7 +63,7 @@ export function spendingPose(progress, index) {
   };
 }
 export function spendingScrollProgress(sectionTop, sectionHeight, viewportHeight) {
-  const start = viewportHeight * .55;
+  const start = viewportHeight * .94;
   const end = viewportHeight - sectionHeight;
   return sectionTop <= end + 1 ? 1 : clamp((start - sectionTop) / (start - end));
 }

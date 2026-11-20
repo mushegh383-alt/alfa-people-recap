@@ -3,7 +3,7 @@ import { markSoftGlows } from './performance.js';
 import { optimizedAssetUrl } from './resources.js';
 import { ease,reel } from './november-layout.js';
 import { setHeadingScale } from './typography.js';
-import { clockContactFrame,clockContactGeometry,contactComposition,contactPhoto } from './clock-contact-transition.js';
+import { clockContactFrame,clockContactGeometry,contactComposition,contactPhoto } from './clock-contact-transition.js?local=21';
 export function contactFrame(p,reduced=false){
  const phase=(a,b)=>reduced?1:ease(a,b,p);
  return {photo:phase(.02,.35),name:phase(.26,.58),props:phase(.22,.65),bubble:phase(.16,.63),number:phase(.58,.82),digits:phase(.58,.91),caption:phase(.78,.98)};
@@ -58,6 +58,7 @@ export function mountTalkContact(root,signal){
  function draw(progress,visible,reduced,u=15.85+progress*1.95){last=[progress,visible,reduced,u];if(!visible)return;
   const f=contactFrame(progress,reduced);s.dataset.progress=progress.toFixed(4);
   const handoff=clockContactFrame(u,reduced),g=clockContactGeometry(s.clientWidth,s.clientHeight,u,reduced),cs=g.contact.scale,cx=(g.x-g.contact.x)/cs,cy=(g.y-g.contact.y)/cs,photoScale=g.half/(344*cs);
+  s.style.setProperty('--contact-sky', ease(.52, .98, handoff.p));
   composition.style.visibility=reduced&&u<16.15?'hidden':'visible';s.dataset.morph=handoff.p.toFixed(4);clip.setAttribute('rx',String(344+(106-344)*handoff.p));
   for(const g of parts){
    const kind=g.dataset.contactMotion,photo=kind==='photo'||kind==='glow',p=photo?f.photo:kind==='bubble'?f.bubble:f.props;

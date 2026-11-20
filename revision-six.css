@@ -27,7 +27,7 @@
 .revision-six .opening-story .envelope-section { position: absolute; inset: 0; height: 100%; background: transparent; }
 .revision-six .opening-story .envelope-stage { position: absolute; inset: 0; height: 100%; background: transparent; }
 .revision-six .envelope-data { left: 605px; top: 333px; width: 656px; }
-.revision-six .envelope-number { font-size: 700px; line-height: 1.1114; }
+.revision-six .envelope-number { font-size: var(--envelope-count-size,700px); line-height: 1.1114; }
 .revision-six .envelope-caption { margin-top: -45px; font: 700 60px/.9174 Styrene, sans-serif; letter-spacing: -.04em; }
 .revision-six .income-glass-stage { height: 1644px; }
 .revision-six .income-glass-world, .revision-six .income-glass-fallback-world { transform-origin: 878.5px 952.5px; }

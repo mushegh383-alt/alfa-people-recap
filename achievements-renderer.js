@@ -1,7 +1,7 @@
 import { canvasBudget, getQuality } from './performance.js';
 import { resourceUrl } from './resources.js';
 import { achievementRibbonMaterial, achievementRibbonAxis } from './achievement-ribbon.js';
-import { achievementEdges, achievementRayReveal, achievementsFrame, achievementsSceneScale } from './achievements-layout.js';
+import { achievementEdges, achievementRayReveal, achievementsFrame, achievementsSceneScale } from './achievements-layout.js?local=21';
 import { fitScale } from './layout-fit.js';
 
 // Preserve the source SVG contours, but rasterize only the visible viewport.
@@ -70,8 +70,17 @@ export function createRaysRenderer(canvas, signal, onReady, { luminous = false }
     artwork.forEach((paths, index) => {
       const reveal = achievementRayReveal(progress, index).scale;
       if (reveal < .0001) return;
-      const pose = rayViewportTransform(achievementEdges[index], reveal, width, height, offsetY);
+      // Uncover each ribbon along its final contour, from the star outwards.
+      const pose = rayViewportTransform(achievementEdges[index], 1, width, height, offsetY);
       context.save();
+      if (reveal < 1) {
+        const cx = width/2 + (achievementsFrame.originX-achievementsFrame.width/2)*pose.scale;
+        const cy = height/2 + (achievementsFrame.originY-achievementsFrame.height/2)*pose.scale + offsetY;
+        const radius = Math.hypot(Math.max(cx,width-cx), Math.max(cy,height-cy));
+        context.beginPath();
+        context.arc(cx, cy, radius*reveal, 0, 2*Math.PI);
+        context.clip();
+      }
       context.transform(pose.scale, 0, 0, pose.scale, pose.x, pose.y);
       paths.forEach(({ path, fill, gradient, edge }) => {
         context.fillStyle = gradient || fill;

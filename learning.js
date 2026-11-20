@@ -4,7 +4,7 @@ import { optimizedAssetUrl } from './resources.js';
 import { requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cancelAnimationFrame } from './performance.js';
 import { createSpending } from './blocks/spending.js';
 import { bookChapterPlan, bookFrame, bookGeometry, bookSpendingPose } from './learning-layout.js';
-import { reel } from './november-layout.js';
+import { ease, reel } from './november-layout.js';
 import { setHeadingScale } from './typography.js';
 
 export function createBookChapter(data) {
@@ -37,6 +37,7 @@ export function mountBookChapter(root, signal) {
   const chapter = root.querySelector('.book-chapter'); if (!chapter) return;
   const stage = chapter.querySelector('.book-chapter-stage'), book = chapter.querySelector('.learning-book'), video = book.querySelector('video');
   const composition = chapter.querySelector('.learning-composition'), heading = chapter.querySelector('.learning-heading'), backdrop = chapter.querySelector('.book-chapter-backdrop');
+  const overlapsOffice = chapter.classList.contains('overlap-exit');
   const spending = chapter.querySelector('.spending');
   const spendComposition = spending?.querySelector('.spending-composition');
   const spendingComp = () => { if (!spendComposition) return null; const r = screenRect(spendComposition), st = screenRect(stage); return { left: r.left - st.left, top: r.top - st.top, s: r.width / 1920 }; };
@@ -57,8 +58,11 @@ export function mountBookChapter(root, signal) {
     latest = f.time;
     book.style.width = book.style.height = `${g.size}px`;
     book.style.transform = `translate(${g.x - g.size / 2}px,${g.y - g.size / 2 + (reduced.matches && spending ? stage.clientHeight : 0)}px) rotate(${g.rotation || 0}deg)`;
-    book.style.opacity = g.opacity ?? f.appear;
-    book.style.visibility = (g.opacity ?? f.appear) > .001 ? 'visible' : 'hidden';
+    const exit = overlapsOffice && !reduced.matches ? 1 - b.bottom / stage.clientHeight : 0;
+    const bookOpacity = (g.opacity ?? f.appear) * (1 - ease(.14, .66, exit));
+    book.style.opacity = bookOpacity;
+    book.style.visibility = bookOpacity > .001 ? 'visible' : 'hidden';
+    composition.style.opacity = 1 - ease(0, .35, exit);
     placeComposition(composition, g.fit);
     const fitKey = [g.fit, stage.clientWidth, stage.clientHeight].join('/');
     if (fitKey !== previousFit) {
@@ -75,6 +79,7 @@ export function mountBookChapter(root, signal) {
     heading.style.opacity = f.title;
     heading.style.transform = `translateY(${(1 - f.title) * 65}px) scale(${.96 + f.title * .04})`;
     const ready = reduced.matches || video.currentTime >= 5.24;
+    composition.style.setProperty('--note-opacity', ready ? f.hours : 0);
     for (const { key, node } of stats) {
       const reveal = ready ? f[key] : 0;
       node.style.opacity = reveal;

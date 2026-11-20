@@ -1,5 +1,8 @@
-export const storyTravel = 18.2;
-export const storyAnchors = { '#intro': 0, '#your-year': 1.8, '#thanks': 3.28, '#postcards': 5.5, '#moments': 7.45, '#income': 9.65, '#alfa-ai': 11.6, '#ai-agent': 13.1, '#talk-time': 15.5, '#top-contact':17.8 };
+const clockReadingStart = 15.5;
+const clockReadingTravel = 1.15;
+const filmEnd = 18.2;
+export const storyTravel = filmEnd + clockReadingTravel + .65;
+export const storyAnchors = { '#intro': 0, '#your-year': 1.8, '#thanks': 3.28, '#postcards': 5.5, '#moments': 7.45, '#income': 9.65, '#alfa-ai': 11.6, '#ai-agent': 13.1, '#talk-time': clockReadingStart, '#top-contact':17.8 + clockReadingTravel };
 const clamp = x => Math.max(0, Math.min(1, x));
 export const storyPhase = (u, a, b) => {
   const p = clamp((u - a) / (b - a));
@@ -53,7 +56,9 @@ export function storyDigits(value, progress, start, end) {
 }
 
 export function storyUnit(scroll, top, viewport) {
-  return Math.max(0, Math.min(storyTravel, (scroll - top) / Math.max(1, viewport)));
+  const distance = Math.max(0, (scroll - top) / Math.max(1, viewport));
+  const reading = clamp((distance - clockReadingStart) / clockReadingTravel);
+  return Math.min(filmEnd, distance - reading * clockReadingTravel);
 }
 
 // Scene-to-scene "focus pull": the outgoing chapter drifts toward the viewer and

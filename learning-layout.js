@@ -1,6 +1,6 @@
 import { ease } from './november-layout.js';
 import { filmTime } from './scroll-film-timing.js';
-import { spendingPose, spendingScrollProgress, spendingShapeEntrance } from './spending-layout.js';
+import { spendingPose, spendingScrollProgress, spendingShapeEntrance } from './spending-layout.js?local=20';
 import { fitScale } from './layout-fit.js';
 
 export function bookChapterPlan(hasSpending) {

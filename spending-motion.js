@@ -1,6 +1,6 @@
 import { setHeadingScale } from './typography.js';
 import { requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cancelAnimationFrame } from './performance.js';
-import { spendingEntrance, spendingFrame, spendingInformation, spendingPose, spendingScrollProgress, spendingShapeEntrance, spendingShapes, shapeColor } from './spending-layout.js';
+import { spendingEntrance, spendingFrame, spendingInformation, spendingPose, spendingScrollProgress, spendingShapeEntrance, spendingShapes, shapeColor } from './spending-layout.js?local=20';
 import { fitScale, placeComposition } from './layout-fit.js';
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -10,6 +10,8 @@ export function mountSpendingMotion(root, signal) {
   const stage = section.querySelector('.spending-stage');
   const chapter = section.closest('.book-chapter');
   const composition = section.querySelector('.spending-composition');
+  const paired = (chapter || section).classList.contains('overlap-entry');
+  const heading = section.querySelector('.spending-heading');
   const artboard = section.querySelector('.spending-artboard');
   const paper = section.querySelector('.spending-paper');
   const shapes = [...section.querySelectorAll('.spending-shape')].map(item => ({ item, face: item.querySelector('.spending-face'), core: item.querySelector('.spending-ring-core') }));
@@ -52,7 +54,8 @@ export function mountSpendingMotion(root, signal) {
     if (!settling) { progress = target; entrance = enterTarget; }
     const key=`${progress}:${entrance}:${Math.max(0,box.top)}:${reducedMotion.matches}`;
     if(key===lastPaint)return;lastPaint=key;
-    composition.style.opacity = section.classList.contains('follows-coins') ? 1 : entrance;
+    composition.style.opacity = paired || section.classList.contains('follows-coins') ? 1 : entrance;
+    if (paired && heading) heading.style.opacity = reducedMotion.matches ? 1 : spendingEntrance(box.top,stage.clientHeight);
     // Both scenes use the same viewport-aligned paper. Keep the previous
     // paper visible through the handoff, without a second dark overlay.
     paper.style.opacity = section.classList.contains('follows-coins') && !reducedMotion.matches ? (box.top <= 0 ? 1 : 0) : entrance;
@@ -67,7 +70,7 @@ export function mountSpendingMotion(root, signal) {
       const pose = spendingPose(progress, index);
       item.style.opacity = spendingShapeEntrance(progress, index);
       item.style.transform = `translate(${pose.x}px, ${pose.y}px) rotate(${pose.rotation}deg) scale(${pose.scale})`;
-      if (['solid', 'ring', 'ornament'].includes(shape.kind)) face.style.borderRadius = `${pose.radius}%`;
+      if (['solid', 'ring', 'ornament'].includes(shape.kind)) face.style.borderRadius = `${shape.kind === 'solid' && !item.hasAttribute('data-artwork') ? Math.max(14, pose.radius) : pose.radius}%`;
       if (!item.hasAttribute('data-artwork') && ['solid', 'ring'].includes(shape.kind)) face.style.background = shapeColor(progress, index, shape.color);
       if (core) { core.style.background = shapeColor(progress, index + 2, '#2abbff'); core.style.borderRadius = `${pose.radius}%`; }
     });

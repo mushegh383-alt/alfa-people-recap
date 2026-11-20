@@ -1,18 +1,19 @@
 import { requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cancelAnimationFrame, getQuality } from './performance.js';
-import { createThanksNotes } from './scene-fill.js';
+import { createThanksNotes } from './scene-fill.js?prints=5';
 import { incomeGlassPose, incomeGlassDigits, incomeGlassGeometry, incomePlanetHandoff } from './income-glass-layout.js';
 import { getIncomeGlassRenderer, syncIncomeCapWindow } from './income-glass-motion.js';
-import { openingStoryFrame, storyPhase, storyDigits, storyUnit, storyAnchors, storyTravel } from './opening-story-layout.js';
-import { mountEnvelope } from './envelope.js';
-import { mountPlanet } from './planet-story.js';
-import { mountMoments } from './moments.js';
-import { mountTalkContact } from './talk-contact.js';
+import { openingStoryFrame, storyPhase, storyDigits, storyUnit, storyAnchors, storyTravel } from './opening-story-layout.js?local=18';
+import { mountEnvelope } from './envelope.js?local=15';
+import { mountPlanet } from './planet-story.js?local=21';
+import { mountMoments } from './moments.js?local=16';
+import { mountTalkContact } from './talk-contact.js?local=21';
 import { setHeadingScale } from './typography.js';
 import { fitScale, placeComposition, screenRect } from './layout-fit.js';
 
 export function createOpeningStory(hero, personal, income, thanks, extra = {}) {
   const section = document.createElement('section');
   section.className = 'opening-story';
+  section.style.height = `${(storyTravel + 1) * 100}svh`;
   section.classList.toggle('has-film-intro', hero.classList.contains('hero-film'));
   section.setAttribute('aria-label', 'Ваш год: итоги, спасибки, открытки, моменты, топ-1 сервис, Alfa AI и топ-собеседник');
   section.innerHTML = `<div class="story-pin"><div class="story-dark" aria-hidden="true"></div><div class="story-heart-glow" aria-hidden="true"></div></div>`;
@@ -115,7 +116,7 @@ export function mountOpeningStory(story, signal) {
   let lastRelease = -1;
   function applyRelease() {
     const raw = (scrollY - top) / Math.max(1, height) - storyTravel;
-    const r = reduced.matches || width / height < .8 ? 0 : Math.max(0, Math.min(1, raw));
+    const r = story.classList.contains('overlap-exit') || reduced.matches || width / height < .8 ? 0 : Math.max(0, Math.min(1, raw));
     if (Math.abs(r - lastRelease) < .001) return;
     lastRelease = r;
     const e = r * r * (3 - 2 * r);
@@ -165,6 +166,7 @@ export function mountOpeningStory(story, signal) {
     else current += (target - current) * (1 - Math.exp(-dt / (target>10.85?145:75)));
     forceDraw = false;
     const f = openingStoryFrame(current, reduced.matches);
+    const mobile = width / height < .8;
     const dominant = current < .78 ? 'hero' : current < 2.4 ? 'personal' : current < 3.87 ? 'thanks' : current < 5.98 ? 'postcards' : current < 7.86 ? 'moments' : current < 10.5 ? 'income' : current<16.15?'planet':'contact';
     story.dataset.storyUnit = current.toFixed(4); story.dataset.activeScene = dominant;
     if (document.documentElement.dataset.scene !== dominant) document.documentElement.dataset.scene = dominant;
@@ -199,14 +201,14 @@ export function mountOpeningStory(story, signal) {
     });
     }
     if(f.personal>.001){
-    placeComposition(personalCamera, personalScale, ` scale(${f.personalScale})`);   // телефон: базовый масштаб через zoom (память), анимация — transform
+    placeComposition(personalCamera, personalScale, ` scale(${mobile ? 1 : f.personalScale})`);   // телефон: базовый масштаб через zoom (память), анимация — transform
     photo.style.opacity = f.personalPhoto;
     photo.style.transform = reduced.matches ? 'none' : `scale(${.86 + .14 * f.personalPhoto}) rotate(${(1 - f.personalPhoto) * -5}deg)`;
     name.style.opacity = f.personalName;
     count.style.opacity = f.personalCount;
     caption.style.opacity = f.personalCaption;
-    const personalDigits = storyDigits(counter.dataset.value, current, 1.1, 1.72);
-    personalSlots.forEach((slot, i) => { slot.textContent = reduced.matches ? counter.dataset.value[i] : personalDigits[i]; });
+    const personalDigits = mobile || reduced.matches ? counter.dataset.value : storyDigits(counter.dataset.value, current, 1.1, 1.72);
+    personalSlots.forEach((slot, i) => { if (slot.textContent !== personalDigits[i]) slot.textContent = personalDigits[i]; });
     }
     getIncomeGlassRenderer(income)?.setVisible(f.income>.001 && intersecting);
     if (f.income > .001) {
@@ -233,6 +235,7 @@ export function mountOpeningStory(story, signal) {
       fallbackNumber.textContent = digits;
       fallbackNumber.style.opacity = pose.number;
       fallbackCaption.style.opacity = pose.caption;
+      incomeViewport.style.setProperty('--note-opacity',pose.caption);
       income.dataset.progress = f.incomeProgress.toFixed(4); income.dataset.digits = digits;
       getIncomeGlassRenderer(income)?.draw(pose, geometry, digits, width, height);
       syncIncomeCapWindow(income);
@@ -241,7 +244,7 @@ export function mountOpeningStory(story, signal) {
     thanks.classList.toggle('is-revealed', f.heart > 0);
     if(f.thanks>.001){
     heartEntrance.style.opacity = f.heart;
-    heartEntrance.style.transform = reduced.matches ? 'none' : `scale(${(.12 + .88 * f.heart) * (1 - f.thanksExit * .12)}) rotate(${(1 - f.heart) * -13}deg)`;
+    heartEntrance.style.transform = reduced.matches ? 'none' : mobile ? `translateY(${18 * (1-f.heart)}px) scale(${.94 + .06*f.heart})` : `scale(${(.12 + .88 * f.heart) * (1 - f.thanksExit * .12)}) rotate(${(1 - f.heart) * -13}deg)`;
     heart.style.transform = reduced.matches ? 'none' : `translate(${pointer.x * 10}px, ${pointer.y * 7}px)`;
     burst.style.opacity = f.heart;
     burst.style.transform = `scale(${reduced.matches ? 1 : .65 + .35 * f.heart})`;
@@ -252,8 +255,8 @@ export function mountOpeningStory(story, signal) {
       stat.style.opacity = reveal;
       stat.style.transform = reduced.matches ? 'none' : `translateX(${(index ? 1 : -1) * (1 - reveal) * 150}px) scale(${.9 + .1 * reveal})`;
       const el = stat.querySelector('.thanks-digits');
-      const digits = storyDigits(el.dataset.value, current, 2.5 + index * .1, 3.05 + index * .1);
-      [...el.children].forEach((slot, i) => { slot.textContent = reduced.matches ? el.dataset.value[i] : digits[i]; });
+      const digits = mobile || reduced.matches ? el.dataset.value : storyDigits(el.dataset.value, current, 2.5 + index * .1, 3.05 + index * .1);
+      [...el.children].forEach((slot, i) => { if (slot.textContent !== digits[i]) slot.textContent = digits[i]; });
     });
     const titleReveal = storyPhase(current, 2.4, 2.8);
     thanksTitle.style.opacity = titleReveal;

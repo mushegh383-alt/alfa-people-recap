@@ -140,6 +140,8 @@ function setBackdrop(img, source) {
 
 function mountScene(section, signal) {
   const eyesMode = section.id === 'profile-views';
+  const paired = eyesMode ? section.previousElementSibling?.id === 'zodiac' : section.nextElementSibling?.id === 'profile-views';
+  section.classList.toggle('sky-paired', paired);
   const stage = section.querySelector('.sky-stage'), composition = section.querySelector('.sky-composition');
   const canvas = section.querySelector('.sky-canvas'), backdrop = section.querySelector('.sky-backdrop');
   // Созвездию холст на экране не нужен: небо рисуется во временный холст и становится картинкой.
@@ -207,9 +209,9 @@ function mountScene(section, signal) {
   // Глаза раскладываются по свободному месту вокруг текста (на любом экране).
   function layoutEyes() {
     const portrait = width / Math.max(1, height) < .8, rnd = random(1248);
-    const r = Math.max(16, Math.min(58, Math.min(width, height) * (portrait ? .072 : .052)));
+    const r = Math.max(12, Math.min(46, Math.min(width, height) * (portrait ? .056 : .042)));
     const shownText = number.textContent; number.textContent = Number(number.dataset.value).toLocaleString('ru-RU');
-    const stageBox = stage.getBoundingClientRect(), pad = r * .9;
+    const stageBox = stage.getBoundingClientRect(), pad = r * .38;
     const blocked = [heading, number, label, note].filter(Boolean).map(el => { const b = screenRect(el); return { l: b.left - stageBox.left - pad, t: b.top - stageBox.top - pad, r: b.right - stageBox.left + pad, b: b.bottom - stageBox.top + pad }; });
     // Текст в ширину блока, а не во весь контейнер: сужаем рамки до реального слова.
     for (const [i, el] of [heading, number, label, note].filter(Boolean).entries()) {
@@ -219,16 +221,18 @@ function mountScene(section, signal) {
     const nb = screenRect(number);
     centre = { x: (nb.left + nb.right) / 2 - stageBox.left, y: (nb.top + nb.bottom) / 2 - stageBox.top };
     number.textContent = shownText;
-    const target = Math.round(portrait ? 24 : Math.min(40, width * height / 26000)), list = [];
+    const target = portrait ? 24 : 40, list = [];
     for (let tries = 0; list.length < target && tries < 4000; tries++) {
-      const size = r * (.7 + rnd() * .6), x = size * 1.2 + rnd() * (width - size * 2.4), y = size + rnd() * (height - size * 2);
+      const size = r * (.55 + rnd() * .85), x = size * 1.2 + rnd() * (width - size * 2.4), y = size + rnd() * (height - size * 2);
       if (blocked.some(b => x + size > b.l && x - size < b.r && y + size * .6 > b.t && y - size * .6 < b.b)) continue;
       if (list.some(e => Math.hypot(e.x - x, (e.y - y) * 1.6) < (e.r + size) * 1.15)) continue;
       list.push({ x, y, r: size, iris: ['#1ac3fd', '#fa7ab3', '#ef3124', '#1ac3fd', '#fa7ab3'][list.length % 5], wander: rnd() * Math.PI * 2, blink: 0, seed: rnd() });
     }
     // Открываются от центра к краям — как будто волна взглядов.
     const cx = width / 2, cy = height / 2;
-    list.sort((a, b) => Math.hypot(a.x - cx, a.y - cy) - Math.hypot(b.x - cx, b.y - cy)).forEach((e, i, all) => { e.openAt = .06 + (i / all.length) * .44 + e.seed * .04; });
+    list.sort((a, b) => Math.hypot(a.x - cx, a.y - cy) - Math.hypot(b.x - cx, b.y - cy)).forEach((e, i, all) => {
+      e.openAt = .12 + .49 * i / Math.max(1, all.length-1);
+    });
     eyes = list;
   }
 
@@ -256,13 +260,14 @@ function mountScene(section, signal) {
 
   function drawEyes(now) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, width, height);
-    const focus = reduced.matches ? 1 : ease(.52, .66, p);
+    const focus = reduced.matches ? 1 : ease(.61, .76, p);
     const target = pointer && focus > .99 ? pointer : centre;
     let idle = false;
     for (const e of eyes) {
-      const t = Math.max(0, Math.min(1, (p - e.openAt) / .07));
-      let open = reduced.matches ? 1 : t < 1 ? 1 + 2.7 * (t - 1) ** 3 + 1.7 * (t - 1) ** 2 : 1;   // backOut
-      if (open > .5 && !reduced.matches) {
+      const visible = reduced.matches ? 1 : ease(e.openAt-.018, e.openAt+.022, p);
+      if (!visible) continue;
+      let open = reduced.matches ? 1 : ease(e.openAt, e.openAt+.09, p);
+      if (p > .93 && !reduced.matches) {
         // Моргание: раз в 2–7 секунд, у каждого глаза свой ритм.
         if (!e.blink) e.blink = now + 600 + e.seed * 4000;
         else if (now > e.blink + 160) e.blink = now + 2000 + Math.random() * 5000;
@@ -272,32 +277,45 @@ function mountScene(section, signal) {
       const wander = { x: Math.cos(e.wander + now / 1700 * (.6 + e.seed)), y: Math.sin(e.wander * 1.3 + now / 2100) * .8 };
       const dx = target.x - e.x, dy = target.y - e.y, d = Math.max(1, Math.hypot(dx, dy));
       const at = { x: dx / d * Math.min(1, d / (e.r * 4)), y: dy / d * Math.min(1, d / (e.r * 4)) };
-      drawEye(e, Math.max(0, open), { x: wander.x * (1 - focus) + at.x * focus, y: wander.y * (1 - focus) + at.y * focus });
+      ctx.globalAlpha = visible;
+      drawEye(e, open, { x: wander.x * (1 - focus) + at.x * focus, y: wander.y * (1 - focus) + at.y * focus });
     }
+    ctx.globalAlpha = 1;
     return idle;
   }
 
   function update(now) {
     raf = 0; if (!active || document.hidden || signal.aborted) return;
-    const b = section.getBoundingClientRect(), target = reduced.matches ? 1 : sectionProgress(b.top, b.height, stage.clientHeight), dt = last ? Math.min(64, now - last) : 16; last = now;
-    p = p === undefined || document.documentElement.classList.contains('is-portrait') || reduced.matches ? target : p + (target - p) * (1 - Math.exp(-dt / 75));
+    const b = section.getBoundingClientRect();
+    const viewport = stage.clientHeight;
+    const revealHeight = Math.min(b.height, 2.6 * viewport);
+    const target = reduced.matches ? 1 : sectionProgress(b.top, revealHeight, viewport);
+    const dt = last ? Math.min(64, now - last) : 16; last = now;
+    p = p === undefined || paired || document.documentElement.classList.contains('is-portrait') || reduced.matches ? target : p + (target - p) * (1 - Math.exp(-dt / 75));
     if (Math.abs(target - p) < .0002) p = target;
     section.dataset.progress = p.toFixed(4);
+    if (paired && !reduced.matches) {
+      // During the shared viewport both stages stay on the same horizon.
+      const edge = eyesMode ? b.top : b.bottom;
+      const overlap = Math.max(0, Math.min(1, 1 - edge/height));
+      if (eyesMode) stage.style.opacity = ease(.28, .94, overlap);
+      else composition.style.opacity = 1 - ease(.015, .38, overlap);
+    } else {
+      stage.style.opacity = composition.style.opacity = '';
+    }
     let keepGoing = Math.abs(target - p) > .0002;
     if (eyesMode) {
-      heading.style.opacity = ease(0, .14, p); heading.style.transform = `translateY(${(1 - ease(0, .14, p)) * 40}px)`;
-      const count = ease(.08, .58, p), pop = Math.sin(Math.PI * ease(.56, .7, p));
-      number.style.opacity = ease(.06, .2, p);
-      number.style.transform = `scale(${.9 + .1 * ease(.06, .3, p) + pop * .07})`;
-      const value = Number(number.dataset.value), shown = count >= 1 ? value : Math.round(value * count);
-      number.textContent = shown.toLocaleString('ru-RU');
-      label.style.opacity = ease(.6, .74, p); label.style.transform = `translateY(${(1 - ease(.6, .74, p)) * 30}px)`;
-      note.style.opacity = ease(.7, .84, p);
+      const title = ease(.56, .70, p), result = ease(.72, .87, p);
+      heading.style.opacity = title; heading.style.transform = `translateY(${(1-title)*32}px)`;
+      number.style.opacity = result;
+      number.style.transform = `translateY(${(1-result)*28}px) scale(${.97+.03*result})`;
+      label.style.opacity = ease(.78, .91, p);
+      note.style.opacity = ease(.85, .95, p);
       // Моргание и взгляд живые, пока сцена на экране; на телефоне — 30 кадров/с.
       const frameGap = getQuality() === 'lite' ? 32 : 0;
       if (keepGoing || now - lastDraw >= frameGap) { lastDraw = now; if (drawEyes(now)) keepGoing = true; } else keepGoing = true;
     } else {
-      backdrop.style.opacity = ease(0, .12, p);
+      backdrop.style.opacity = section.classList.contains('overlap-entry') ? 1 : ease(0, .12, p);
       kicker.style.opacity = ease(.04, .16, p);
       const spin = ease(.08, .62, p);
       art.style.transform = `rotate(${(1 - spin) * -8}deg) scale(${.88 + .12 * spin})`;
@@ -356,15 +374,28 @@ function mountTower(section, signal) {
   const canvas = section.querySelector('.sky-canvas'), ctx = canvas.getContext('2d'), backdrop = section.querySelector('.sky-backdrop');
   const sign = section.querySelector('.tower-sign'), number = section.querySelector('.tower-number'), label = section.querySelector('.tower-label');
   const visits = Number(number.dataset.value);
-  const cells = Math.max(TOWER.workdays, Math.ceil(visits / TOWER.cols) * TOWER.cols), rows = cells / TOWER.cols;
-  // Какие дни — «офисные»: по ряду (месяцу) равномерно, детерминированно.
-  const rnd = random(134 + visits), order = Array.from({ length: cells }, (_, i) => i);
-  const lit = new Set([...order].sort(() => rnd() - .5).slice(0, Math.min(visits, cells)));
+  // Map visit days only to usable facade cells. The entrance and its snowy
+  // canopy occupy the bottom centre of the painted elevation.
+  let rows = Math.ceil(Math.max(TOWER.workdays, visits) / TOWER.cols);
+  let order;
+  do {
+    order = [];
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < TOWER.cols; col++) {
+        if (row < Math.ceil(rows * .31) && col >= 3 && col <= 9) continue;
+        order.push(row * TOWER.cols + col);
+      }
+    }
+    if (order.length >= Math.max(TOWER.workdays, visits)) break;
+    rows++;
+  } while (true);
+  const rnd = random(134 + visits);
+  const lit = new Set([...order].sort(() => rnd() - .5).slice(0, visits));
   const litOrder = order.filter(i => lit.has(i));                     // хронологически: снизу вверх
   const kind = new Map(litOrder.map(i => [i, rnd() < .14 ? 'screen' : rnd() < .12 ? 'person' : 'lamp']));
   let active = false, raf = 0, p, last = 0, width = 1, height = 1, dpr = 1, scale = 1, sky = null, drawn = -1;
   // Красный логотип-вывеска на крыше.
-  const logo = new Image(); logo.onload = () => { drawn = -1; schedule(); }; logo.src = './assets/brand/alfa-logo.svg';
+  const logo = new Image(); logo.onload = () => { drawn = -1; schedule(); }; logo.src = './assets/brand/alfa-logo.svg?white=1';
   // Новый стиль: здание — нарисованная картинка (окна в тёмный проём рисует код), фон — ночной город.
   const towerImg = new Image(); towerImg.onload = () => { drawn = -1; schedule(); }; towerImg.src = './assets/restyle/office-tower.png';
   const cityImg = new Image(); cityImg.onload = () => fit(); cityImg.src = isPortrait(innerWidth, innerHeight) ? './assets/restyle/office-bg-phone.jpg' : './assets/restyle/office-bg-desk.jpg';
@@ -442,7 +473,7 @@ function mountTower(section, signal) {
     const padX = 30 * scale, padY = 32 * scale, cw = (w - padX * 2) / TOWER.cols, ch = (h - padY * 2) / rows;
     const ww = cw * .66, wh = ch * .64, on = ease(.18, .66, p) * litOrder.length;
     const litNow = new Map(litOrder.map((cell, k) => [cell, Math.max(0, Math.min(1, on - k))]));
-    for (let i = 0; i < cells; i++) {
+    for (const i of order) {
       const row = Math.floor(i / TOWER.cols), col = i % TOWER.cols;
       const x = left + padX + col * cw + (cw - ww) / 2, y = top + h - padY - (row + 1) * ch + (ch - wh) / 2;
       const t = litNow.get(i) || 0;
@@ -480,15 +511,22 @@ function mountTower(section, signal) {
       const lh = lw * 82 / 408;
       const lx = painted ? left + (.519 - FACE.l) * dw - lw / 2 : left + (w - lw) / 2;
       const ly = painted ? imgTop + .112 * dh - lh / 2 : roof - 26 * scale - lh;
-      const n = ease(.64, .76, p), lit = n > 0 && n < 1 ? (Math.sin(n * 47) > .1 ? 1 : .3) : n;
-      if (!painted) { ctx.fillStyle = '#3a0f17'; ctx.fillRect(lx + lw * .2, ly + lh, 6 * scale, roof - ly - lh); ctx.fillRect(lx + lw * .8 - 6 * scale, ly + lh, 6 * scale, roof - ly - lh); }
-      if (lit > 0) {
-        const halo = ctx.createRadialGradient(lx + lw / 2, ly + lh / 2, 0, lx + lw / 2, ly + lh / 2, lw * .7);
-        // Тёплый свет вывески (был розовый): мягкое золотистое сияние на фасаде.
-        halo.addColorStop(0, `rgba(255,214,150,${.42 * lit})`); halo.addColorStop(.55, `rgba(255,170,90,${.12 * lit})`); halo.addColorStop(1, 'rgba(255,170,90,0)');
-        ctx.fillStyle = halo; ctx.fillRect(lx - lw * .2, ly - lh * 1.5, lw * 1.4, lh * 4);
-      }
-      ctx.globalAlpha = .25 + .75 * lit; ctx.drawImage(logo, lx, ly, lw, lh); ctx.globalAlpha = 1;
+      const lit = ease(.45, .75, p);
+      ctx.save();
+      ctx.translate(lx + lw / 2, ly + lh / 2);
+      ctx.scale(lw, lh);
+      const spill = ctx.createRadialGradient(0, 0, 0, 0, 0, .83);
+      spill.addColorStop(0, 'rgba(255,241,226,.36)');
+      spill.addColorStop(.5, 'rgba(255,225,216,.18)');
+      spill.addColorStop(1, 'rgba(255,214,208,0)');
+      ctx.globalAlpha = lit; ctx.fillStyle = spill; ctx.fillRect(-1,-1,2,2);
+      ctx.restore();
+      ctx.save();
+      ctx.globalAlpha = .55 + .45 * lit;
+      ctx.shadowColor = 'rgba(255,237,225,.9)';
+      ctx.shadowBlur = lh * dpr * .23 * lit;
+      ctx.drawImage(logo, lx, ly, lw, lh);
+      ctx.restore();
     }
     // Ровно столько окон, сколько уже загорелось: счётчик совпадает с картинкой.
     return Math.round(on);

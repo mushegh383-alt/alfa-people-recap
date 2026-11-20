@@ -4,7 +4,7 @@ export function createAchievements(data) {
   section.id = 'achievements';
   section.setAttribute('aria-label', 'Ваши достижения');
   section.innerHTML = `
-    <div class="achievements-stage">
+    <div class="achievements-track"><div class="achievements-stage">
     <canvas class="achievement-rays-canvas" width="1" height="1" aria-hidden="true"></canvas>
     <div class="achievements-composition">
       <p class="achievement-heading" aria-hidden="true">ачивки</p>
@@ -17,7 +17,7 @@ export function createAchievements(data) {
       <p class="achievement-number" aria-labelledby="achievement-caption"><span class="achievement-digits" aria-hidden="true"></span><span class="sr-only"></span></p>
     </div>
     <div class="achievement-flash" aria-hidden="true"></div>
-    </div>
+    </div></div>
   `;
   const caption = section.querySelector('.achievement-caption');
   data.achievements.label.split('\n').forEach((line, index) => {

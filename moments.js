@@ -103,9 +103,8 @@ export function mountMoments(section, signal) {
     // Intentionally let the large star cross the viewport. Text has its own
     // camera, and photos can approach without scaling the entire scene.
     const scale = fitScale(stage.clientWidth, stage.clientHeight, 1480, 1820, 'moments');
-    // Центр звезды и текста — x 988 в макете 1920 (на 28 px правее середины).
-    // На узком экране это заметно, поэтому сдвигаем сцену, чтобы цифра была по центру.
-    const shift = isPortrait(stage.clientWidth, stage.clientHeight) ? ' translateX(-28px)' : '';
+    // У растровой звезды центр медальона в x=948, у векторной — в x=988.
+    const shift = isPortrait(stage.clientWidth, stage.clientHeight) ? (core ? ' translateX(-28px)' : ' translateX(12px)') : '';
     placeComposition(composition, scale, `${shift}`);
     setHeadingScale(composition, scale, stage.clientWidth, stage.clientHeight);
     schedule();
@@ -114,8 +113,8 @@ export function mountMoments(section, signal) {
     frame = 0; if (!active || document.hidden || signal.aborted) return;
     const f = momentsFrame(progress, reduced.matches);
     const portrait = isPortrait(stage.clientWidth,stage.clientHeight);
-    camera.style.transform = `scale(${f.zoom})`;
-    back.style.transform = `rotate(${f.backRotation}deg)`;
+    camera.style.transform = `scale(${portrait ? .97+.03*f.info : f.zoom})`;
+    back.style.transform = `rotate(${portrait ? (1-f.info)*-5 : f.backRotation}deg)`;
     if (core) core.style.transform = `rotate(${f.coreRotation}deg)`;
     pictures.forEach(({node, index, x, y, angle}) => {
       const growth = f.growth[index], reveal = f.photos[index], land = f.land[index], away = 1 - land, t = photoThrow[index];
@@ -133,7 +132,7 @@ export function mountMoments(section, signal) {
     });
     info.style.opacity = f.info;
     const title = section.querySelector('.moments-heading'); if (title) { title.style.opacity = f.info; title.style.transform = `translateY(${(1 - f.info) * 40}px)`; }
-    info.style.transform = `translateY(${(1-f.info)*55}px) scale(${.55 + .45 * f.numberPop})`;
+    info.style.transform = `translateY(${(1-f.info)*55}px) scale(${portrait ? 1 : .55 + .45 * f.numberPop})`;
     flash.style.opacity = f.flash; flash.style.visibility = f.flash > .005 ? 'visible' : 'hidden';
     const burst = f.sparkles, glow = Math.sin(Math.PI * burst);
     sparkles.forEach((s, i) => {
@@ -141,7 +140,7 @@ export function mountMoments(section, signal) {
       s.style.transform = `rotate(var(--a)) translateY(${-dist}px) rotate(${burst * 220}deg) scale(${(.4 + glow) * (i % 2 ? .7 : 1)})`;
       s.style.opacity = glow; s.style.visibility = glow > .01 ? 'visible' : 'hidden';
     });
-    const text = reel(section.dataset.value, f.digits); if (number.textContent !== text) number.textContent = text;
+    const text = portrait ? section.dataset.value : reel(section.dataset.value, f.digits); if (number.textContent !== text) number.textContent = text;
     section.dataset.progress = progress.toFixed(4); section.dataset.zoom = f.zoom.toFixed(4);
     // No idle loop, path rewrites or animated SVG/backdrop filter geometry.
   }
