@@ -21,7 +21,7 @@ html[data-quality=lite] .office-seven-back {background:radial-gradient(circle 10
 /* Финал на телефоне: размытая копия талисмана (blur 24px на картинке 120%) —
    одна из самых дорогих операций по памяти; на lite её нет. */
 html[data-quality=lite] .finale-seven-ghost {display:none;}
-html[data-quality=lite] .is-offscreen-chapter > * {visibility:hidden !important;content-visibility:hidden;}
+html[data-quality=lite] .is-offscreen-chapter > * {visibility:hidden !important;}
 /* Финал на телефоне: без тени-фильтра у марки (мерцала вместе с движением слоя). */
 html[data-quality=lite] .finale-seven-stamp {filter:none;}
 html[data-quality=lite] .finale-seven-frame {box-shadow:none;}

@@ -2,7 +2,7 @@ import { isPortrait, placeComposition } from './layout-fit.js';
 import { optimizedAssetUrl } from './resources.js';
 import { createScrollVideo, markSoftGlows, getQuality, requestRenderFrame as requestAnimationFrame, cancelRenderFrame as cancelAnimationFrame } from './performance.js';
 import { ease, reel } from './november-layout.js';
-import { planetMediaPose, planetComposition, clockLayerFrame, clockFace } from './planet-layout.js';
+import { planetMediaPose, planetComposition, clockLayerFrame, clockFace, planetAISource } from './planet-layout.js';
 import { incomePlanetHandoff } from './income-glass-layout.js';
 import { setHeadingScale } from './typography.js';
 import { filmTime } from './scroll-film-timing.js';
@@ -16,7 +16,7 @@ export function planetFrame(u, reduced=false) {
 }
 export function createPlanetStory(data){
  const s=document.createElement('section');s.className='planet-story';s.id='alfa-ai';s.setAttribute('aria-label','Alfa AI, любимый агент и время общения');
- s.innerHTML=`<div class="planet-media"><video muted playsinline preload="none" disablepictureinpicture poster="./assets/planet/poster.jpg" src="./assets/planet/planet-smooth.mp4"></video></div><div class="planet-composition"><div class="planet-clock-art" aria-hidden="true"></div><div class="planet-ai planet-copy"><h2>alfa ai</h2><p class="planet-number"></p><p class="planet-label"></p></div><div class="planet-agent planet-copy" id="ai-agent"><h2></h2><p class="planet-label"></p></div><div class="planet-time planet-copy" id="talk-time"><p class="planet-number"></p><h2 class="planet-label"></h2><p class="planet-note"></p></div></div>`;
+ s.innerHTML=`<div class="planet-media"><video muted playsinline preload="none" disablepictureinpicture poster="./assets/planet/poster.jpg" src="./assets/planet/planet-smooth.mp4"></video></div><div class="planet-composition"><div class="planet-clock-art" aria-hidden="true"></div><div class="planet-ai planet-copy"><h2>alfa ai</h2><div class="planet-ai-stat"><p class="planet-number"></p><p class="planet-label"></p></div></div><div class="planet-agent planet-copy" id="ai-agent"><h2></h2><p class="planet-label"></p></div><div class="planet-time planet-copy" id="talk-time"><p class="planet-number"></p><h2 class="planet-label"></h2><p class="planet-note"></p></div></div>`;
  // Статичный режим: хрустальный шар картинкой вместо видео планеты (легче для телефона).
  if(data.ai.still){
   s.classList.add('is-planet-still');s.querySelector('video').removeAttribute('src');s.querySelector('video').removeAttribute('poster');
@@ -163,14 +163,16 @@ export function mountPlanet(root,signal){
    const enter=reduced?1:ease(10.3,10.95,u);
    still.style.opacity=(enter*(1-.65*ease(13.8,14.5,u))).toFixed(3);still.style.visibility=enter>.001?'visible':'hidden';
   }
+  let aiCenter;
   if(orbA){
-   const comp=planetComposition(width,height);
+   const comp=composition;
    const H=incomePlanetHandoff(width,height,Math.min(u,10.85));
    // На широком экране шар чуть выше и меньше — чтобы под ним поместилась подставка.
    const wide=width>height,R={x:width/2,y:height*(wide?.46:.52),radius:wide?Math.min(width*.47,height*.355):Math.min(width*.47,height*.4)},R2={x:R.x,y:R.y,radius:R.radius*(wide?1.06:1.1)};
    const D={x:comp.x+clockFace.x*comp.scale,y:comp.y+clockFace.y*comp.scale,radius:DIAL_R*comp.scale};
    const t1=reduced?1:ease(10.85,11.5,u),t2=reduced?(u<12.4?0:1):ease(12.1,12.7,u),t3=reduced?(u<14?0:1):ease(13.6,14.45,u);
    const c=lerpC(lerpC(lerpC(H,R,t1),R2,t2),D,t3),rot=reduced?0:(25*t2+50*t3)*(1-.0)+8*Math.sin(Math.PI*t1);
+   aiCenter = c;
    const transform=`translate(${c.x.toFixed(1)}px,${c.y.toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${(c.radius/ORB_R).toFixed(4)}) translate(-512px,-512px)`;
    const shown=(reduced?1:ease(10.2,10.75,u))*(1-ease(14.2,14.6,u));
    orbA.style.transform=transform;orbA.style.opacity=(shown*(1-t2)).toFixed(3);orbA.style.visibility=shown*(1-t2)>.001?'visible':'hidden';
@@ -182,6 +184,14 @@ export function mountPlanet(root,signal){
     stand.style.opacity=on.toFixed(3);stand.style.visibility=on>.001?'visible':'hidden';
    }
    if(orbB&&orbB!==orbA){orbB.style.transform=transform;orbB.style.opacity=(shown*t2).toFixed(3);orbB.style.visibility=shown*t2>.001?'visible':'hidden';}
+  }
+  if (width / height < .8 && f.ai > .001) {
+   if (!aiCenter) {
+    const source = planetAISource(video.currentTime);
+    aiCenter = {x:pose.x + source.x * pose.scale, y:pose.y + source.y * pose.scale};
+   }
+   ai.style.setProperty('--ai-stat-x', `${(aiCenter.x - composition.x) / composition.scale}px`);
+   ai.style.setProperty('--ai-stat-y', `${(aiCenter.y - composition.y) / composition.scale}px`);
   }
   if (dial) {
    const opacity = ease(14.15,14.55,u) * handoff.face;

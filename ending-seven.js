@@ -297,7 +297,7 @@ function mountChapter(chapter, signal) {
     if (blend!==handoff) schedule();
   }
   function schedule() {if (!raf && active && !document.hidden && !signal.aborted) raf=requestAnimationFrame(paint);}
-  const observer=new IntersectionObserver(([entry])=>{active=entry.isIntersecting;if(active)schedule();else{cancelAnimationFrame(raf);raf=last=0;}},{rootMargin:'100px'});observer.observe(chapter);
+  const observer=new IntersectionObserver(([entry])=>{active=entry.isIntersecting;if(active)schedule();else{cancelAnimationFrame(raf);raf=last=0;}},{rootMargin:'100% 0px'});observer.observe(chapter);
   window.addEventListener('scroll',schedule,{passive:true,signal});
   window.addEventListener('resize',schedule,{passive:true,signal});
   window.addEventListener('hashchange',()=>toEndingAnchor(chapter.parentElement,location.hash),{signal});

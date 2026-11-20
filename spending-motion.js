@@ -90,7 +90,7 @@ export function mountSpendingMotion(root, signal) {
     section.classList.toggle('is-motion-active', inView);
     if (!inView) { cancelAnimationFrame(frame); frame = 0; progress = entrance = undefined; lastPaint=undefined;lastTime = 0; composition.style.opacity = paper.style.opacity = 0; }
     else schedule();
-  }, { rootMargin: '150px' });
+  }, { rootMargin:'100% 0px' });
   observer.observe(chapter || section);
   const resize = new ResizeObserver(fit);
   resize.observe(stage); fit();

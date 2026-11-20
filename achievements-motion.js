@@ -142,7 +142,7 @@ export function mountAchievementsMotion(root, signal) {
       focal.style.opacity = number.style.opacity = 0;
     }
     else schedule();
-  }, { rootMargin: '200px' });
+  }, { rootMargin:'100% 0px' });
   observer.observe(section);
   const resize = new ResizeObserver(fit);
   resize.observe(stage);

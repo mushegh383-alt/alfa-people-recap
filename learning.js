@@ -96,7 +96,7 @@ export function mountBookChapter(root, signal) {
     if (Math.abs(target - progress) > .0001) schedule();
   }
   function schedule() { if (!raf && active && !signal.aborted && !document.hidden) raf = requestAnimationFrame(update); }
-  const observer = new IntersectionObserver(([entry]) => { active = entry.isIntersecting; if (active) schedule(); else { transport.pause(); cancelAnimationFrame(raf); raf = last = 0; } }, { rootMargin: '150px' });
+  const observer = new IntersectionObserver(([entry]) => { active = entry.isIntersecting; if (active) schedule(); else { transport.pause(); cancelAnimationFrame(raf); raf = last = 0; } }, { rootMargin:'100% 0px' });
   observer.observe(chapter);
   const resize = new ResizeObserver(schedule); resize.observe(stage);
   window.addEventListener('scroll', schedule, { passive: true, signal });

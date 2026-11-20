@@ -218,3 +218,37 @@ html:not(.is-portrait) .november .office-tower .tower-label { top:1414px !import
 
 .scroll-hint:not(.is-visible) .scroll-hint-line i { animation-play-state:paused; }
 .scroll-hint-text { white-space:normal; line-height:1.35; }
+
+.planet-ai-stat { display:contents; }
+html.is-portrait .revision-six .planet-ai {
+  inset:0;
+  width:auto;
+  transform:none !important;
+}
+html.is-portrait .planet-ai-stat {
+  position:absolute;
+  left:var(--ai-stat-x,960px);
+  top:var(--ai-stat-y,1143.5px);
+  display:grid;
+  justify-items:center;
+  width:1205px;
+  translate:-50% -50%;
+}
+html.is-portrait .revision-six .planet-ai-stat .planet-number {
+  height:auto;
+  margin:0;
+  line-height:1;
+  text-box:trim-both cap alphabetic;
+}
+html.is-portrait .revision-six .planet-ai-stat .planet-label { margin:36px auto 0; }
+
+html.is-portrait .revision-six .planet-ai h2:not(.planet-label) {
+  position:absolute;
+  top:84px;
+  inset-inline:0;
+  font-size:calc(var(--recap-heading-logical,260px) * 1.28) !important;
+  line-height:1.02;
+  white-space:nowrap;
+}
+html.is-portrait .revision-six .opening-story .income-glass-title { top:-38px; }
+html.is-portrait .revision-six .opening-story .income-glass-rank { top:-140px; }

@@ -336,7 +336,7 @@ function mountScene(section, signal) {
   const observer = new IntersectionObserver(([e]) => {
     active = e.isIntersecting; section.classList.toggle('is-on-screen', active);
     if (active) schedule(); else { cancelAnimationFrame(raf); raf = 0; last = 0; }
-  }, { rootMargin: '150px' });
+  }, { rootMargin:'100% 0px' });
   observer.observe(section);
   const resize = new ResizeObserver(fit); resize.observe(stage);
   document.fonts?.ready.then(() => { if (!signal.aborted) fit(); });
@@ -552,7 +552,7 @@ function mountTower(section, signal) {
   const observer = new IntersectionObserver(([e]) => {
     active = e.isIntersecting; section.classList.toggle('is-on-screen', active);
     if (active) schedule(); else { cancelAnimationFrame(raf); raf = 0; last = 0; }
-  }, { rootMargin: '150px' });
+  }, { rootMargin:'100% 0px' });
   observer.observe(section);
   const resize = new ResizeObserver(fit); resize.observe(stage);
   document.fonts?.ready.then(() => { if (!signal.aborted) fit(); });

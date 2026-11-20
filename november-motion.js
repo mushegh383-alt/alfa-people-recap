@@ -40,7 +40,7 @@ function mount(section,signal){
   if(Math.abs(target-p)>.0002)schedule();
  }
  function schedule(){if(!raf&&active&&!signal.aborted&&!document.hidden)raf=requestAnimationFrame(update);}
- const observer=new IntersectionObserver(([e])=>{active=e.isIntersecting;section.classList.toggle('is-on-screen',active);if(active)schedule();else{cancelAnimationFrame(raf);raf=0;last=0;}},{rootMargin:'150px'});observer.observe(section);
+ const observer=new IntersectionObserver(([e])=>{active=e.isIntersecting;section.classList.toggle('is-on-screen',active);if(active)schedule();else{cancelAnimationFrame(raf);raf=0;last=0;}},{rootMargin:'100% 0px'});observer.observe(section);
  const resize=new ResizeObserver(fit);resize.observe(stage);fit();window.addEventListener('scroll',schedule,{passive:true,signal});document.addEventListener('visibilitychange',schedule,{signal});reduced.addEventListener('change',schedule,{signal});
  signal.addEventListener('abort',()=>{observer.disconnect();resize.disconnect();cancelAnimationFrame(raf);},{once:true});
 }

@@ -4,7 +4,7 @@ import { incomeGlassPose, incomeGlassDigits, incomeGlassGeometry, incomePlanetHa
 import { getIncomeGlassRenderer, syncIncomeCapWindow } from './income-glass-motion.js';
 import { openingStoryFrame, storyPhase, storyDigits, storyUnit, storyAnchors, storyTravel } from './opening-story-layout.js?local=18';
 import { mountEnvelope } from './envelope.js?local=28';
-import { mountPlanet } from './planet-story.js?local=27';
+import { mountPlanet } from './planet-story.js?local=30';
 import { mountMoments } from './moments.js?local=16';
 import { mountTalkContact } from './talk-contact.js?local=21';
 import { setHeadingScale } from './typography.js';
@@ -275,7 +275,7 @@ export function mountOpeningStory(story, signal) {
     if (!intersecting) current = null;
     forceDraw = true; schedule();
   });
-  observer.observe(story);
+  observer.observe(story.querySelector(':scope > .chapter-track') || story);
   const resize = new ResizeObserver(fit); resize.observe(pin);
   window.addEventListener('scroll', schedule, { passive: true, signal });
   // ResizeObserver tracks the stable sticky viewport, including rotations.
