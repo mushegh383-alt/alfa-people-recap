@@ -279,3 +279,7 @@ html.is-paging, html.is-paging body { overscroll-behavior: none; }
 .november.is-paging { touch-action: none; }
 /* На телефоне лучи (холст) лежат поверх текста — подпись должна целиком помещаться в звезде. */
 .achievement-caption .scene-reading-note { max-width:9.2em; margin-left:auto; margin-right:auto; }
+/* iOS двигает sticky-сцены на кадр позже программной прокрутки — сверху (под панелью Safari)
+   открывалась полоска уезжающего прошлого экрана. Тень-«козырёк» над сценой закрывает этот зазор. */
+.november.is-paging :is(.sky-stage,.november-stage,.book-chapter-stage,.ending-chapter-pin,.story-pin) { box-shadow:0 -160px 0 #0b1636; }
+.november.is-paging .achievements-stage { box-shadow:0 -160px 0 #020101; }

@@ -1,5 +1,8 @@
 import { storyAnchors } from './opening-story-layout.js?local=18';
 import { bookChapterPlan } from './learning-layout.js';
+// Прокрутка идёт на тех же часах (60 Гц), что и отрисовка сцен: на 120-герцовом iPhone
+// иначе каждый второй кадр сцена отставала от прокрутки — картинка «дрожала».
+import { requestRenderFrame, cancelRenderFrame } from './performance.js';
 
 export function sceneStops(root) {
   const stops = [{id:'intro', y:0}];
@@ -125,7 +128,7 @@ function mountPaging(root, signal, phone, hint) {
   function tick(now) {
     const t = Math.min(1, (now - start) / Math.max(1, duration));
     scrollTo({top: from + (to - from) * ease(t), behavior: 'instant'});
-    if (t < 1) frame = requestAnimationFrame(tick);
+    if (t < 1) frame = requestRenderFrame(tick);
     else { frame = 0; target = -1; armHint(); }
   }
   function go(dir) {
@@ -138,13 +141,13 @@ function mountPaging(root, signal, phone, hint) {
     const screens = Math.abs(to - from) / innerHeight;
     duration = reduced.matches ? 1 : Math.min(16800, 5200 + screens * 2880) * .75 * speed;
     hideHint();
-    cancelAnimationFrame(frame); frame = requestAnimationFrame(tick);
+    cancelRenderFrame(frame); frame = requestRenderFrame(tick);
   }
   // Подравнять к ближайшей остановке (поворот экрана, переход по якорю).
   function settle() {
     if (!enabled() || frame) return;
     const list = stops(), i = nearest(list);
-    if (Math.abs(list[i].y - scrollY) > 4) { target = i; from = scrollY; to = list[i].y; start = performance.now(); duration = 450; frame = requestAnimationFrame(tick); }
+    if (Math.abs(list[i].y - scrollY) > 4) { target = i; from = scrollY; to = list[i].y; start = performance.now(); duration = 450; frame = requestRenderFrame(tick); }
   }
 
   // Постояли на слайде 3 с — напоминаем, что дальше можно потянуть (кроме последнего).
@@ -195,5 +198,5 @@ function mountPaging(root, signal, phone, hint) {
   document.addEventListener('recap:ready', () => setTimeout(() => { settle(); armHint(); }, 400), {once: true, signal});
   window.addEventListener('touchstart', hideHint, {passive: true, signal});
   window.__recapPage = go;                                   // для проверок
-  signal.addEventListener('abort', () => { cancelAnimationFrame(frame); clearTimeout(hintTimer); root.classList.remove('is-paging'); html.classList.remove('is-paging'); delete window.__recapPage; }, {once: true});
+  signal.addEventListener('abort', () => { cancelRenderFrame(frame); clearTimeout(hintTimer); root.classList.remove('is-paging'); html.classList.remove('is-paging'); delete window.__recapPage; }, {once: true});
 }
