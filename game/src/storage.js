@@ -22,7 +22,7 @@ export function load(store = localStorage, now = new Date()) {
   const text = store.getItem(STORAGE_KEY);
   let raw;
   try { raw = text ? JSON.parse(text) : {}; }
-  catch { throw new Error('Не удалось прочитать прогресс. Попробуй перезагрузить страницу.'); }
+  catch { throw new Error('Не удалось прочитать прогресс. Попробуйте перезагрузить страницу.'); }
   return normalize(raw, now);
 }
 
@@ -51,7 +51,7 @@ export function finishAttempt(id, score) {
   return locked(() => {
     const state = load();
     if (state.completed.includes(id)) return state;
-    if (state.active?.id !== id) throw new Error('Попытка уже завершена в другой вкладке. Обнови страницу.');
+    if (state.active?.id !== id) throw new Error('Попытка уже завершена в другой вкладке. Обновите страницу.');
     if (!isCount(score)) throw new Error('Invalid round score');
     return save({ ...state, bank: state.bank + score, best: Math.max(state.best, score), rounds: state.rounds + 1, active: null, completed: [...state.completed, id].slice(-100) });
   });

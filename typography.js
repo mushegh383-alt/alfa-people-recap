@@ -1,3 +1,4 @@
+import { screenRect } from './layout-fit.js';
 // A shared on-screen size, independent of each scene's fitted design canvas.
 export function recapHeadingPixels(width,height) {
  // На вертикальном экране акцентные заголовки крупнее: 15% ширины вместо 10.5%.
@@ -18,20 +19,19 @@ export function setHeadingScale(element,scale,width,height) {
  setTextScale(element,scale,width,height);
 }
 
-// Единая шкала мелкого текста. Каждая сцена масштабирует свой макет целиком, и на
-// телефоне подписи выходили по 9–11 px. Здесь у каждой роли — минимальный размер
-// НА ЭКРАНЕ; текст растёт, только если в сцене он получился мельче.
+// Единая шкала текста (кроме заголовков и крупных цифр): у каждой роли — ОДИН размер
+// на экране на всех слайдах. Сцены масштабируют свои макеты по-разному, поэтому размер
+// задаётся в пикселях экрана и пересчитывается в единицы макета (target / scale).
+//  label — подпись под цифрой («Раз смотрели ваш профиль», «Ачивки вы получили»…);
+//  note  — пояснение, пожелание, поздравление и маленькие строки над заголовком.
 const TEXT_ROLES={
- kicker:'.income-glass-rank,.talk-contact-kicker,.sky-kicker',
- caption:'.visit-caption,.thanks-caption,.moments-caption,.learning-label,.november-park-label,.coins-copy,.spending-caption,.talk-contact-label,.sky-label,.tower-label,.finale-seven-name,.planet-label,.achievement-caption',
- // Подпись в открытке конверта: мельче обычной, чтобы не вылезать на красный конверт.
- envelope:'.envelope-caption',
- note:'.thanks-note,.spending-note,.talk-contact-note,.november-park-note,.sky-note,.finale-seven-caption,.planet-note',
+ label:'.visit-caption,.thanks-caption,.moments-caption,.learning-label,.november-park-label,.coins-copy,.spending-caption,.talk-contact-label,.sky-label,.tower-label,.finale-seven-name,.planet-label,.achievement-caption,.envelope-caption',
+ note:'.thanks-note,.spending-note,.talk-contact-note,.november-park-note,.sky-note,.planet-note,.scene-reading-note,.finale-seven-caption,.income-glass-rank,.talk-contact-kicker,.sky-kicker',
 };
 export function textMinimum(width,height){
  const clamp=(a,v,b)=>Math.max(a,Math.min(b,v));
- if(width/Math.max(1,height)<.8)return{kicker:15,caption:clamp(17,width*.048,21),note:clamp(15,width*.04,18),envelope:clamp(14,width*.037,16)};
- return{kicker:clamp(16,width*.0135,26),caption:clamp(18,width*.019,32),note:clamp(15,width*.0145,24),envelope:clamp(18,width*.019,32)};
+ if(width/Math.max(1,height)<.8)return{label:clamp(16,width*.043,18),note:clamp(13.5,width*.036,15)};
+ return{label:clamp(17,width*.0145,26),note:clamp(14,width*.0112,20)};
 }
 export function setTextScale(element,scale,width,height){
  const min=textMinimum(width,height);
@@ -46,7 +46,7 @@ export function setTextScale(element,scale,width,height){
    else if(cs.position==='static'&&node.offsetWidth&&cs.marginLeft===cs.marginRight&&parseFloat(cs.marginLeft)>0)Object.assign(node.dataset,{baseWidth:node.offsetWidth,baseStatic:'1',baseInlineWidth:node.style.width});
   }
   const base=Number(node.dataset.baseFont),target=min[role]/Math.max(.01,scale),grow=base?target/base:1;
-  if(base&&grow>1.01){
+  if(base&&Math.abs(grow-1)>.01){
    node.style.setProperty('font-size',`${target.toFixed(1)}px`,'important');
    if(node.dataset.baseWidth){
     const naturalWidth=Number(node.dataset.baseWidth);
@@ -71,8 +71,90 @@ export function setTextScale(element,scale,width,height){
   if(b.dataset.baseTop===undefined)b.dataset.baseTop=String(b.offsetTop);
   const need=a.offsetTop+a.offsetHeight+Math.round(14/Math.max(.01,scale));
   b.style.top=need>Number(b.dataset.baseTop)?`${need}px`:`${b.dataset.baseTop}px`;
+ } applyGaps(element,width,height);
+}
+// ── Система отступов ─────────────────────────────────────────────────────────────
+// Между цифрой и подписью — один отступ на всех слайдах (gap1), между подписью и
+// пояснением — другой (gap2). Меряем по видимым краям букв (верх заглавных и базовая
+// линия), а не по рамкам элементов — у них разный «воздух» в разных шрифтах. Нижний
+// элемент сдвигаем свойством translate (не мешает анимациям на transform).
+export function textGaps(width,height){
+ const clamp=(a,v,b)=>Math.max(a,Math.min(b,v));
+ return width/Math.max(1,height)<.8?{gap1:12,gap2:9}:{gap1:clamp(12,width*.0105,20),gap2:clamp(9,width*.0075,14)};
+}
+const GAP_PAIRS=[
+ ['.visit-count','.visit-caption','gap1'],['.thanks-number','.thanks-caption','gap1'],['.envelope-number','.envelope-caption','gap1'],
+ ['.moments-number','.moments-caption','gap1'],['.planet-number','.planet-label','gap1'],['.planet-label','.planet-note','gap2'],
+ ['.talk-contact-number','.talk-contact-label','gap1'],['.talk-contact-label','.talk-contact-note','gap2'],
+ ['.eyes-number','.eyes-label','gap1'],['.eyes-label','.eyes-note','gap2'],
+ ['.achievement-number','.achievement-caption','gap1'],['.achievement-caption-line','.scene-reading-note','gap2'],
+ ['.spending-number','.spending-caption','gap1'],['.spending-caption','.spending-note','gap2'],
+ ['.learning-number','.learning-label','gap1'],['.finale-seven-name','.finale-seven-caption','gap2'],
+];
+const metricCtx=typeof document!=='undefined'?document.createElement('canvas').getContext('2d'):null;
+const metricCache=new Map();
+function fontMetrics(el){
+ const cs=getComputedStyle(el),font=`${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+ let m=metricCache.get(font);
+ if(!m&&metricCtx){metricCtx.font=font;const all=metricCtx.measureText('Нд8'),cap=metricCtx.measureText('Н8');m={a:all.fontBoundingBoxAscent,d:all.fontBoundingBoxDescent,cap:cap.actualBoundingBoxAscent};if(m.a)metricCache.set(font,m);}
+ return m;
+}
+// Видимые края текста элемента на экране: верх заглавных первой строки и базовая линия последней.
+export function inkBounds(el){
+ const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.textContent.trim()&&!n.parentElement.closest('.sr-only')?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT});
+ let top=Infinity,bottom=-Infinity,unit=0;
+ for(let n=walker.nextNode();n;n=walker.nextNode()){
+  const m=fontMetrics(n.parentElement);if(!m||!m.a)continue;
+  const text=n.textContent,first=text.search(/\S/),last=text.length-1-[...text].reverse().findIndex(c=>c.trim());
+  const r1=document.createRange();r1.setStart(n,first);r1.setEnd(n,first+1);const a=screenRect(r1);
+  const r2=document.createRange();r2.setStart(n,last);r2.setEnd(n,last+1);const b=screenRect(r2);
+  if(!a.height||!b.height)continue;
+  const s=a.height/(m.a+m.d);unit=unit||s;
+  top=Math.min(top,a.top+(m.a-m.cap)*s);bottom=Math.max(bottom,b.bottom-m.d*(b.height/(m.a+m.d)));
+ }
+ return Number.isFinite(top)?{top,bottom,unit}:null;
+}
+const gapRoots=new Map(),pendingGaps=new Set();
+export function applyGaps(root,width,height){
+ gapRoots.set(root,[width,height]);
+ const gaps=textGaps(width,height);
+ for(const [upSel,lowSel,kind] of GAP_PAIRS)for(const up of root.querySelectorAll(upSel)){
+  let low=null;for(let scope=up.parentElement;scope&&!low;scope=scope===root?null:scope.parentElement)low=scope.querySelector(lowSel);
+  if(!low||low===up||!up.textContent.trim()||!low.textContent.trim())continue;
+  // На время замера снимаем анимационные transform (появление, покачивание) у элементов и их родителей.
+  low.style.translate='';
+  const realUnit=inkBounds(low)?.unit;   // экранных px на px макета — в реальном (немасштабированном замером) виде
+  const saved=[],freeze=e=>{if(!saved.some(x=>x[0]===e)){saved.push([e,e.style.transform]);e.style.transform='none';}};
+  for(const start of [up,low]){for(let e=start;e&&e!==root;e=e.parentElement)freeze(e);start.querySelectorAll('*').forEach(freeze);}
+  low.style.translate='';
+  const a=inkBounds(up),b=inkBounds(low);
+  for(const [e,t] of saved)e.style.transform=t;
+  if(!a||!b||!b.unit||!realUnit){pendingGaps.add(root);continue;}   // текст ещё не появился (счётчик) — измерим позже
+  // Отступ — только если подпись действительно под цифрой (пересекаются по горизонтали);
+  // в раскладках, где они стоят в разных местах (покупки на десктопе), ничего не двигаем.
+  {const ra=screenRect(up),rb=screenRect(low),cx=(rb.left+rb.right)/2;if(cx<ra.left||cx>ra.right||rb.top<ra.top){continue;}}
+  const shift=gaps[kind]/realUnit-(b.top-a.bottom)/b.unit;
+  if(Math.abs(shift)>.5)low.style.translate=`0 ${shift.toFixed(1)}px`;
  }
 }
+function regap(){metricCache.clear();for(const [root,[w,h]] of gapRoots)if(root.isConnected)applyGaps(root,w,h);else gapRoots.delete(root);}
+if(typeof document!=='undefined'){
+ document.fonts?.ready.then(()=>requestAnimationFrame(regap));
+ document.addEventListener('recap:ready',()=>setTimeout(regap,300));
+ let gapFrame=0;
+ const retry=()=>{gapFrame=0;const roots=[...pendingGaps];pendingGaps.clear();for(const r of roots){const wh=gapRoots.get(r);if(wh&&r.isConnected)applyGaps(r,wh[0],wh[1]);}};
+ // Сцены на подлёте масштабируются и сдвигаются — точный замер только в покое:
+ // после остановки прокрутки пересчитываем отступы у сцен, которые на экране.
+ let restTimers=[];
+ const regapVisible=()=>{for(const [root,[w,h]] of gapRoots){if(!root.isConnected){gapRoots.delete(root);continue;}const r=root.getBoundingClientRect();if(r.bottom>0&&r.top<innerHeight&&r.width)applyGaps(root,w,h);}};
+ addEventListener('scroll',()=>{
+  if(pendingGaps.size&&!gapFrame)gapFrame=requestAnimationFrame(retry);
+  restTimers.forEach(clearTimeout);restTimers=[setTimeout(regapVisible,260),setTimeout(regapVisible,1100)];
+ },{passive:true});
+ // Счётчики заполняются уже после остановки прокрутки — добираем по таймеру, пока есть недомеренное.
+ setInterval(()=>{if(pendingGaps.size&&!gapFrame&&!document.hidden)gapFrame=requestAnimationFrame(retry);},700);
+}
+
 const STACKS=[['.november-park-label','.november-park-note'],['.talk-contact-label','.talk-contact-note'],['.sky-label','.sky-note'],['.spending-caption','.spending-note'],['.finale-seven-name','.finale-seven-caption'],['.planet-label','.planet-note']];
 
 // Телефон: акцентные заголовки этих экранов — максимально крупные, во всю ширину

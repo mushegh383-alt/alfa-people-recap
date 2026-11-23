@@ -45,7 +45,7 @@ export function mountSceneNavigation(root, signal) {
   const phone = matchMedia(preview ? '(max-width: 767px)' : '(pointer: coarse) and (max-width: 767px), (pointer: coarse) and (max-height: 500px) and (max-width: 1000px)');
   const hint = document.createElement('div');
   hint.className = 'scroll-hint is-touch';
-  hint.innerHTML = '<span class="scroll-hint-text">Листайте вверх — по одному экрану</span><span class="scroll-hint-line" aria-hidden="true"><i></i></span>';
+  hint.innerHTML = '<span class="scroll-hint-text">Листайте, чтобы узнать, каким был ваш год</span><span class="scroll-hint-line" aria-hidden="true"><i></i></span>';
   root.append(hint);
 
   function refresh() {

@@ -221,12 +221,28 @@ function mountScene(section, signal) {
     const nb = screenRect(number);
     centre = { x: (nb.left + nb.right) / 2 - stageBox.left, y: (nb.top + nb.bottom) / 2 - stageBox.top };
     number.textContent = shownText;
+    // Равномерно по экрану: сетка ячеек, в каждой — глаз в случайной точке своей ячейки
+    // (чистый рандом оставлял пустые пятна — например, слева на широком экране).
     const target = portrait ? 24 : 40, list = [];
-    for (let tries = 0; list.length < target && tries < 4000; tries++) {
+    const cols = portrait ? 5 : 9, rows = portrait ? 7 : 5, cw = width / cols, ch = height / rows;
+    const fits = (x, y, size) => x > size * 1.1 && x < width - size * 1.1 && y > size && y < height - size
+      && !blocked.some(b => x + size > b.l && x - size < b.r && y + size * .6 > b.t && y - size * .6 < b.b)
+      && !list.some(e => Math.hypot(e.x - x, (e.y - y) * 1.6) < (e.r + size) * 1.15);
+    const add = (x, y, size) => list.push({ x, y, r: size, iris: ['#1ac3fd', '#fa7ab3', '#ef3124', '#1ac3fd', '#fa7ab3'][list.length % 5], wander: rnd() * Math.PI * 2, blink: 0, seed: rnd() });
+    const cells = [];
+    for (let cy = 0; cy < rows; cy++) for (let cx = 0; cx < cols; cx++) cells.push([cx, cy]);
+    for (let i = cells.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [cells[i], cells[j]] = [cells[j], cells[i]]; }
+    for (const [cx, cy] of cells) {
+      if (list.length >= target) break;
+      for (let tries = 0; tries < 14; tries++) {
+        const size = r * (.55 + rnd() * .85), x = (cx + .12 + rnd() * .76) * cw, y = (cy + .12 + rnd() * .76) * ch;
+        if (fits(x, y, size)) { add(x, y, size); break; }
+      }
+    }
+    // Добираем до нужного числа в свободных местах (ячейки под текстом пустуют).
+    for (let tries = 0; list.length < target && tries < 3000; tries++) {
       const size = r * (.55 + rnd() * .85), x = size * 1.2 + rnd() * (width - size * 2.4), y = size + rnd() * (height - size * 2);
-      if (blocked.some(b => x + size > b.l && x - size < b.r && y + size * .6 > b.t && y - size * .6 < b.b)) continue;
-      if (list.some(e => Math.hypot(e.x - x, (e.y - y) * 1.6) < (e.r + size) * 1.15)) continue;
-      list.push({ x, y, r: size, iris: ['#1ac3fd', '#fa7ab3', '#ef3124', '#1ac3fd', '#fa7ab3'][list.length % 5], wander: rnd() * Math.PI * 2, blink: 0, seed: rnd() });
+      if (fits(x, y, size)) add(x, y, size);
     }
     // Открываются от центра к краям — как будто волна взглядов.
     const cx = width / 2, cy = height / 2;
@@ -355,7 +371,7 @@ function mountScene(section, signal) {
 // Каждое окно — рабочий день года (13 окон в ряд, снизу вверх: январь → декабрь).
 // По скроллу окна загораются по порядку; светится ровно столько, сколько дней
 // человек был в офисе. В конце на крыше включается неоновая вывеска.
-const TOWER = { x: 560, y: 640, w: 800, h: 590, cols: 13, workdays: 260 };
+const TOWER = { x: 560, y: 700, w: 800, h: 590, cols: 13, workdays: 260 };   // здание ниже (было y: 640): цифра — на нём, над дверью
 export function createOfficeTower(data) {
   const o = data.office, section = scene('office', 'Походы в офис', 'office-tower');
   const c = section.querySelector('.sky-composition');
@@ -397,9 +413,10 @@ function mountTower(section, signal) {
   // Красный логотип-вывеска на крыше.
   const logo = new Image(); logo.onload = () => { drawn = -1; schedule(); }; logo.src = './assets/brand/alfa-logo.svg?white=1';
   // Новый стиль: здание — нарисованная картинка (окна в тёмный проём рисует код), фон — ночной город.
-  const towerImg = new Image(); towerImg.onload = () => { drawn = -1; schedule(); }; towerImg.src = './assets/restyle/office-tower.png';
+  const towerImg = new Image(); towerImg.onload = () => { drawn = -1; schedule(); }; towerImg.src = './assets/restyle/office-tower.webp';   // 92 КБ вместо 2,4 МБ PNG
   const cityImg = new Image(); cityImg.onload = () => fit(); cityImg.src = isPortrait(innerWidth, innerHeight) ? './assets/restyle/office-bg-phone.jpg' : './assets/restyle/office-bg-desk.jpg';
-  const FACE = { l: .19, r: .81, t: .31, b: .93 };   // проём под окна на картинке здания (доли)
+  const FACE = { l: .19, r: .81, t: .31, b: .93 };
+  let cityDrawn = false;   // фон нарисован без картинки города — перерисуем, как только она будет
 
   function fit() {
     width = stage.clientWidth; height = stage.clientHeight;
@@ -418,6 +435,7 @@ function mountTower(section, signal) {
     for (let i = 0; i < count; i++) { s.globalAlpha = .2 + r() * .6; s.fillStyle = r() > .88 ? '#fa7ab3' : '#f8e4c2'; s.beginPath(); s.arc(r() * width, r() * height * .8, r() ** 3 * 2 + .4, 0, Math.PI * 2); s.fill(); }
     s.globalAlpha = 1;
     const ground = Y(TOWER.y + TOWER.h), towerL = X(TOWER.x) - 24 * scale, towerR = X(TOWER.x + TOWER.w) + 24 * scale;
+    cityDrawn = Boolean(cityImg.complete && cityImg.naturalWidth);
     if (cityImg.complete && cityImg.naturalWidth) {
       const k = Math.max(width / cityImg.naturalWidth, height / cityImg.naturalHeight), iw = cityImg.naturalWidth * k, ih = cityImg.naturalHeight * k;
       s.drawImage(cityImg, (width - iw) / 2, (height - ih) / 2, iw, ih);
@@ -534,6 +552,7 @@ function mountTower(section, signal) {
 
   function update(now) {
     raf = 0; if (!active || document.hidden || signal.aborted) return;
+    if (!cityDrawn && cityImg.complete && cityImg.naturalWidth) { fit(); drawn = -1; }
     const target = endingSceneProgress(section, stage.clientHeight, reduced.matches), dt = last ? Math.min(64, now - last) : 16; last = now;
     p = p === undefined || document.documentElement.classList.contains('is-portrait') || reduced.matches ? target : p + (target - p) * (1 - Math.exp(-dt / 75));
     if (Math.abs(target - p) < .0002) p = target;

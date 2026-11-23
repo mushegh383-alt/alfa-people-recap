@@ -1,3 +1,4 @@
+import { LOADING } from './copy.js';
 import { envelopeSequence } from './envelope.js?local=28';
 import { preloadAssets, resourceUrl, resourceJSON } from './resources.js';
 const overlay = document.querySelector('#preloader');
@@ -24,7 +25,7 @@ export function showLoading() {
 // Пока грузится — шутки по кругу.
 const joke = overlay.querySelector('.preloader-joke');
 // Тёмная загрузка: вместо шуток — полутаинственные фразы, по одной, с затуханием.
-const jokes = ['Собираем ваш год по кусочкам', 'Кое-кто заглядывал в ваш профиль', 'Звёзды уже почти сложились', 'Считаем, сколько раз вы сказали «спасибо»', 'Кажется, вы делали это чаще других', 'Осталось совсем чуть-чуть'];
+const jokes = LOADING;
 let jokeIndex = 0, jokeTimer = 0;
 function startJokes() {
   clearInterval(jokeTimer);

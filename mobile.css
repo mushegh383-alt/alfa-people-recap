@@ -59,7 +59,7 @@ html.is-portrait .coins-blue-orbit > i:nth-of-type(7) { left: 800px !important; 
 html.is-portrait .coins-blue-orbit > i:nth-of-type(8) { left: 1150px !important; top: 1980px !important; }
 /* К-толк: блок «250 / Часов вы общались» стоял на 55 px макета правее центра —
    на узком экране это заметно. Выравниваем по центру экрана, как заголовок. */
-html.is-portrait .talk-contact-data { margin-left: -55px; }
+/* (сдвиг -55px больше не нужен: колонка цифр отцентрована в revision-six.css) */
 
 html.is-portrait .moments-photo { width: 322px; height: 390px; }
 html.is-portrait .moments-photo[data-photo="1"] { z-index: 5; }
@@ -299,3 +299,39 @@ html.is-paging .scroll-hint-line { height:34px; }
 #profile-views .sky-composition { z-index:2; }
 /* Открытки: подпись ближе к цифре. */
 html.is-portrait .revision-six .envelope-caption { margin-top:-72px; }
+/* Подписи по таблице: ровные переносы, без «висячих» последних слов. */
+.planet-note, .sky-note, .talk-contact-note, .scene-reading-note, .finale-seven-caption { text-wrap:balance; }
+html.is-paging .scroll-hint-text { letter-spacing:.12em; font-size:10.5px; }
+/* Ачивки на телефоне: подпись-плашка по количеству — длинная, а лучи (холст) лежат поверх
+   всего, что за звездой. Цифра чуть меньше и выше, подпись поднята — всё помещается в звезде. */
+html.is-portrait .revision-six .achievement-digits { font-size:calc(var(--achievement-count-size, 700px) * .66); }
+html.is-portrait .revision-six .achievement-number { top:-105px; }
+html.is-portrait .revision-six .achievement-caption { top:775px; }
+html.is-portrait .achievement-caption .scene-reading-note { max-width:14em; font-size:34px; margin-top:12px; }
+html.is-portrait .revision-six .planet-agent .planet-label { width:1150px; }
+/* Открытки на широком экране: подпись мельче и ближе к цифре — не касается краёв открытки. */
+html:not(.is-portrait) .revision-six .envelope-caption { font-size:56px; margin-top:-62px; line-height:1; }
+/* Ачивки на любом экране: цифра чуть меньше и выше, подпись и плашка — внутри звезды
+   (за звездой лучи; на широком экране плашка уходила под край звезды). */
+.revision-six .achievement-digits { font-size:calc(var(--achievement-count-size, 700px) * .66); }
+.revision-six .achievement-number { top:-105px; }
+.revision-six .achievement-caption { top:775px; }
+.achievement-caption .scene-reading-note { max-width:14em; font-size:34px; margin-top:12px; }
+/* Финал: поздравление мельче и уже — читается спокойнее. */
+.finale-seven-caption { font-size:38px !important; line-height:1.18 !important; }
+/* Моменты на любом экране: заголовок на светлых лучах — с тёмным ореолом и поверх полароидов. */
+.revision-six .moments-heading { z-index:8; text-shadow:0 0 6px #5a0712cc, 0 2px 18px #5a0712e6, 0 6px 44px #3d0510; }
+/* Обучение: подпись ближе к цифре, пояснение выше — не у самого края книги. */
+.revision-six .learning-label { margin-top:40px; }
+.learning-composition > .scene-reading-note { bottom:15%; }
+/* Подписи под цифрами: переносы из текстов (copy.js) соблюдаются, строки ровные. */
+.visit-caption, .moments-caption, .coins-copy, .tower-label { white-space:pre-line; text-wrap:balance; }
+/* Офис: цифра — на здании поверх двери, подпись и пояснение — под зданием. */
+.office-tower .tower-number { top:930px !important; text-shadow:0 0 18px #3a0d12, 0 4px 26px #1a0508, 0 0 2px #3a0d12; }
+.office-tower .tower-label { top:1350px !important; }
+html:not(.is-portrait) .office-tower .tower-number { top:975px !important; }
+html:not(.is-portrait) .november .office-tower .tower-label { top:1345px !important; }
+.office-tower .sky-composition { z-index:4; }   /* текст поверх нарисованного здания (холст) */
+/* Офис: цифра крупнее и выше (на фасаде над дверью). */
+.office-tower .tower-number { font-size:340px !important; top:835px !important; }
+html:not(.is-portrait) .office-tower .tower-number { font-size:290px !important; top:880px !important; }

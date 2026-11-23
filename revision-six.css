@@ -95,7 +95,7 @@
 .talk-contact-heading {position:absolute;left:50%;top:60px;width:1650px;transform-origin:center;translate:-50% 0;text-align:center;}
 .talk-contact-kicker {font:700 60px/79px Styrene,sans-serif;letter-spacing:-.03em;}
 .talk-contact-name {margin-top:30px;font:700 260px/263px Nauryz,sans-serif;letter-spacing:-.03em;text-shadow:0 4px 13.2px #fff;}
-.talk-contact-data {position:absolute;left:509px;top:1046px;width:1015px;text-align:center;}
+.talk-contact-data {position:absolute;left:452.5px;top:1046px;width:1015px;text-align:center;}   /* центр колонки = центр макета (960) */
 .talk-contact-number {position:absolute;top:-305px;left:calc(50% - 473.5px);width:947px;height:708px;font:550px/770px Agse,serif;letter-spacing:-.03em;color:#fae7c4;text-shadow:0 4px 13.2px #fff;}
 .talk-contact-label {margin-top:367px;font:700 60px/.9 Styrene,sans-serif;letter-spacing:-.03em;}
 .talk-contact-note {margin-top:32px;font:500 48px/.9174 Formular,sans-serif;letter-spacing:-.04em;white-space:pre-line;opacity:.6;}
@@ -252,3 +252,8 @@ html.is-portrait .spending-heading { top: -640px; }
 /* Обложка: «ИТОГИ» в 1,5 раза крупнее общего размера заголовков. */
 .revision-six .hero-film .hero-title { font-size: calc(var(--recap-heading-logical, 260px) * 1.5) !important; }
 html:not(.is-portrait) .talk-contact-heading { top: 0; }
+/* «Alfa AI» — всегда в одну строку: блок шире колонки, центр тот же. */
+.revision-six .planet-ai h2:not(.planet-label) { white-space:nowrap; width:calc(100% + 1000px); margin-left:-500px; }
+/* Место ассистента крупной цифрой в кружке (шрифт цифр итогов). */
+.podium-avatar.is-placeholder::before { font: 190px/1 Agse, serif; padding-top: 6%; text-shadow: 0 4px 14px #0005; }
+.podium-1 .podium-avatar.is-placeholder::before { font-size: 270px; }

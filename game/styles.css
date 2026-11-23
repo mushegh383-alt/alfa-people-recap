@@ -236,3 +236,4 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; }
 }
 .rule-art.is-blot { width: 44px; height: 44px; margin-inline: auto; border-radius: 50%; background: var(--cream); }
 .rule-art.is-blot img { max-width: 30px; max-height: 30px; }
+.panel-card .saved-note { margin-top: -1.2cqw; color: var(--muted); font-size: 3.2cqw; }

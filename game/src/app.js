@@ -20,11 +20,11 @@ root.innerHTML = `
     <a class="back-link" href="${RECAP_URL}">${arrow}<span>К итогам года</span></a>
     <div class="intro-body">
       <p class="eyebrow">Новогодняя игра</p>
-      <h1 class="intro-title">лови<br><span>марки</span></h1>
-      <p class="intro-lead">Собирай марки и открывай пять новогодних открыток. Марки копятся от раунда к раунду.</p>
+      <h1 class="intro-title">почта<br><span>чудес</span></h1>
+      <p class="intro-lead">Собирайте марки и открывайте пять эксклюзивных открыток к Новому году</p>
       <ul class="rules">
         <li><span class="rule-art stamp-mini" style="--frame:url('${asset(STAMPS[1].frame)}')"><img src="${asset(STAMPS[1].image)}" alt=""></span><span>Марка</span><b>+1</b></li>
-        <li><span class="rule-art stamp-mini is-express" style="--frame:url('${asset(STAMPS[2].frame)}')"><img src="${asset(STAMPS[2].image)}" alt=""></span><span>Срочная марка</span><b>+3</b></li>
+        <li><span class="rule-art stamp-mini is-express" style="--frame:url('${asset(STAMPS[2].frame)}')"><img src="${asset(STAMPS[2].image)}" alt=""></span><span>Супермарка</span><b>+3</b></li>
         <li><span class="rule-art is-blot"><img src="${asset('blot.png')}" alt=""></span><span>Клякса</span><b class="is-minus">−5</b></li>
       </ul>
     </div>
@@ -36,11 +36,11 @@ root.innerHTML = `
   </aside>
 
   <main class="stage-wrap">
-    <div class="game-stage" tabindex="-1" aria-label="Игровое поле. Управляй пипликом мышью, пальцем или стрелками.">
+    <div class="game-stage" tabindex="-1" aria-label="Игровое поле. Управляйте пипликом мышью, пальцем или стрелками.">
       <img class="scenery" src="${asset('scenery.png')}" alt="" draggable="false">
       <canvas class="game-canvas" aria-hidden="true"></canvas>
       <div class="hud">
-        <div class="score-badge"><b data-score>0</b><span data-score-label>марок на счету</span><i data-round hidden>+0 за раунд</i></div>
+        <div class="score-badge"><b data-score>0</b><span data-score-label>Марки на счёте</span><i data-round hidden>+0 за раунд</i></div>
         <div class="hud-right">
           <div class="timer"><i></i><span data-timer>01:00</span></div>
           <button class="icon-button" data-action="sound" aria-label="Включить звук" aria-pressed="false">${icons.mute}</button>
@@ -48,20 +48,20 @@ root.innerHTML = `
         </div>
       </div>
       <div class="play-layer" hidden>
-        <div class="level-label"><span data-level>1 / 5</span><b data-level-name>Лови марки</b></div>
+        <div class="level-label"><span data-level>1 / 5</span><b data-level-name>Ловите марки</b></div>
         <p class="wind-label" data-wind hidden></p>
         <div class="mechanic-toast" data-toast hidden role="status"><b></b><span></span></div>
         <p class="catch-feedback" data-feedback aria-live="polite"></p>
         <div class="time-track" role="progressbar" aria-label="Оставшееся время" aria-valuemin="0" aria-valuemax="${R.duration}"><span data-time-track></span></div>
       </div>
       <div class="screen-overlay" data-overlay></div>
-      <div class="countdown-overlay" data-countdown hidden aria-live="assertive"><p></p><strong></strong><span>Мышь, палец или стрелки</span></div>
+      <div class="countdown-overlay" data-countdown hidden aria-live="assertive"><p></p><strong></strong><span>Водите влево-вправо, чтобы поймать</span></div>
       <p class="sr-only" role="status" data-sr></p>
     </div>
   </main>
 
   <aside class="collection-panel">
-    <div class="collection-head"><p class="eyebrow">Твои открытки</p><b data-collection-count>0/5</b></div>
+    <div class="collection-head"><p class="eyebrow">Моя коллекция</p><b data-collection-count>0/5</b></div>
     <div class="collection-grid" data-collection></div>
     <div data-side-progress></div>
   </aside>
@@ -127,7 +127,7 @@ function progressHTML(bank, target) {
   const next = target || store.nextCard(bank);
   const floor = target ? 0 : [...POSTCARDS].reverse().find(c => bank >= c.threshold)?.threshold || 0;
   const ratio = next ? Math.min(1, (bank - floor) / (next.threshold - floor)) : 1;
-  const title = target ? 'Марки для этой открытки' : next ? 'До следующей открытки' : 'Вся коллекция собрана';
+  const title = target || next ? 'Собрано марок' : 'Вся коллекция собрана';
   return `<div class="bank-progress">
     <div class="bank-row"><span>${title}</span><b>${bank}${next ? `<small> / ${next.threshold}</small>` : ''}</b></div>
     <div class="bank-track" role="progressbar" aria-label="Марки для открытки" aria-valuemin="${floor}" aria-valuemax="${next?.threshold || bank || 1}" aria-valuenow="${bank}"><span style="transform:scaleX(${ratio})"></span></div>
@@ -156,7 +156,7 @@ function renderSide() {
 // ── Экраны поверх поля ───────────────────────────────────
 function attemptsLine() {
   const left = store.attemptsLeft(progress);
-  return `<div class="overlay-attempts"><span class="attempt-dots">${Array.from({ length: ATTEMPTS_PER_DAY }, (_, i) => `<i class="${i < left ? 'is-left' : ''}"></i>`).join('')}</span>${left ? `Попыток сегодня: ${left} из ${ATTEMPTS_PER_DAY}` : 'Попытки закончились'}</div>`;
+  return `<div class="overlay-attempts"><span class="attempt-dots">${Array.from({ length: ATTEMPTS_PER_DAY }, (_, i) => `<i class="${i < left ? 'is-left' : ''}"></i>`).join('')}</span>${left ? `Попытки на сегодня: ${left} из ${ATTEMPTS_PER_DAY}` : 'Попытки закончились'}</div>`;
 }
 const primary = (action, text, extra = '') => `<button class="primary-button" data-action="${action}" ${extra}>${text}${arrow}</button>`;
 const textButton = (action, text, extra = '') => `<button class="text-button" data-action="${action}" ${extra}>${text}</button>`;
@@ -171,25 +171,26 @@ function overlayHTML() {
     case 'save-error': return `<section class="panel-card"><h2>сохраним<br>улов?</h2>${primary('settle', 'Повторить сохранение')}</section>`;
     case 'start': return `<section class="panel-card">
         <p class="kicker">${POSTCARDS.length} новогодних открыток</p>
-        <h2>собери<br><em>праздник</em></h2>
-        <p>60 секунд на раунд. Лови марки, обходи кляксы — и копи на открытки.</p>
+        <h2>соберите<br><em>коллекцию</em></h2>
+        <p>Ловите марки, уворачивайтесь от клякс и открывайте эксклюзивные открытки. На каждый раунд —&nbsp;60&nbsp;секунд</p>
         ${progressHTML(progress.bank)}
         ${primary('play', busy ? 'Готовим раунд…' : 'Играть', busy ? 'disabled' : '')}
         ${attemptsLine()}
-        <div class="overlay-links">${textButton('album', `Мои открытки · ${opened()}/${POSTCARDS.length}`)}<a class="text-button mobile-only" href="${RECAP_URL}">К итогам года</a></div>
+        <div class="overlay-links">${textButton('album', `Моя коллекция · ${opened()}/${POSTCARDS.length}`)}<a class="text-button mobile-only" href="${RECAP_URL}">К итогам года</a></div>
       </section>`;
     case 'limit': return `<section class="panel-card">
         <p class="kicker">${ATTEMPTS_PER_DAY} из ${ATTEMPTS_PER_DAY} попыток</p>
         <h2>до<br><em>завтра!</em></h2>
-        <p>Новые попытки через <b>${untilMidnight()}</b>.<br>Марки и открытки никуда не денутся.</p>
+        <p>Вы использовали все попытки на сегодня. Возвращайтесь через <b>${untilMidnight()}</b> — сможете сыграть снова.</p>
+        <p class="saved-note">Ваш прогресс сохранён</p>
         ${progressHTML(progress.bank)}
-        ${primary('album', 'Мои открытки')}
+        ${primary('album', 'Моя коллекция')}
         <div class="overlay-links">${activeId ? textButton('resume', 'Продолжить текущую попытку') : ''}<a class="text-button" href="${RECAP_URL}">К итогам года</a></div>
       </section>`;
     case 'paused': return `<section class="panel-card">
         <p class="kicker">Время остановлено</p>
         <h2>${confirmRestart ? 'новая<br>попытка?' : 'пауза'}</h2>
-        <p>${confirmRestart ? 'Марки этого раунда не сохранятся, а попытка спишется.' : 'Продолжай, когда будешь готов.'}</p>
+        <p>${confirmRestart ? 'Марки этого раунда не сохранятся, а попытка спишется.' : 'Продолжайте, когда будете готовы.'}</p>
         ${confirmRestart ? primary('restart', 'Начать заново', busy ? 'disabled' : '') : primary('resume', 'Продолжить', busy ? 'disabled' : '')}
         <div class="overlay-links">${confirmRestart ? textButton('cancel-restart', 'Отмена') : left ? textButton('ask-restart', 'Начать заново') : ''}${textButton('album', 'Открытки')}</div>
         ${attemptsLine()}
@@ -197,18 +198,18 @@ function overlayHTML() {
     case 'result': {
       const gotCard = freshCards.length > 0;
       return `<section class="panel-card result-card">
-        <p class="kicker">${gotCard ? `Новая открытка${freshCards.length > 1 ? ` ×${freshCards.length}` : ''}` : 'Марки сохранены'}</p>
-        <h2>${gotCard ? 'есть<br><em>открытка!</em>' : 'хороший<br><em>улов!</em>'}</h2>
-        <div class="result-score">+${lastScore}<span>${stampWord(lastScore)} за раунд</span></div>
+        <p class="kicker">${gotCard ? `Новая открытка${freshCards.length > 1 ? ` ×${freshCards.length}` : ''}` : 'Игра завершена'}</p>
+        <h2>${gotCard ? 'есть<br><em>открытка!</em>' : 'хорошая<br><em>работа!</em>'}</h2>
+        <div class="result-score">+${lastScore}<span>${stampWord(lastScore)} за игру</span></div>
         ${gotCard ? `<div class="fresh-cards">${freshCards.map(c => thumbHTML(c)).join('')}</div>` : progressHTML(progress.bank)}
-        ${left ? primary('play', 'Ещё раунд', busy ? 'disabled' : '') : primary('to-limit', 'На сегодня всё')}
+        ${left ? primary('play', 'Сыграть ещё раз', busy ? 'disabled' : '') : primary('to-limit', 'На сегодня всё')}
         ${attemptsLine()}
-        <div class="overlay-links">${textButton('album', `Открытки · ${opened()}/${POSTCARDS.length}`)}</div>
+        <div class="overlay-links">${textButton('album', `Моя коллекция · ${opened()}/${POSTCARDS.length}`)}</div>
       </section>`;
     }
     case 'album': return albumCard ? cardViewHTML(albumCard) : `<section class="album-screen">
         <button class="album-back" data-action="album-back">← ${albumReturn === 'paused' ? 'К раунду' : 'Назад'}</button>
-        <p class="kicker">Твоя коллекция</p>
+        <p class="kicker">Моя коллекция</p>
         <h2>открытки <span>${opened()}/${POSTCARDS.length}</span></h2>
         ${progressHTML(progress.bank)}
         <div class="album-grid">${POSTCARDS.map(c => thumbHTML(c)).join('')}</div>
@@ -227,7 +228,7 @@ function cardViewHTML(card) {
       ? `<div class="postcard-large" data-large="${card.id}"><span class="postcard-loading">Готовим открытку…</span></div>
          <a class="primary-button" data-download download="alfa-people-${card.id}-2027.png" aria-disabled="true">Скачать открытку${arrow}</a>`
       : `<div class="postcard-large is-locked" style="--card-bg:${card.bg}"><span class="lock-mark">?</span></div>
-         <p>Нужно ещё <b>${need} ${stampWord(need)}</b>.</p>
+         <p>Осталось собрать <b>${need} ${stampWord(need)}</b></p>
          ${progressHTML(progress.bank, card)}`}
   </section>`;
 }
@@ -262,7 +263,7 @@ function render() {
 }
 
 function setMode(next) { mode = next; render(); }
-function fail(e) { console.error(e); errorText = e.message || 'Не удалось сохранить прогресс. Попробуй ещё раз.'; render(); }
+function fail(e) { console.error(e); errorText = e.message || 'Не удалось сохранить прогресс. Попробуйте ещё раз.'; render(); }
 
 // ── HUD ───────────────────────────────────────────────────
 let lastHud = '';
@@ -274,7 +275,7 @@ function updateHud(force = false) {
   if (!force && sig === lastHud) return;
   lastHud = sig;
   hud.score.textContent = total;
-  hud.scoreLabel.textContent = `${stampWord(total)} на счету`;
+  hud.scoreLabel.textContent = 'Марки на счёте';
   hud.round.hidden = !inRound;
   hud.round.textContent = `+${v.score} за раунд`;
   hud.timer.textContent = `${String(Math.floor(v.remaining / 60)).padStart(2, '0')}:${String(v.remaining % 60).padStart(2, '0')}`;
@@ -342,7 +343,7 @@ function loop() {
 function countdown() {
   clearInterval(countdownTimer);
   let n = 3;
-  hud.countdown.querySelector('p').textContent = resumed ? 'Продолжаем' : 'Лови марки';
+  hud.countdown.querySelector('p').textContent = resumed ? 'Продолжаем' : 'Ловите марки';
   const show = () => { const s = hud.countdown.querySelector('strong'); s.textContent = n; s.style.animation = 'none'; void s.offsetWidth; s.style.animation = ''; };
   setMode('countdown'); show();
   countdownTimer = setInterval(() => {

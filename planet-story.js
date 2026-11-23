@@ -31,8 +31,8 @@ export function createPlanetStory(data){
   const dial=document.createElement('img');dial.className='planet-dial';dial.src='./assets/restyle/ai-dial.png';dial.alt='';dial.setAttribute('aria-hidden','true');
   s.querySelector('.planet-composition').prepend(dial);
  }
- s.querySelector('.planet-ai .planet-label').textContent='Запросов вы отправили\nв alfa ai';s.querySelector('.planet-ai').dataset.value=data.ai.requests;
- s.querySelector('.planet-agent h2').textContent=data.ai.agent;s.querySelector('.planet-agent .planet-label').textContent=data.ai.agents.length>1?'агенты, с которыми вы\nработали чаще всего':'агент с которым вы\nработали чаще всего';
+ s.querySelector('.planet-ai h2').textContent='Alfa AI';s.querySelector('.planet-ai .planet-label').textContent=data.ai.requestsLabel;s.querySelector('.planet-ai').dataset.value=data.ai.requests;
+ s.querySelector('.planet-agent h2').textContent=data.ai.agent;s.querySelector('.planet-agent .planet-label').textContent=data.ai.agentsLabel;
  // Пьедестал топ-3: первое место — по центру и крупнее, 2-е и 3-е — по бокам ниже.
  if(data.ai.agents.length>1){
   const podium=document.createElement('div');podium.className='planet-podium';
@@ -41,15 +41,16 @@ export function createPlanetStory(data){
    const a=data.ai.agents[i],item=document.createElement('div');item.className=`podium-item podium-${i+1}`;item.style.setProperty('--i',String(i));
    const avatar=document.createElement('div');avatar.className='podium-avatar';
    if(a.cover){const img=document.createElement('img');img.src=a.cover;img.alt='';avatar.append(img);}
-   else{avatar.dataset.letter=a.name[0].toUpperCase();avatar.classList.add('is-placeholder');}
-   const medal=document.createElement('span');medal.className='podium-medal';medal.textContent=String(i+1);avatar.append(medal);
+   // Без иллюстрации ассистента — в кружке крупно его место (1, 2, 3); с иллюстрацией — значок места.
+   else{avatar.dataset.letter=String(i+1);avatar.classList.add('is-placeholder');}
+   if(a.cover){const medal=document.createElement('span');medal.className='podium-medal';medal.textContent=String(i+1);avatar.append(medal);}
    item.append(avatar);
    if(i>0){const name=document.createElement('p');name.className='podium-name';name.textContent=a.name;item.append(name);}
    podium.append(item);
   }
   s.querySelector('.planet-agent').append(podium);
  }
- s.querySelector('.planet-time').dataset.value=data.ai.hours;s.querySelector('.planet-time h2').textContent='Часов вы общались';s.querySelector('.planet-note').textContent='Вот столько часов вы потратили листая\nрилсы на работе';
+ s.querySelector('.planet-time').dataset.value=data.ai.hours;s.querySelector('.planet-time h2').textContent=data.ai.hoursLabel;s.querySelector('.planet-note').textContent=data.ai.hoursNote;
  return s;
 }
 const ns='http://www.w3.org/2000/svg';

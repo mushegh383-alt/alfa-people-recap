@@ -42,7 +42,8 @@ export function mountChapterOverlaps(slides, signal) {
       const top = section.getBoundingClientRect().top;
       const progress = 1-top/Math.max(1,stage.clientHeight);
       const entersFromBook = section.matches('.ending-chapter, #office');
-      const opacity = entersFromBook ? ease(.64,1.02,progress) : ease(.03,.96,progress);
+      // Офис после книги проявляется плавнее (раньше влетал за последнюю треть прокрутки).
+      const opacity = entersFromBook ? ease(.3,1,progress) : ease(.03,.96,progress);
       (track || stage).style.opacity = reduced.matches ? '' : opacity;
       if (entersFromBook) stage.style.setProperty('--office-entry-y', reduced.matches ? '0%' : `${(1-opacity)*14}%`);
     }

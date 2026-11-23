@@ -113,3 +113,9 @@
 .talisman-download:disabled { opacity: .5; cursor: default; }
 .talisman-close { background: #f8e4c2; color: #020101; }
 html.has-modal, html.has-modal body { overflow: hidden; }
+/* Финал по таблице текстов: заголовок «Ваш сказочный помощник на 2027 год» в две строки,
+   ниже — марка, имя помощника и поздравление; всё поднято, чтобы поздравление не налезало на кнопку. */
+.finale-seven-title {left:310px;top:70px;width:1300px;height:270px;font-size:136px;line-height:124px;}
+.finale-seven-stamp {top:372px;}
+.finale-seven-name {top:786px;}
+.finale-seven-caption {top:866px;font-size:44px;line-height:1.08;text-wrap:balance;}

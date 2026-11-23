@@ -14,7 +14,7 @@ export function phaseAt(t) {
     interval: D.interval[0] - D.interval[1] * g,
     hazardChance: t < 3 ? 0 : D.hazard[0] + D.hazard[1] * g,
     sway: D.sway[0] + D.sway[1] * g,
-    label: level === 1 ? 'Лови марки' : MECHANICS[level - 2].title,
+    label: level === 1 ? 'Ловите марки' : MECHANICS[level - 2].title,
   };
 }
 
@@ -88,14 +88,14 @@ function hurt(s, text) {
 }
 
 function collect(s, item) {
-  if (item.hazard) hurt(s, 'Клякса! −5');
+  if (item.hazard) hurt(s, 'Клякса −5');
   else {
     const value = item.express ? 3 : 1;
     s.score += value; s.caught++; s.streak++;
     s.bestStreak = Math.max(s.bestStreak, s.streak);
     s.collection[item.variant]++;
     s.catchUntil = s.elapsed + .25;
-    if (item.express) { s.expressCaught++; s.feedback = 'Срочная доставлена! +3'; }
+    if (item.express) { s.expressCaught++; s.feedback = 'Супермарка +3'; }
     else if (s.streak % 5 === 0) s.feedback = `${s.streak} подряд!`;
     if (item.express || s.streak % 5 === 0) s.feedbackUntil = s.elapsed + 1.6;
   }
@@ -123,7 +123,7 @@ export function step(s, dt, keyDir = 0) {
       const gap = s.waves++ % 3;
       [90, 270, 450].forEach((x, i) => spawn(s, phase, { x, hazard: i === gap, wave: true }));
       s.nextWaveAt += D.waveEvery; s.spawnIn = 1.05;
-      s.feedback = 'Почтовая волна!'; s.feedbackUntil = s.elapsed + 1.2;
+      s.feedback = 'Почтовая волна'; s.feedbackUntil = s.elapsed + 1.2;
     }
     if (s.elapsed >= s.nextExpressAt) { spawn(s, phase, { express: true, hazard: false }); s.nextExpressAt += D.expressEvery; }
     while (s.spawnIn <= 0) { spawn(s, phase); s.spawnIn += phase.interval * (.9 + s.random() * .2); }
@@ -143,7 +143,7 @@ export function step(s, dt, keyDir = 0) {
   for (const p of s.puddles) {
     if (!p.triggered && s.elapsed >= p.armed && Math.abs(s.playerX - p.x) < 52) {
       p.triggered = true;
-      hurt(s, 'Осторожно, лужа! −5');
+      hurt(s, 'Клякса −5');
       s.effects.push({ id: p.id, x: p.x, y: 880, age: 0, hazard: true, text: '−5' });
     }
   }

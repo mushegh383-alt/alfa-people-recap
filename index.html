@@ -17,6 +17,11 @@
     <link rel="stylesheet" href="./motion-polish.css" />
     <link rel="stylesheet" href="./sky-scenes.css?local=31" />
     <link rel="stylesheet" href="./mobile.css?local=34" />
+    <link rel="stylesheet" href="./empty-state.css" />
+    <!-- Офис: картинки заранее, иначе на медленной сети сцена успевает показаться с запасным фоном. -->
+    <link rel="preload" as="image" href="./assets/restyle/office-tower.webp" />
+    <link rel="preload" as="image" href="./assets/restyle/office-bg-desk.jpg" media="(min-aspect-ratio: 4/5)" />
+    <link rel="preload" as="image" href="./assets/restyle/office-bg-phone.jpg" media="(max-aspect-ratio: 4/5)" />
     <script type="module">
       import('./app.js?local=33').catch(error => {
         console.error('Application loading:', error);

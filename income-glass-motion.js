@@ -31,7 +31,32 @@ export function prepareIncomeGlass(root, signal) {
   section.classList.toggle('has-glass-renderer', Boolean(renderer));
   const state = { renderer };
   prepared.set(section, state);
+  // Браузер может отобрать WebGL (нехватка памяти GPU, много вкладок) — тогда шар
+  // оставался плоским без отражений до перезагрузки. Теперь при потере контекста
+  // шар пересоздаётся на новом холсте (getContext у потерянного холста не вернуть).
+  let lost = false, reviveTimer = 0;
+  const text = sel => section.querySelector(sel).textContent;
+  function bindLoss(target) {
+    target.addEventListener('webglcontextlost', event => {
+      event.preventDefault(); lost = true;
+      section.classList.remove('has-glass-renderer');
+      clearTimeout(reviveTimer); reviveTimer = setTimeout(state.revive, 500);
+    }, { signal });
+  }
+  state.revive = () => {
+    if (signal.aborted || document.hidden || (state.renderer && !lost)) return;
+    let target = section.querySelector('.income-glass-canvas');
+    if (lost && target) { const fresh = target.cloneNode(false); target.replaceWith(fresh); target = fresh; bindLoss(fresh); }
+    try { state.renderer?.destroy(); } catch {}
+    try { state.renderer = createIncomeGlassRenderer(target, section.dataset.caption, text('.income-glass-title'), text('.income-glass-rank')); lost = false; }
+    catch (error) { state.renderer = null; console.warn('Glass sphere stays flat:', error.message); }
+    section.classList.toggle('has-glass-renderer', Boolean(state.renderer));
+    dispatchEvent(new Event('resize'));          // сцена (или открывающая история) заново задаст размер
+  };
+  bindLoss(canvas);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && lost) state.revive(); }, { signal });
   signal.addEventListener('abort', () => {
+    clearTimeout(reviveTimer);
     state.renderer?.destroy();
     prepared.delete(section);
   }, { once: true });
@@ -124,7 +149,7 @@ export function mountIncomeGlass(root, signal) {
   const observer = new IntersectionObserver(entries => {
     active = entries[0].isIntersecting;
     section.classList.toggle('is-glass-active', active);
-    if (active) { fit(); schedule(); }
+    if (active) { state.revive?.(); fit(); schedule(); }
     else { current = null; schedule(); }
   });
   observer.observe(section);
@@ -136,7 +161,7 @@ export function mountIncomeGlass(root, signal) {
       if (!entry.isIntersecting && state.renderer) {
         state.renderer.destroy(); state.renderer = null;
       } else if (entry.isIntersecting && !state.renderer) {
-        try { state.renderer = createIncomeGlassRenderer(canvas, section.dataset.caption, title.textContent, rank.textContent); }
+        try { state.renderer = createIncomeGlassRenderer(section.querySelector('.income-glass-canvas'), section.dataset.caption, title.textContent, rank.textContent); }
         catch { state.renderer = null; }
         section.classList.toggle('has-glass-renderer', Boolean(state.renderer));
         fit(); schedule();
@@ -149,16 +174,7 @@ export function mountIncomeGlass(root, signal) {
   window.addEventListener('resize', fit, { passive: true, signal });
   document.addEventListener('visibilitychange', schedule, { signal });
   reduced.addEventListener('change', () => { current = null; schedule(); }, { signal });
-  canvas.addEventListener('webglcontextlost', event => {
-    event.preventDefault();
-    section.classList.remove('has-glass-renderer');
-  }, { signal });
-  canvas.addEventListener('webglcontextrestored', () => {
-    try { state.renderer = createIncomeGlassRenderer(canvas, section.dataset.caption, section.querySelector('.income-glass-title').textContent, section.querySelector('.income-glass-rank').textContent); }
-    catch { state.renderer = null; }
-    section.classList.toggle('has-glass-renderer', Boolean(state.renderer));
-    fit();
-  }, { signal });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && active) state.revive?.(); }, { signal });
   signal.addEventListener('abort', () => {
     resize.disconnect(); observer.disconnect(); cancelAnimationFrame(frame);
     intro?.classList.remove('has-income-next');

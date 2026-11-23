@@ -1,4 +1,5 @@
 import { config } from './config.js';
+import { applyCopy } from './copy.js';
 
 function assetUrl(value, field) {
   if (typeof value !== 'string' || !value.trim()) throw new Error(`Missing ${field}`);
@@ -73,7 +74,7 @@ export function normalizeRecap(input) {
   if (intro && intro.mode !== 'video' && (!Number.isFinite(intro.fps) || intro.fps < 1 || intro.fps > 60)) throw new Error('Invalid intro fps');
   if (intro && (!Number.isSafeInteger(intro.mediaYear) || intro.mediaYear < 2000 || intro.mediaYear > 9999)) throw new Error('Invalid intro media year');
   if (intro?.title !== undefined && (typeof intro.title !== 'string' || !intro.title.trim())) throw new Error('Invalid intro title');
-  return {
+  return applyCopy({
     year: input.year,
     profileViews: profileViews ? {
       count: profileViews.count,
@@ -124,6 +125,8 @@ export function normalizeRecap(input) {
       label: finale.label || 'играйте в нашу игру\nи откройте 5 уникальных открыток',
       buttonLabel: finale.buttonLabel || 'играть',
       gameUrl: finale.gameUrl == null ? null : assetUrl(finale.gameUrl, 'finale.gameUrl'),
+      // Самая яркая метрика пользователя — от неё помощник и поздравление (см. copy.js).
+      metric: typeof finale.metric === 'string' ? finale.metric : 'visits',
     } : null,
     spending: spending ? {
       amount: spending.amount,
@@ -222,7 +225,7 @@ export function normalizeRecap(input) {
       visits: (input.copy?.visits || 'раз вы заходили в Alfa People в {year} году').replaceAll('{year}', String(input.year)),
     },
     art,
-  };
+  });
 }
 
 export async function loadRecap(signal) {

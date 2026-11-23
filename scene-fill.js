@@ -7,13 +7,14 @@ import { screenRect } from './layout-fit.js';
 const clamp = v => Math.max(0, Math.min(1, v));
 const smooth = t => t * t * (3 - 2 * t);
 const outBack = t => { const c = 1.6; return 1 + (c + 1) * (t - 1) ** 3 + c * (t - 1) ** 2; };
+import { THANKS_WORDS } from './copy.js';
 function random(seed) { let s = seed >>> 0; return () => ((s = Math.imul(s ^ (s >>> 15), 2246822507) ^ Math.imul(s ^ (s >>> 13), 3266489909), (s >>>= 0) / 4294967296)); }
 function sprite(w, h, paint) { const c = document.createElement('canvas'); c.width = w; c.height = h; paint(c.getContext('2d'), w, h); return c; }
 function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
 
 // ───────────────────────────── «Спасибки» ─────────────────────────────
 // Полученные записки собираются вокруг сердца.
-const THANKS_WORDS = ['спасибо!', 'ты лучший', 'выручил!', 'огонь 🔥', 'спасибо ❤', 'ты супер', 'респект', 'спас!'];
+// Фразы на записках — из таблицы текстов (copy.js).
 export function createThanksNotes(section) {
   const composition = section.querySelector('.thanks-composition');
   if (!composition) return null;
@@ -54,7 +55,19 @@ export function createThanksNotes(section) {
     c.save(); c.translate(w / 2, h / 2); c.scale(2, 2); c.rotate((i % 2 ? 1 : -1) * .02);
     roundRect(c, -128, -52, 256, 104, 18); c.fillStyle = i % 2 ? '#ffc4dd' : '#ffd6e8'; c.fill();   // только розовые
     c.lineWidth = 4; c.strokeStyle = '#ef3124'; c.stroke();
-    c.fillStyle = '#ef3124'; c.font = '700 34px Styrene, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(word, 0, 2);
+    // Длинные фразы: сначала чуть мельче, потом в две строки — текст не вылезает за записку.
+    c.fillStyle = '#ef3124'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    let size = 34; c.font = `700 ${size}px Styrene, sans-serif`;
+    while (size > 27 && c.measureText(word).width > 226) { size -= 1; c.font = `700 ${size}px Styrene, sans-serif`; }
+    if (c.measureText(word).width <= 226) c.fillText(word, 0, 2);
+    else {
+      const parts = word.split(' '); let best = 1, diff = Infinity;
+      for (let k = 1; k < parts.length; k++) { const d = Math.abs(c.measureText(parts.slice(0, k).join(' ')).width - c.measureText(parts.slice(k).join(' ')).width); if (d < diff) { diff = d; best = k; } }
+      const lines = [parts.slice(0, best).join(' '), parts.slice(best).join(' ')];
+      size = 30; c.font = `700 ${size}px Styrene, sans-serif`;
+      while (size > 20 && Math.max(...lines.map(l => c.measureText(l).width)) > 226) { size -= 1; c.font = `700 ${size}px Styrene, sans-serif`; }
+      c.fillText(lines[0], 0, 2 - size * .56); c.fillText(lines[1], 0, 2 + size * .56);
+    }
     c.restore();
   }));
   const count = Math.min(received, cap);
@@ -126,6 +139,18 @@ export function createPostcardPrints(section) {
     layer.append(img);
     return img;
   });
+  // Широкий экран: на «отправили» из конверта вылетает ещё стайка открыток и
+  // разлетается по бокам (на телефоне места нет — там только три открытки).
+  const SENT_FLOCK = [
+    { x: -.36, y: -.20, r: -14, s: .92, d: 0 },   { x: .35, y: -.24, r: 12, s: .96, d: .03 },
+    { x: -.27, y: .06, r: 9, s: .78, d: .06 },    { x: .29, y: .03, r: -10, s: .82, d: .09 },
+    { x: -.44, y: -.34, r: -6, s: .7, d: .12 },   { x: .43, y: -.06, r: 7, s: .72, d: .15 },
+  ];
+  const flock = sent > 0 && !matchMedia('(prefers-reduced-motion: reduce)').matches
+    ? SENT_FLOCK.slice(0, Math.min(SENT_FLOCK.length, sent)).map((f, i) => {
+      const img = new Image(); img.src = './assets/envelope/prints/' + (i % 3) + '.webp'; img.alt = ''; img.className = 'is-sent-flock';
+      layer.append(img); return { img, ...f };
+    }) : [];
   stage.append(layer);
   let width, height, mouth, envelopeScale;
   function resize(scale,shift=0) {
@@ -153,8 +178,19 @@ export function createPostcardPrints(section) {
         card.style.opacity=smooth(clamp(flight/.12))*(1-smooth(clamp((flight-.70)/.30)));
         card.style.transform=`translate(${x}px,${y}px) translate(-50%,-50%) rotate(${side*(3+12*t)}deg) scale(${.68+.32*t})`;
       });
+      // Стайка «отправленных»: вылетает, пока появляется вторая цифра (.70–.90), и остаётся в кадре.
+      const flockSize=Math.min(560*envelopeScale,width*.1);
+      flock.forEach(f=>{
+        const t=smooth(clamp((progress-.7-f.d*.5)/.13));   // к остановке (~.92) все уже на местах
+        const x=width*.5+f.x*width*t, y=mouth+(f.y*height-height*.06)*t-Math.sin(Math.PI*t)*height*.12;
+        f.img.style.display='';
+        f.img.style.width=flockSize*f.s+'px';
+        f.img.style.opacity=String(smooth(clamp(t/.18)));
+        f.img.style.transform=`translate(${x}px,${y}px) translate(-50%,-50%) rotate(${f.r*t}deg) scale(${.5+.5*t})`;
+      });
       return;
     }
+    flock.forEach(f=>{ f.img.style.display='none'; });
     const size=Math.min(width*.29,height*.19,190);
     const fanY=Math.min(height-size*.45-12,height*.84);
     cards.forEach((card,i)=>{

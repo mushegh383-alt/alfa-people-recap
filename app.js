@@ -33,6 +33,7 @@ import { createTalkContact, prepareTalkContact } from './talk-contact.js?local=2
 import { createBookChapter, mountBookChapter } from './learning.js?local=31';
 import { createZodiac, createProfileViews, mountSkyScenes } from './sky-scenes.js?local=29';
 import { mountTalismanCard } from './talisman-card.js?local=21';
+import { isEmptyRecap, createEmptyState, mountEmptyState } from './empty-state.js';
 
 const shell = document.querySelector('#recap-shell');
 shell.classList.toggle('is-android', /Android/i.test(navigator.userAgent));
@@ -70,6 +71,20 @@ async function render(input) {
   shell.classList.remove('is-ready');
   try {
     const data = input === undefined ? await loadRecap(AbortSignal.any([signal, AbortSignal.timeout(30000)])) : normalizeRecap(input);
+    // Нет ни одного блока данных — вместо сцен страница «итогов нет» (проверка: ?empty).
+    shell.querySelector('.recap-empty')?.remove();
+    shell.classList.remove('is-empty');
+    if (isEmptyRecap(data) || new URLSearchParams(location.search).has('empty')) {
+      intro.hidden = true; slides.replaceChildren(); canvas.replaceChildren();
+      shell.querySelector('.opening-story')?.remove();
+      shell.append(createEmptyState(data));
+      document.querySelector('.load-error').hidden = true;
+      openRecap();
+      shell.classList.add('is-ready', 'is-empty');
+      mountEmptyState(shell, signal);
+      document.dispatchEvent(new CustomEvent('recap:ready', { detail: { year: data.year, empty: true } }));
+      return;
+    }
     canvas.replaceChildren(createHero(data), createPersonal(data));
     slides.replaceChildren();
     shell.querySelector('.opening-story')?.remove();
@@ -96,16 +111,13 @@ async function render(input) {
     if (data.parksharing) slides.append(createNovemberPark(data));
     slides.append(...createEndingChapter(data));
     const notes = [
-      ['.moments-caption', 'Вся лента года в ваших кадрах.'],
-      ['.achievement-caption', 'Ещё один повод собой гордиться.'],
-      ['.coins-copy', 'Можно выбрать подарок себе или коллеге.'],
-      ['.learning-composition', 'Теперь есть чему научить коллег.'],
-      ['.tower-label, .office-caption', 'Столько поводов сказать «привет» вживую.'],
-      ['.income-glass-viewport', 'День зарплаты — хороший повод заглянуть.'],
+      ['.achievement-caption', data.achievements?.note],
+      ['.learning-composition', data.learning?.note],
+      ['.tower-label, .office-caption', data.office?.note],
     ];
     for (const [selector, text] of notes) {
       const parent = shell.querySelector(selector);
-      if (!parent) continue;
+      if (!parent || !text) continue;
       const note = document.createElement('span');
       note.className = 'scene-reading-note';
       note.textContent = text;

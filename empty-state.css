@@ -1,0 +1,65 @@
+/* Страница «итогов нет» — обложка + карточка с объяснением. */
+.recap-empty {
+  position: fixed; inset: 0; z-index: 5; overflow: hidden; isolation: isolate;
+  height: 100svh; background: #0b1636; color: #fff;
+  display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+  padding: max(28px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+html:has(.recap-empty), html:has(.recap-empty) body { overflow: hidden; overscroll-behavior: none; }
+.recap-empty-media, .recap-empty-media > * { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.recap-empty-media { z-index: -2; }
+.recap-empty-loop { opacity: 0; transition: opacity .6s; }
+.recap-empty.is-playing .recap-empty-loop { opacity: 1; }
+/* Затемнение сверху под заголовок и снизу под карточку; середина с «2026» — как на обложке. */
+.recap-empty-shade { position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(#0b1636cc 0%, #0b163600 26%, #0b163600 58%, #0b1636b3 82%, #0b1636f2 100%); }
+
+.recap-empty-head { text-align: center; }
+.recap-empty-title { margin: 0; font: 700 clamp(64px, 24vw, 150px)/.9 Nauryz, sans-serif; letter-spacing: -.04em; text-shadow: 0 4px 30px #05081699; }
+.recap-empty-subtitle { margin: 6px 0 0; font: 700 clamp(18px, 5.6vw, 34px)/1 Styrene, sans-serif; letter-spacing: -.03em; text-shadow: 0 2px 14px #050816cc; }
+
+.recap-empty-card {
+  width: min(100%, 460px); box-sizing: border-box; padding: 22px 20px 20px; text-align: center;
+  border-radius: 24px; background: #0b1636c7; border: 1px solid #f8e4c22e;
+  box-shadow: 0 20px 60px #02040c80, inset 0 1px 0 #ffffff14;
+  -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
+}
+.recap-empty-heading { margin: 0; font: 700 clamp(21px, 5.8vw, 28px)/1.05 Styrene, sans-serif; letter-spacing: -.035em; text-wrap: balance; }
+.recap-empty-text { margin: 10px 0 0; color: #ffffffc2; font: 500 clamp(14px, 3.9vw, 17px)/1.3 Formular, sans-serif; letter-spacing: -.01em; text-wrap: pretty; }
+.recap-empty-button {
+  display: block; margin: 18px 0 0; padding: 15px 20px; border-radius: 14px;
+  background: #ef3124; color: #fff; text-decoration: none; font: 700 16px/1 Styrene, sans-serif; letter-spacing: -.02em;
+  box-shadow: 0 8px 24px #ef312459; transition: transform .2s, background .2s;
+}
+.recap-empty-button:active { transform: scale(.98); background: #d72a1e; }
+.recap-empty-button:focus-visible { outline: 3px solid #f8e4c2; outline-offset: 3px; }
+
+/* Появление: заголовок сверху, карточка снизу. */
+.recap-empty-head, .recap-empty-card { opacity: 0; transition: opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1); }
+.recap-empty-head { transform: translateY(-18px); transition-delay: .25s; }
+.recap-empty-card { transform: translateY(28px); transition-delay: .7s; }
+.recap-empty.is-in :is(.recap-empty-head, .recap-empty-card) { opacity: 1; transform: none; }
+
+/* Широкий экран: «2026» на обложке левее центра — карточка справа внизу. */
+@media (min-aspect-ratio: 4/5) {
+  .recap-empty { padding: 48px; }
+  .recap-empty-title { font-size: clamp(90px, 11vw, 200px); }
+  .recap-empty-card { align-self: flex-end; padding: 28px 28px 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .recap-empty-head, .recap-empty-card { transition: none; opacity: 1; transform: none; }
+}
+/* Телефон: обложка чуть выше, чтобы «2026» не пряталась под карточкой; карточка компактнее. */
+@media (max-aspect-ratio: 4/5) {
+  .recap-empty-media { transform: translateY(-11%); }
+  .recap-empty-media { -webkit-mask-image: linear-gradient(#000 76%, #0000 89%); mask-image: linear-gradient(#000 76%, #0000 89%); }
+  .recap-empty-card { padding: 18px 18px 16px; }
+  .recap-empty-text { font-size: clamp(14px, 3.7vw, 16px); }
+  .recap-empty-button { margin-top: 14px; padding: 14px 18px; }
+}
+@media (max-aspect-ratio: 4/5) and (max-height: 600px) {
+  .recap-empty-title { font-size: 19vw; }
+  .recap-empty-heading { font-size: 20px; }
+}
+button.recap-empty-button { width: 100%; border: 0; cursor: pointer; appearance: none; -webkit-appearance: none; }

@@ -26,9 +26,9 @@ export function createOffice(data) {
 }
 export function createFinale(data) {
   const s = scene('finale', 'Ваш талисман следующего года', `<div class="finale-seven-art ending-vector-art" aria-hidden="true"></div><div class="finale-seven-core"><h2 class="finale-seven-title"></h2><div class="finale-seven-stamp"><img class="finale-seven-frame" src="${assets}stamp-frame.svg" alt="" /><img class="finale-seven-mascot" alt="" /></div><h3 class="finale-seven-name"></h3><p class="finale-seven-caption"></p><div class="finale-seven-action-slot"></div></div>`);
-  s.querySelector('.finale-seven-title').textContent = data.finale.heading.replace(/\s+(\d{4})/u, '\n$1');
+  s.querySelector('.finale-seven-title').textContent = (data.finale.heading.includes('\n') ? data.finale.heading : data.finale.heading.replace(/\s+(\d{4})/u, '\n$1'));
   s.querySelector('.finale-seven-name').textContent = data.finale.talisman;
-  s.querySelector('.finale-seven-caption').textContent = data.finale.label;
+  s.querySelector('.finale-seven-caption').textContent = data.finale.wish || data.finale.label;
   const image = s.querySelector('.finale-seven-mascot'); image.src = data.finale.talismanImage; image.alt = data.finale.talisman;
   const ghost = document.createElement('img'); ghost.className = 'finale-seven-ghost'; ghost.src = data.finale.talismanImage; ghost.alt = ''; ghost.setAttribute('aria-hidden','true');
   ghost.dataset.source = data.finale.talismanImage;
@@ -127,7 +127,9 @@ async function flattenFinale(slot, layers, lenses, signal) {
   ];
   const minX = Math.min(...boxes.map(b => b.x)), minY = Math.max(0, Math.min(...boxes.map(b => b.y)));
   const maxX = Math.max(...boxes.map(b => b.x + b.w)), maxY = Math.min(1467, Math.max(...boxes.map(b => b.y + b.h)));
-  const k = .6, canvas = document.createElement('canvas');
+  // Разрешение склейки — по реальному экрану: при 0,6 от макета на большом мониторе
+  // картинку растягивало, и лучи выглядели «поплывшими».
+  const k = Math.min(getQuality() === 'lite' ? .75 : 1, Math.max(.6, innerWidth / 1920 * (devicePixelRatio || 1))), canvas = document.createElement('canvas');
   canvas.width = Math.ceil((maxX - minX) * k); canvas.height = Math.ceil((maxY - minY) * k);
   const ctx = canvas.getContext('2d');
   ctx.setTransform(k, 0, 0, k, -minX * k, -minY * k);

@@ -1,6 +1,9 @@
 @font-face { font-family: Nauryz; src: url('./assets/nauryz.ttf') format('truetype'); font-display: swap; font-weight: 700; }
 @font-face { font-family: Agse; src: url('./assets/agse.otf') format('opentype'); font-display: swap; }
 @font-face { font-family: Formular; src: url('./assets/formular.otf') format('opentype'); font-display: swap; font-weight: 500; }
+/* В Formular часть знаков пустые (тире, «!», «?», кавычки, двоеточие, скобки, %, №, ₽…) — текст выглядел с дырами.
+   Эти знаки берём из Styrene (шрифт сайта): unicode-range подменяет только их. */
+@font-face { font-family: Formular; src: url('./assets/styrene-a-regular.otf') format('opentype'); font-weight: 500; font-display: swap; unicode-range: U+0021-0022, U+0025, U+0027-0029, U+002B, U+003A-003B, U+003F, U+00AB, U+00BB, U+0401, U+0451, U+2013-2014, U+2026, U+2116, U+20BD; }
 @font-face { font-family: Frame39; src: url('./assets/frame39-black.ttf') format('truetype'); font-display: swap; font-weight: 900; }
 @font-face { font-family: UraBumBum; src: url('./assets/ura-bum-bum.otf') format('opentype'); font-display: swap; }
 @font-face { font-family: Inter; src: url('./assets/inter.ttf') format('truetype'); font-display: swap; font-weight: 100 900; }

@@ -82,3 +82,5 @@ html:not(.is-portrait) #zodiac .sky-number { top: 905px !important; }
 html:not(.is-portrait) #zodiac .sky-label { top: 1228px !important; }
 html:not(.is-portrait) #zodiac .zodiac-runners { top: 1300px !important; }
 html:not(.is-portrait) #zodiac .sky-note { top: 1392px !important; }
+/* Подзаголовок знака зодиака — в две строки, как в таблице текстов. */
+.sky-kicker { white-space: pre-line; }
