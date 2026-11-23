@@ -19,7 +19,8 @@ export const SAFE_WIDTH = {
 export function fitScale(width, height, designW, designH, key, padX = 0, padY = 0) {
   const desktop = Math.min((width - padX) / designW, (height - padY) / designH);
   if (!isPortrait(width, height) || !SAFE_WIDTH[key]) return Math.max(.01, desktop);
-  return Math.max(.01, Math.min(width / SAFE_WIDTH[key], (height - padY) / designH));
+  // На телефоне сцена чуть меньше экрана — чтобы подписи не прятались под панели браузера.
+  return Math.max(.01, .95 * Math.min(width / SAFE_WIDTH[key], (height - padY) / designH));
 }
 
 function syncPortraitClass() {

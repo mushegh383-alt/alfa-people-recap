@@ -109,7 +109,7 @@ function mountPaging(root, signal, phone, hint) {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   // Сдвиг начинается сразу после взмаха и долго, мягко дотягивается до остановки
   // (ease-in-out на 6 с первую секунду почти стоял — ощущалось как лаг).
-  const ease = t => 1 - Math.pow(1 - t, 3.2);
+  const ease = t => 1 - (1 - t) * (1 - t);   // сразу в движение, без долгого «хвоста»: длинные сцены (обучение) не застревают в конце
   let frame = 0, from = 0, to = 0, start = 0, duration = 0, target = -1, lockUntil = 0;
   let touch = null, wheelSum = 0, wheelTimer = 0;
   const speed = Number(new URLSearchParams(location.search).get('pace')) || 1;   // ?pace=0.5 — вдвое быстрее
@@ -136,11 +136,15 @@ function mountPaging(root, signal, phone, hint) {
     const list = stops();
     const base = target >= 0 ? target : nearest(list);
     const next = Math.max(0, Math.min(list.length - 1, base + dir));
-    if (next === base) return;
+    if (next === base) { if (Math.abs(list[base].y - scrollY) > 1) animateTo(base, 380); else target = -1; return; }
     target = next; from = scrollY; to = list[next].y; start = performance.now();
     const screens = Math.abs(to - from) / innerHeight;
-    duration = reduced.matches ? 1 : Math.min(16800, 5200 + screens * 2880) * .75 * speed;
+    duration = reduced.matches ? 1 : Math.min(4200, 1600 + screens * 650) * speed;
     hideHint();
+    cancelRenderFrame(frame); frame = requestRenderFrame(tick);
+  }
+  function animateTo(i, ms) {
+    const list = stops(); target = i; from = scrollY; to = list[i].y; start = performance.now(); duration = ms;
     cancelRenderFrame(frame); frame = requestRenderFrame(tick);
   }
   // Подравнять к ближайшей остановке (поворот экрана, переход по якорю).
@@ -165,22 +169,36 @@ function mountPaging(root, signal, phone, hint) {
   function apply() { root.classList.toggle('is-paging', phone.matches); html.classList.toggle('is-paging', phone.matches); }
   apply(); phone.addEventListener('change', apply, {signal});
 
+  // Как в рилсах: пока палец на экране, страница едет за ним (отклик сразу), после отпускания
+  // докатывается до следующего слайда или возвращается назад, если тянули чуть-чуть.
+  let dragY = null, dragFrame = 0;
   window.addEventListener('touchstart', e => {
     if (!enabled() || e.touches.length !== 1) { touch = null; return; }
-    touch = {y: e.touches[0].clientY, x: e.touches[0].clientX, t: performance.now()};
+    touch = {y: e.touches[0].clientY, x: e.touches[0].clientX, t: performance.now(), drag: !frame};
+    if (touch.drag) {
+      const list = stops(), base = nearest(list);
+      Object.assign(touch, {base, y0: scrollY, lo: list[base - 1]?.y ?? scrollY, hi: list[base + 1]?.y ?? scrollY});
+    }
   }, {passive: true, signal});
   window.addEventListener('touchmove', e => {
     if (!enabled() || !root.contains(e.target)) return;
-    e.preventDefault();                                    // страница едет только по нашим взмахам
+    e.preventDefault();                                    // нативной прокрутки нет — ведём сами
+    if (!touch?.drag || frame) return;
+    const p = e.touches[0];
+    if (Math.abs(touch.x - p.clientX) > Math.abs(touch.y - p.clientY) * 1.5) return;
+    dragY = Math.max(touch.lo, Math.min(touch.hi, touch.y0 + (touch.y - p.clientY) * 1.1));
+    if (!dragFrame) dragFrame = requestRenderFrame(() => { dragFrame = 0; if (dragY !== null && !frame) scrollTo({top: dragY, behavior: 'instant'}); });
   }, {passive: false, signal});
   window.addEventListener('touchend', e => {
     if (!touch) return;
-    const p = e.changedTouches[0], dy = touch.y - p.clientY, dx = touch.x - p.clientX, dt = performance.now() - touch.t;
-    touch = null;
-    if (Math.abs(dy) < Math.abs(dx)) return;
-    if (Math.abs(dy) > 36 || (Math.abs(dy) > 14 && Math.abs(dy) / dt > .35)) go(dy > 0 ? 1 : -1);
+    const p = e.changedTouches[0], dy = touch.y - p.clientY, dx = touch.x - p.clientX, dt = performance.now() - touch.t, t = touch;
+    touch = null; dragY = null; cancelRenderFrame(dragFrame); dragFrame = 0;
+    const swipe = Math.abs(dy) >= Math.abs(dx) && (Math.abs(dy) > 36 || (Math.abs(dy) > 14 && Math.abs(dy) / dt > .35));
+    if (swipe) { if (t.drag) target = t.base; go(dy > 0 ? 1 : -1); }
+    else if (t.drag && Math.abs(scrollY - t.y0) > 1) animateTo(t.base, 380);
     if (!frame) armHint();
   }, {passive: true, signal});
+  window.addEventListener('touchcancel', () => { if (touch?.drag) animateTo(touch.base, 380); touch = null; dragY = null; }, {passive: true, signal});
   window.addEventListener('wheel', e => {
     if (!enabled()) return;
     e.preventDefault();
@@ -195,7 +213,12 @@ function mountPaging(root, signal, phone, hint) {
   }, {signal});
   let resizeTimer = 0;
   window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(settle, 250); }, {signal});
-  document.addEventListener('recap:ready', () => setTimeout(() => { settle(); armHint(); }, 400), {once: true, signal});
+  // Для проверок: ?slide=N — сразу открыть N-й слайд.
+  const jump = Number(new URLSearchParams(location.search).get('slide'));
+  document.addEventListener('recap:ready', () => setTimeout(() => {
+    if (jump > 0) { const list = stops(); scrollTo({top: list[Math.min(jump, list.length - 1)].y, behavior: 'instant'}); }
+    settle(); armHint();
+  }, 400), {once: true, signal});
   window.addEventListener('touchstart', hideHint, {passive: true, signal});
   window.__recapPage = go;                                   // для проверок
   signal.addEventListener('abort', () => { cancelRenderFrame(frame); clearTimeout(hintTimer); root.classList.remove('is-paging'); html.classList.remove('is-paging'); delete window.__recapPage; }, {once: true});

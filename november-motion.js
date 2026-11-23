@@ -9,7 +9,7 @@ function mount(section,signal){
  const purchases = section.matches('.has-spending-next.overlap-exit') ? section.nextElementSibling : null;
  const layers=[...section.querySelectorAll('.november-coin')];
  let active=false,raf=0,p,last=0;
- function fit(){let scale=fitScale(stage.clientWidth,stage.clientHeight,Number(section.dataset.width),Number(section.dataset.height),section.id);if(section.id==='coins')scale=Math.min(scale,stage.clientHeight/2010);placeComposition(composition, scale);setHeadingScale(composition,scale,stage.clientWidth,stage.clientHeight);if(section.id==='parksharing'){const snow=section.querySelector('.november-snow'),w=Math.max(2082.48,stage.clientWidth/scale+24);snow.style.width=`${w}px`;snow.style.height=`${w*1520.02/2082.48}px`;snow.style.left=`${Number(section.dataset.width)/2-w/2}px`;}schedule();}
+ function fit(){let scale=fitScale(stage.clientWidth,stage.clientHeight,Number(section.dataset.width),Number(section.dataset.height),section.id);if(section.id==='coins')scale=Math.min(scale,(stage.clientHeight-(stage.clientWidth<stage.clientHeight?130:0))/2010);placeComposition(composition, scale);setHeadingScale(composition,scale,stage.clientWidth,stage.clientHeight);if(section.id==='parksharing'){const snow=section.querySelector('.november-snow'),w=Math.max(2082.48,stage.clientWidth/scale+24);snow.style.width=`${w}px`;snow.style.height=`${w*1520.02/2082.48}px`;snow.style.left=`${Number(section.dataset.width)/2-w/2}px`;}schedule();}
  function update(now){raf=0;if(!active||document.hidden||signal.aborted)return;const b=section.getBoundingClientRect();
   const h=stage.clientHeight;
   const coinHandoff=section.classList.contains('follows-achievements') && document.documentElement.classList.contains('is-portrait');

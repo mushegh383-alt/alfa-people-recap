@@ -23,13 +23,15 @@ export function setHeadingScale(element,scale,width,height) {
 // НА ЭКРАНЕ; текст растёт, только если в сцене он получился мельче.
 const TEXT_ROLES={
  kicker:'.income-glass-rank,.talk-contact-kicker,.sky-kicker',
- caption:'.visit-caption,.thanks-caption,.envelope-caption,.moments-caption,.learning-label,.november-park-label,.coins-copy,.spending-caption,.talk-contact-label,.sky-label,.tower-label,.finale-seven-name,.planet-label,.achievement-caption',
+ caption:'.visit-caption,.thanks-caption,.moments-caption,.learning-label,.november-park-label,.coins-copy,.spending-caption,.talk-contact-label,.sky-label,.tower-label,.finale-seven-name,.planet-label,.achievement-caption',
+ // Подпись в открытке конверта: мельче обычной, чтобы не вылезать на красный конверт.
+ envelope:'.envelope-caption',
  note:'.thanks-note,.spending-note,.talk-contact-note,.november-park-note,.sky-note,.finale-seven-caption,.planet-note',
 };
 export function textMinimum(width,height){
  const clamp=(a,v,b)=>Math.max(a,Math.min(b,v));
- if(width/Math.max(1,height)<.8)return{kicker:15,caption:clamp(17,width*.048,21),note:clamp(15,width*.04,18)};
- return{kicker:clamp(16,width*.0135,26),caption:clamp(18,width*.019,32),note:clamp(15,width*.0145,24)};
+ if(width/Math.max(1,height)<.8)return{kicker:15,caption:clamp(17,width*.048,21),note:clamp(15,width*.04,18),envelope:clamp(14,width*.037,16)};
+ return{kicker:clamp(16,width*.0135,26),caption:clamp(18,width*.019,32),note:clamp(15,width*.0145,24),envelope:clamp(18,width*.019,32)};
 }
 export function setTextScale(element,scale,width,height){
  const min=textMinimum(width,height);

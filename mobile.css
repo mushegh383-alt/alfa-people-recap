@@ -283,3 +283,19 @@ html.is-paging, html.is-paging body { overscroll-behavior: none; }
    открывалась полоска уезжающего прошлого экрана. Тень-«козырёк» над сценой закрывает этот зазор. */
 .november.is-paging :is(.sky-stage,.november-stage,.book-chapter-stage,.ending-chapter-pin,.story-pin) { box-shadow:0 -160px 0 #0b1636; }
 .november.is-paging .achievements-stage { box-shadow:0 -160px 0 #020101; }
+/* Листание по слайдам: панели Safari не прячутся (нативной прокрутки нет), поэтому экран сцены —
+   видимая область (svh), а не «большая» (lvh): иначе низ сцены уходит под нижнюю панель. */
+html.is-portrait.is-paging { --recap-screen:100svh; }
+/* Моменты: заголовок на светло-розовых лучах терялся, подпись выходила за круг. */
+html.is-portrait .moments-heading { text-shadow:0 0 6px #5a0712cc, 0 2px 18px #5a0712e6, 0 6px 44px #3d0510; }
+.moments-caption .scene-reading-note { max-width:9.6em; margin-left:auto; margin-right:auto; }
+/* Подпись «Мой доход» — сразу под шаром, не у самой кромки экрана (там подсказка и панель Safari). */
+html.is-portrait .income-glass-viewport > .scene-reading-note { bottom:17%; font-size:16px; }
+/* Подсказка в режиме листания — компактная, не закрывает подписи внизу сцен. */
+html.is-paging .scroll-hint { padding-top:26px; gap:8px; padding-bottom:14px; }
+html.is-paging .scroll-hint-line { height:34px; }
+/* «На вас смотрят»: сцена в своём слое (zoom/transform), и тёмная виньетка ::before (z=1) ложилась
+   ПОВЕРХ цифры и подписей — текст выглядел как в тени. Поднимаем композицию над виньеткой. */
+#profile-views .sky-composition { z-index:2; }
+/* Открытки: подпись ближе к цифре. */
+html.is-portrait .revision-six .envelope-caption { margin-top:-72px; }

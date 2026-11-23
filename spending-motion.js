@@ -27,7 +27,7 @@ export function mountSpendingMotion(root, signal) {
     const portrait = stage.clientWidth / Math.max(1, stage.clientHeight) < .8;
     // Телефон: колонка от заголовка (−760) до примечания (~1740) целиком по высоте экрана.
     let scale = fitScale(stage.clientWidth, stage.clientHeight, spendingFrame.width, spendingFrame.height + (portrait ? 0 : 360), 'spending');
-    if (portrait) scale = Math.min(scale, stage.clientHeight * .96 / 2500);
+    if (portrait) scale = Math.min(scale, (stage.clientHeight - 170) / 2600);   // запас под подсказку и панель браузера
     placeComposition(composition, scale, ` translateY(${portrait ? 160 : 180}px)`);
     setHeadingScale(composition, scale, stage.clientWidth, stage.clientHeight);
     lastPaint=undefined;schedule();
