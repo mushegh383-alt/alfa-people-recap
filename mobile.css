@@ -266,6 +266,16 @@ html.is-portrait .revision-six .planet-ai h2:not(.planet-label) {
   text-shadow:0 2px 14px #101b39, 0 0 32px #101b39b3;
 }
 
-html.is-portrait .revision-six.is-android .thanks-stats { top:548px; }
+html.is-portrait .revision-six.is-android .thanks-title { top:120px; }
+html.is-portrait .revision-six.is-android .thanks-stats { top:340px; }
+html.is-portrait .revision-six.is-android .thanks-stat { gap:40px; }
+html.is-portrait .revision-six.is-android .thanks-number { height:530px; }
 html.is-portrait .revision-six.is-android .achievement-number { top:85px; }
 html.is-portrait .revision-six.is-android .achievement-caption { top:1090px; }
+html.is-portrait .revision-six.is-android .thanks-digits { translate:0 -55px; }
+html.is-portrait .revision-six.is-android .thanks-caption { translate:0 52px; }
+/* Листание по слайдам на телефоне: нативной прокрутки и «резинки» нет. */
+html.is-paging, html.is-paging body { overscroll-behavior: none; }
+.november.is-paging { touch-action: none; }
+/* На телефоне лучи (холст) лежат поверх текста — подпись должна целиком помещаться в звезде. */
+.achievement-caption .scene-reading-note { max-width:9.2em; margin-left:auto; margin-right:auto; }

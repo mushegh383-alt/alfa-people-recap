@@ -48,3 +48,8 @@ html[data-quality=lite] .achievement-heading { visibility: hidden; }
 html[data-quality=lite] .achievement-sparkles { visibility: hidden; }
 /* «Мой доход» на телефоне: стеклянный шар (WebGL) поверх сцены, колпачок — в вырезе маски. */
 html[data-quality=lite] .income-glass-canvas { z-index: 4; -webkit-mask-composite: xor; mask-composite: exclude; }
+/* Телефон: «биение» сердца — бесконечная CSS-анимация, отдельный огромный слой в масштабированной сцене. */
+html[data-quality=lite] .thanks-heart-mask { animation: none !important; }
+/* Телефон: «Спасибки» масштабируются через zoom, а не transform — иначе Safari держит
+   сердце, лучи и записки в слоях размером в макет ×3 (вылеты на этом экране). */
+html[data-quality=lite] .thanks-composition { zoom: var(--thanks-scale, .4); transform: none !important; margin-left: -958px; margin-top: calc(var(--thanks-h, 1478px) / -2); }

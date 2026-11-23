@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Alfa People · мобильное превью v36</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#18181b;min-height:100svh;display:grid;place-items:center}
+iframe{display:block;width:min(390px,100vw);height:min(844px,100svh);border:0;background:#09090a;box-shadow:0 8px 64px #0006}
+</style>
+<iframe title="Мобильная версия Alfa People" allow="autoplay"></iframe>
+<script>
+  function openPreview() {
+    const demo = new URLSearchParams(location.search).get('demo');
+    const preview = new URL('./?phone-preview&v=35&renderQuality=lite', location.href);
+    preview.hash = demo ? '' : location.hash;
+    if (preview.hash) preview.searchParams.set('start', preview.hash.slice(1));
+    if (demo) preview.searchParams.set('demo', demo);
+    document.querySelector('iframe').src = preview.href;
+  }
+  openPreview();
+  window.addEventListener('hashchange', openPreview);
+</script>
+</html>
