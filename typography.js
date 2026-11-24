@@ -167,7 +167,6 @@ function fitHeadingsToWidth(element,scale,width,height){
  if(!nodes.length)return;
  const portrait=width/Math.max(1,height)<.8;
  for(const heading of nodes){
-  if(!portrait){heading.style.removeProperty('font-size');continue;}
   const text=heading.textContent.trim();if(!text)continue;
   heading.style.removeProperty('font-size');
   const style=getComputedStyle(heading),current=parseFloat(style.fontSize)||100;
@@ -182,9 +181,11 @@ function fitHeadingsToWidth(element,scale,width,height){
   const longest=Math.max(...lines.map(line=>line.length));
   const avail=(width-MARGIN*2)/Math.max(.01,scale);
   let size=avail/Math.max(.01,perPx+spacing*Math.max(0,longest-1));
-  size=Math.min(size,height*.2/Math.max(.01,scale)/Math.max(1,lines.length*.62));
+  if(portrait)size=Math.min(size,height*.2/Math.max(.01,scale)/Math.max(1,lines.length*.62));
   // «Мой доход» стоит над шаром: не крупнее прежнего размера, только уже по экрану.
   if(heading.classList.contains('income-glass-title'))size=Math.min(size,current);
+  // Широкий экран: размер макета, но не шире окна (узкое окно ноутбука, планшет).
+  if(!portrait){ if(size>=current){continue;} }
   heading.style.setProperty('font-size',`${size.toFixed(1)}px`,'important');
  }
 }
