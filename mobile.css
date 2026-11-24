@@ -335,3 +335,23 @@ html:not(.is-portrait) .november .office-tower .tower-label { top:1345px !import
 /* Офис: цифра крупнее и выше (на фасаде над дверью). */
 .office-tower .tower-number { font-size:340px !important; top:835px !important; }
 html:not(.is-portrait) .office-tower .tower-number { font-size:290px !important; top:880px !important; }
+/* Заголовки разделов — одним начертанием: строчные буквы Nauryz (кроме бренда Alfa AI и обложки). */
+.talk-contact-name, .zodiac-heading, .zodiac-runner-name, .planet-agent h2 { text-transform: lowercase; }
+/* Спасибки: заголовок отделён от записок тёмным ореолом. */
+.revision-six .thanks-title { text-shadow: 0 0 8px #5a0712b3, 0 3px 22px #5a0712d9, 0 8px 48px #3d0510; }
+/* Пояснения под подписью — та же разрядка, что у остальных (-.04em), без грязной тени на красном. */
+.scene-reading-note { letter-spacing:-.04em; }
+.achievement-caption .scene-reading-note { text-shadow:0 1px 4px #8a0c0c80; }
+.achievement-caption .scene-reading-note { max-width:10.4em; }
+html.is-portrait .achievement-caption .scene-reading-note { max-width:12.6em; }
+/* Низкий телефон (iPhone SE): звезда мельче, а текст того же размера — цифра с подписью выше,
+   иначе нижняя строка пояснения уходит за звезду под холст лучей. */
+@media (orientation:portrait) and (max-height:620px) { html.is-portrait .revision-six .achievement-number { top:-215px; } html.is-portrait .revision-six .achievement-caption { top:665px; } }
+/* «МОМЕНТЫ» набраны прописными Nauryz (у них завитки, как у остальных заголовков) — они шире строчных. */
+html.is-portrait .revision-six .moments-heading { font-size:calc(var(--recap-heading-logical,260px) * .78) !important; }
+/* Пояснения на небесных сценах (взгляды, зодиак) читались плохо: 60% белого по тёмному лесу. */
+.sky-note { color:#ffeede; text-shadow:0 2px 9px #0a142ae6, 0 0 3px #0a142a; }
+/* «Все Взгляды / На Вас»: на телефоне в две строки и крупнее, на десктопе — одной строкой. */
+#profile-views .eyes-heading { white-space:nowrap; }
+html.is-portrait #profile-views .eyes-heading { white-space:pre-line; line-height:.9; }
+html:not(.is-portrait) #profile-views .eyes-heading { font-size:210px !important; }

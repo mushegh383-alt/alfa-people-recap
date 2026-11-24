@@ -173,13 +173,16 @@ function fitHeadingsToWidth(element,scale,width,height){
   const style=getComputedStyle(heading),current=parseFloat(style.fontSize)||100;
   measure||=document.createElement('canvas').getContext('2d');
   measure.font=`${style.fontWeight} 100px ${style.fontFamily}`;
-  const shown=style.textTransform==='lowercase'?text.toLowerCase():style.textTransform==='uppercase'?text.toUpperCase():text;
-  const perPx=measure.measureText(shown).width/100;
+  let shown=style.textTransform==='lowercase'?text.toLowerCase():style.textTransform==='uppercase'?text.toUpperCase():text;
+  // Перенос строки в тексте работает только при pre-line — иначе это пробел, и строка одна.
+  if(!/^pre/.test(style.whiteSpace))shown=shown.replace(/\s*\n\s*/g,' ');
+  const lines=shown.split('\n');
+  const perPx=Math.max(...lines.map(line=>measure.measureText(line).width))/100;
   const spacing=(parseFloat(style.letterSpacing)||0)/current;
-  const longest=Math.max(...shown.split('\n').map(line=>line.length));
+  const longest=Math.max(...lines.map(line=>line.length));
   const avail=(width-MARGIN*2)/Math.max(.01,scale);
   let size=avail/Math.max(.01,perPx+spacing*Math.max(0,longest-1));
-  size=Math.min(size,height*.2/Math.max(.01,scale));
+  size=Math.min(size,height*.2/Math.max(.01,scale)/Math.max(1,lines.length*.62));
   // «Мой доход» стоит над шаром: не крупнее прежнего размера, только уже по экрану.
   if(heading.classList.contains('income-glass-title'))size=Math.min(size,current);
   heading.style.setProperty('font-size',`${size.toFixed(1)}px`,'important');

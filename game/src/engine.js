@@ -88,16 +88,15 @@ function hurt(s, text) {
 }
 
 function collect(s, item) {
-  if (item.hazard) hurt(s, 'Клякса −5');
+  if (item.hazard) hurt(s, 'Клякса');
   else {
     const value = item.express ? 3 : 1;
     s.score += value; s.caught++; s.streak++;
     s.bestStreak = Math.max(s.bestStreak, s.streak);
     s.collection[item.variant]++;
     s.catchUntil = s.elapsed + .25;
-    if (item.express) { s.expressCaught++; s.feedback = 'Супермарка +3'; }
-    else if (s.streak % 5 === 0) s.feedback = `${s.streak} подряд!`;
-    if (item.express || s.streak % 5 === 0) s.feedbackUntil = s.elapsed + 1.6;
+    // Всплывающие надписи — только из таблицы текстов: «Клякса», «Почтовая волна», «Супермарка».
+    if (item.express) { s.expressCaught++; s.feedback = 'Супермарка'; s.feedbackUntil = s.elapsed + 1.6; }
   }
   s.effects.push({ id: item.id, x: item.x, y: Math.min(item.y, R.catchY) - 30, age: 0, hazard: item.hazard, text: item.hazard ? '−5' : item.express ? '+3' : '+1' });
 }
@@ -143,7 +142,7 @@ export function step(s, dt, keyDir = 0) {
   for (const p of s.puddles) {
     if (!p.triggered && s.elapsed >= p.armed && Math.abs(s.playerX - p.x) < 52) {
       p.triggered = true;
-      hurt(s, 'Клякса −5');
+      hurt(s, 'Клякса');
       s.effects.push({ id: p.id, x: p.x, y: 880, age: 0, hazard: true, text: '−5' });
     }
   }

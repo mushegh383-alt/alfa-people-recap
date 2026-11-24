@@ -20,6 +20,7 @@ export function showLoading() {
   shell.inert = true;
   shell.setAttribute('aria-busy', 'true');
   setProgress(0);
+  jokeIndex = 0; if (joke) joke.textContent = jokes[0];
   startJokes();
 }
 // Пока грузится — шутки по кругу.

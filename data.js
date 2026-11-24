@@ -123,7 +123,7 @@ export function normalizeRecap(input) {
       talisman: finale.talisman || 'Гном с сердцем',
       talismanImage: assetUrl(finale.talismanImage || './assets/restyle/gnome-stamp.webp', 'finale.talismanImage'),
       label: finale.label || 'играйте в нашу игру\nи откройте 5 уникальных открыток',
-      buttonLabel: finale.buttonLabel || 'играть',
+      buttonLabel: finale.buttonLabel || 'Играть',
       gameUrl: finale.gameUrl == null ? null : assetUrl(finale.gameUrl, 'finale.gameUrl'),
       // Самая яркая метрика пользователя — от неё помощник и поздравление (см. copy.js).
       metric: typeof finale.metric === 'string' ? finale.metric : 'visits',

@@ -2,7 +2,7 @@ export function mountTalismanCard(root, data, signal) {
   const section = root.querySelector('#finale'); if (!section || !data.finale) return;
   const stamp = section.querySelector('.finale-seven-stamp');
   // Ссылка под «играть» и нажатие на саму марку.
-  const link = document.createElement('button'); link.type = 'button'; link.className = 'finale-card-link'; link.textContent = 'Открыть открытку';
+  const link = document.createElement('button'); link.type = 'button'; link.className = 'finale-card-link'; link.textContent = 'Посмотреть открытку';
   section.querySelector('.finale-seven-action-slot')?.append(link);
   if (stamp) { stamp.setAttribute('role', 'button'); stamp.tabIndex = 0; stamp.setAttribute('aria-label', 'Открыть новогоднюю открытку'); stamp.classList.add('is-clickable'); }
 

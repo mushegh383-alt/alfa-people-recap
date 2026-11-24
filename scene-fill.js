@@ -83,9 +83,17 @@ export function createThanksNotes(section) {
   // Куда садятся полученные записки: по лучу от сердца наружу — первое место,
   // которое видно на экране, не задевает заголовок и цифры и не налезает на соседей.
   function place(scale) {
-    const cb = screenRect(composition), toDesign = r => ({ l: (r.left - cb.left) / scale, t: (r.top - cb.top) / scale, r: (r.right - cb.left) / scale, b: (r.bottom - cb.top) / scale });
-    const text = ['.thanks-title', '.thanks-stats'].map(sel => section.querySelector(sel)).filter(Boolean).map(el => toDesign(screenRect(el)));
-    const cx = 960, cy = 739, minX = cx - visibleHalf + 30, maxX = cx + visibleHalf - 30, minY = cy - visibleHalfH + 30, maxY = cy + visibleHalfH - 30;
+    // Рамки заголовка и цифр — в координатах макета через offset*: они не зависят ни от zoom
+    // сцены на телефоне (экранные рамки там давали неверный масштаб, и записки садились на
+    // заголовок), ни от въезда (transform) в момент расстановки.
+    const local = el => {
+      let x = 0, y = 0, e = el;
+      while (e && e !== composition) { x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent; }
+      if (e !== composition) { const cb = screenRect(composition), r = screenRect(el); return { l: (r.left - cb.left) / scale, t: (r.top - cb.top) / scale, r: (r.right - cb.left) / scale, b: (r.bottom - cb.top) / scale }; }
+      return { l: x, t: y, r: x + el.offsetWidth, b: y + el.offsetHeight };
+    };
+    const text = ['.thanks-title', '.thanks-stats'].map(sel => section.querySelector(sel)).filter(Boolean).map(local);
+    const cx = 960, cy = 739, minX = cx - visibleHalf + 30, maxX = cx + visibleHalf - 30, minY = cy - visibleHalfH + 30, maxY = cy + visibleHalfH - 30 - (visibleHalfH > visibleHalf * 1.3 ? visibleHalfH * .2 : 0);   // телефон: низ экрана — под подсказку «Листайте»
     const taken = [];
     for (const n of incoming) {
       n.x = n.y = null;
@@ -93,7 +101,9 @@ export function createThanksNotes(section) {
       for (let f = .95; f < 2.6; f += .06) {
         const x = heart.x + Math.cos(n.angle) * heart.rx * f, y = heart.y + Math.sin(n.angle) * heart.ry * f;
         if (x - hw < minX || x + hw > maxX || y - hh < minY || y + hh > maxY) continue;
-        if (text.some(b => x + hw > b.l - 20 && x - hw < b.r + 20 && y + hh > b.t - 16 && y - hh < b.b + 16)) continue;
+        // Вокруг заголовка и цифр — свободное поле, иначе белые буквы сливаются с розовыми записками.
+        const pad = 36 * boost;
+        if (text.some(b => x + hw > b.l - pad && x - hw < b.r + pad && y + hh > b.t - pad && y - hh < b.b + pad)) continue;
         if (taken.some(q => Math.abs(q.x - x) < (hw + q.hw) * .78 && Math.abs(q.y - y) < (hh + q.hh) * .78)) continue;
         n.x = x; n.y = y; taken.push({ x, y, hw, hh }); break;
       }
@@ -105,7 +115,9 @@ export function createThanksNotes(section) {
       boost = (width / Math.max(1, height || width) < .8) ? Math.max(1, Math.min(3.4, 110 / (300 * .65 * scale))) : 1; },
     draw(u) {
       // Места считаем, когда сцена уже видна: у скрытой сцены текст не размечен.
-      if (!placedFor && section.querySelector('.thanks-title')?.getBoundingClientRect().width) { place(sceneScale); placedFor = 1; }
+      // Пока записки не полетели, заголовок ещё въезжает — места пересчитываем по его финальному положению.
+      if (u < 2.45) placedFor = 0;   // записки ещё не летят — место выберем, когда сцена встанет
+      else if (!placedFor && section.querySelector('.thanks-title')?.getBoundingClientRect().width) { place(sceneScale); placedFor = 1; }
       layer.begin();
       const { ctx } = layer;
       for (const n of incoming) {

@@ -8,9 +8,9 @@ export function plural(n, [one, few, many]) {
   if (b >= 2 && b <= 4) return few;
   return many;
 }
-const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
-// «264» + {раз, раза, раз} + «вы заходили…» → «Раза\nвы заходили…» (подпись под крупной цифрой).
-export const countLabel = (n, forms, tail, breakAfterWord = true) => `${cap(plural(n, forms))}${breakAfterWord ? '\n' : ' '}${tail}`;
+// «264» + {раз, раза, раз} + «вы заходили…» → «раза\nвы заходили…». Число и подпись — одно
+// предложение («1248 раз смотрели ваш профиль»), поэтому подпись со строчной буквы.
+export const countLabel = (n, forms, tail, breakAfterWord = true) => `${plural(n, forms)}${breakAfterWord ? '\n' : ' '}${tail}`;
 
 const TIMES = ['раз', 'раза', 'раз'];
 const HOURS = ['час', 'часа', 'часов'];
@@ -93,14 +93,15 @@ export function applyCopy(d) {
   const next = String(d.year + 1), fill = s => s.replaceAll('{nextYear}', next).replaceAll('{year}', String(d.year));
   if (d.intro) { d.intro.title = 'ИТОГИ'; d.intro.caption = 'в Alfa People'; }
   d.copy.visits = countLabel(d.stats.visits, TIMES, 'вы заглядывали\nв Alfa People', false);
-  if (d.thanks) Object.assign(d.thanks, { title: 'спасибки', sentLabel: 'Отправили', receivedLabel: 'Получили', note: '' });
+  if (d.thanks) Object.assign(d.thanks, { title: 'спасибки', sentLabel: 'отправили', receivedLabel: 'получили', note: '' });
   if (d.postcards) Object.assign(d.postcards, {
     title: 'открытки',
     sentLabel: countLabel(d.postcards.sent, ['открытку', 'открытки', 'открыток'], 'вы отправили'),
     receivedLabel: countLabel(d.postcards.received, ['открытку', 'открытки', 'открыток'], 'вы получили'),
   });
-  if (d.moments) Object.assign(d.moments, { title: 'моменты', label: countLabel(d.moments.count, ['момент', 'момента', 'моментов'], 'вы опубликовали') });
+  if (d.moments) Object.assign(d.moments, { title: 'МОМЕНТЫ', label: countLabel(d.moments.count, ['момент', 'момента', 'моментов'], 'вы опубликовали') });
   if (d.income) Object.assign(d.income, {
+    title: 'Мой доход',
     rankLabel: `Ваш топ-${d.income.rank} сервис`,
     caption: countLabel(d.income.visits, TIMES, 'вы заходили\nв сервис', false),
     note: '',
@@ -119,7 +120,7 @@ export function applyCopy(d) {
   });
   if (d.zodiac) Object.assign(d.zodiac, { kicker: 'Знак зодиака, с которым\nвы общались чаще всего', note: fill(ZODIAC_WISH[d.zodiac.sign] || '') });
   if (d.profileViews) Object.assign(d.profileViews, {
-    heading: 'все взгляды на вас',
+    heading: 'все взгляды\nна вас',
     label: countLabel(d.profileViews.count, TIMES, 'смотрели\nваш профиль', false),
     note: profileNote(d.profileViews.count),
   });
@@ -130,7 +131,7 @@ export function applyCopy(d) {
   if (d.coins) Object.assign(d.coins, { title: 'коины', label: countLabel(d.coins.earned, COINS, 'вы получили') });
   if (d.spending) Object.assign(d.spending, { title: 'покупки', label: countLabel(d.spending.amount, COINS, 'вы потратили', false), note: '' });
   if (d.learning) Object.assign(d.learning, {
-    title: 'Обучение',
+    title: 'обучение',
     coursesLabel: countLabel(d.learning.courses, ['курс', 'курса', 'курсов'], 'вы прошли'),
     hoursLabel: countLabel(d.learning.hours, HOURS, 'вы потратили на это'),
     note: 'Самые лучшие инвестиции — это в знания!',
@@ -144,5 +145,17 @@ export function applyCopy(d) {
     const helper = HELPERS[d.finale.metric] || HELPERS.visits;
     Object.assign(d.finale, { heading: fill('Ваш сказочный\nпомощник на {nextYear} год'), talisman: helper.name, wish: fill(helper.text) });
   }
-  return d;
+  return keepTogether(d);
+}
+
+// «Alfa People» и предлог перед ним не разрываются переносом строки.
+function keepTogether(v) {
+  if (typeof v === 'string') return v.replace(/(^|\s)([вкс]) Alfa/g, '$1$2\u00a0Alfa').replace(/Alfa (People|AI)/g, 'Alfa\u00a0$1');
+  if (v && typeof v === 'object' && !Object.isFrozen(v)) {
+    for (const k of Object.keys(v)) {
+      const next = keepTogether(v[k]);
+      if (next !== v[k]) { try { v[k] = next; } catch { /* поле только для чтения — оставляем */ } }
+    }
+  }
+  return v;
 }
