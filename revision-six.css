@@ -101,7 +101,7 @@
 .talk-contact-note {margin-top:32px;font:500 48px/.9174 Formular,sans-serif;letter-spacing:-.04em;white-space:pre-line;opacity:.6;}
 /* One page-level layer sits above footage, SVG effects, text and all later scenes. */
 .november::after {display:none;}
-.recap-grain {position:fixed;inset:0;z-index:9000;pointer-events:none;background:url('./assets/finish-grain.png') repeat;background-size:384px 384px;opacity:.13;}
+.recap-grain {position:fixed;inset:0;z-index:9000;pointer-events:none;background:url('./assets/finish-grain.webp') repeat;background-size:384px 384px;opacity:.13;}
 .talk-contact-heading {z-index:1;}
 .talk-contact-art {z-index:2;}
 .talk-contact-data {z-index:3;}

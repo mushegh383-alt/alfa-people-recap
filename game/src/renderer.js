@@ -2,7 +2,7 @@
 import { ROUND as R, STAMPS, asset } from './config.js';
 import { windAt } from './engine.js';
 
-const FILES = [...new Set(['scenery.png', 'character.png', 'character-mask.svg', 'hat.png', 'hat-mask.svg', 'hat-red.svg', 'blot.png', ...STAMPS.flatMap(s => [s.frame, s.image])])];
+const FILES = [...new Set(['scenery.webp', 'character.webp', 'character-mask.svg', 'hat.webp', 'hat-mask.svg', 'hat-red.svg', 'blot.webp', ...STAMPS.flatMap(s => [s.frame, s.image])])];
 
 export async function loadImages(onProgress, signal) {
   let done = 0;
@@ -47,13 +47,13 @@ export function piplik(images) {
   if (piplikCache.has(images)) return piplikCache.get(images);
   const c = document.createElement('canvas'); c.width = 607; c.height = 698;
   const ctx = c.getContext('2d');
-  ctx.drawImage(images['character.png'], 23.97, 70.31, 587.625, 587.625);
+  ctx.drawImage(images['character.webp'], 23.97, 70.31, 587.625, 587.625);
   ctx.globalCompositeOperation = 'destination-in';
   ctx.drawImage(images['character-mask.svg'], 27.558, 106.423, 579.753, 547.671);
   ctx.globalCompositeOperation = 'source-over';
   const hat = document.createElement('canvas'); hat.width = 607; hat.height = 698;
   const h = hat.getContext('2d');
-  h.drawImage(images['hat.png'], -58.02, -10.28, 744.773, 744.773);
+  h.drawImage(images['hat.webp'], -58.02, -10.28, 744.773, 744.773);
   h.globalCompositeOperation = 'destination-in';
   h.drawImage(images['hat-mask.svg'], 0, 0, 462.729, 242.382);
   ctx.drawImage(hat, 0, 0);
@@ -87,13 +87,13 @@ export function createRenderer(canvas, images) {
       const arming = s.elapsed < p.armed;
       ctx.save();
       ctx.globalAlpha = p.triggered ? .35 : arming ? .45 : Math.min(1, (p.expires - s.elapsed) / .35);
-      ctx.drawImage(images['blot.png'], p.x - 59, 904, 118, 40);
+      ctx.drawImage(images['blot.webp'], p.x - 59, 904, 118, 40);
       if (arming) { ctx.strokeStyle = '#f8e4c2'; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(p.x, 924, 62, 21, 0, 0, Math.PI * 2); ctx.stroke(); }
       ctx.restore();
     }
     for (const it of s.items) {
       ctx.save(); ctx.translate(it.x, it.y); ctx.rotate(reduced ? 0 : it.angle);
-      if (it.hazard) ctx.drawImage(images['blot.png'], -it.width / 2, -it.height / 2, it.width, it.height);
+      if (it.hazard) ctx.drawImage(images['blot.webp'], -it.width / 2, -it.height / 2, it.width, it.height);
       else {
         ctx.shadowColor = it.express ? '#1ac3fd' : '#200b0b44';
         ctx.shadowBlur = it.express ? 26 : 10; ctx.shadowOffsetY = 5;

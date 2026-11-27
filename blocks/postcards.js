@@ -9,8 +9,8 @@ export function createPostcards(data) {
   section.innerHTML = `
     <div class="postcards-pin">
       <div class="postcards-composition">
-      <div class="postcards-paper postcards-paper-first" aria-hidden="true"><img src="./assets/thanks-texture.png" width="3259" height="2173" alt="" /></div>
-      <div class="postcards-paper postcards-paper-second" aria-hidden="true"><img src="./assets/thanks-texture.png" width="3259" height="2173" alt="" /></div>
+      <div class="postcards-paper postcards-paper-first" aria-hidden="true"><img src="./assets/thanks-texture.webp" width="3259" height="2173" alt="" /></div>
+      <div class="postcards-paper postcards-paper-second" aria-hidden="true"><img src="./assets/thanks-texture.webp" width="3259" height="2173" alt="" /></div>
       <div class="postcards-stage postcards-stage-top" aria-hidden="true"><div class="postcards-artboard"></div></div>
       <div class="postcards-stats">
         <div class="postcards-stat postcards-sent"><p class="postcards-number"><span class="postcards-digits" aria-hidden="true"></span><span class="sr-only"></span></p><h2 class="postcards-caption"></h2></div>

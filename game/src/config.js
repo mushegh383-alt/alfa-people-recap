@@ -33,10 +33,10 @@ export const DIFFICULTY = Object.freeze({
 });
 
 export const STAMPS = Object.freeze([
-  { id: 'goat', name: 'Огненная коза', frame: 'stamp-blue-small.svg', image: 'goat.png' },
-  { id: 'ornament', name: 'Ёлочный шар', frame: 'stamp-blue.svg', image: 'ornament.png' },
-  { id: 'sweet', name: 'Сладкий момент', frame: 'stamp-cream.svg', image: 'sweet.png' },
-  { id: 'tree', name: 'Праздничная ёлка', frame: 'stamp-cream-alt.svg', image: 'tree.png' },
+  { id: 'goat', name: 'Огненная коза', frame: 'stamp-blue-small.svg', image: 'goat.webp' },
+  { id: 'ornament', name: 'Ёлочный шар', frame: 'stamp-blue.svg', image: 'ornament.webp' },
+  { id: 'sweet', name: 'Сладкий момент', frame: 'stamp-cream.svg', image: 'sweet.webp' },
+  { id: 'tree', name: 'Праздничная ёлка', frame: 'stamp-cream-alt.svg', image: 'tree.webp' },
 ]);
 
 export const MECHANICS = Object.freeze([
@@ -51,10 +51,10 @@ export const MECHANICS = Object.freeze([
 // вся коллекция примерно за 3,5–4 дня (~11 раундов). Игроку послабее
 // (~23 марки за раунд по балансному боту, src/balance.js) понадобится около недели.
 export const POSTCARDS = Object.freeze([
-  { id: 'goat', name: 'Год больших чудес', threshold: 60, image: 'goat.png', bg: '#1ac3fd', ink: '#020101', accent: '#ef3124', lines: ['Пусть год', 'удивляет!'] },
-  { id: 'ornament', name: 'Праздник рядом', threshold: 150, image: 'ornament.png', bg: '#f8e4c2', ink: '#020101', accent: '#ef3124', lines: ['Счастье', 'уже рядом'] },
-  { id: 'sweet', name: 'Сладкие моменты', threshold: 250, image: 'sweet.png', bg: '#fa7ab3', ink: '#020101', accent: '#f8e4c2', lines: ['Больше', 'сладких', 'моментов'] },
-  { id: 'tree', name: 'Время загадывать', threshold: 360, image: 'tree.png', bg: '#020101', ink: '#f8e4c2', accent: '#ef3124', lines: ['Всё', 'сбудется!'] },
+  { id: 'goat', name: 'Год больших чудес', threshold: 60, image: 'goat.webp', bg: '#1ac3fd', ink: '#020101', accent: '#ef3124', lines: ['Пусть год', 'удивляет!'] },
+  { id: 'ornament', name: 'Праздник рядом', threshold: 150, image: 'ornament.webp', bg: '#f8e4c2', ink: '#020101', accent: '#ef3124', lines: ['Счастье', 'уже рядом'] },
+  { id: 'sweet', name: 'Сладкие моменты', threshold: 250, image: 'sweet.webp', bg: '#fa7ab3', ink: '#020101', accent: '#f8e4c2', lines: ['Больше', 'сладких', 'моментов'] },
+  { id: 'tree', name: 'Время загадывать', threshold: 360, image: 'tree.webp', bg: '#020101', ink: '#f8e4c2', accent: '#ef3124', lines: ['Всё', 'сбудется!'] },
   { id: 'piplik', name: 'От пиплика с любовью', threshold: 480, image: null, bg: '#ef3124', ink: '#f8e4c2', accent: '#1ac3fd', lines: ['С новым', 'счастьем!'] },
 ]);
 

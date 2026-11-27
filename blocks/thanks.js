@@ -6,8 +6,8 @@ export function createThanks(data) {
   section.innerHTML = `
     <div class="thanks-scene"><div class="thanks-composition">
     <div class="thanks-art" aria-hidden="true">
-      <div class="thanks-burst-motion"><div class="thanks-burst-idle"><img class="thanks-burst" src="./assets/restyle/thanks-burst.png" width="2412" height="1597" alt="" /></div></div>
-      <div class="thanks-heart-motion"><div class="thanks-heart-entrance"><div class="thanks-heart-mask"><img src="./assets/restyle/thanks-heart.png" width="2075.211" height="1556.408" alt="" /></div></div></div>
+      <div class="thanks-burst-motion"><div class="thanks-burst-idle"><img class="thanks-burst" src="./assets/restyle/thanks-burst.webp" width="2412" height="1597" alt="" /></div></div>
+      <div class="thanks-heart-motion"><div class="thanks-heart-entrance"><div class="thanks-heart-mask"><img src="./assets/restyle/thanks-heart.webp" width="2075.211" height="1556.408" alt="" /></div></div></div>
     </div>
     <h2 class="thanks-title"></h2>
     <div class="thanks-stats">

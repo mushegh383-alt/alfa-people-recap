@@ -28,7 +28,7 @@ export function createPlanetStory(data){
   // Подставка — за шаром (шар лежит на ней): вставляем сразу за фоном, до шаров.
   if(data.ai.stand){const stand=document.createElement('img');stand.className='planet-stand';stand.src=data.ai.stand;stand.alt='';stand.setAttribute('aria-hidden','true');ball.after(stand);}
   // Циферблат раньше был кадром видео — теперь отдельная картинка под стрелками.
-  const dial=document.createElement('img');dial.className='planet-dial';dial.src='./assets/restyle/ai-dial.png';dial.alt='';dial.setAttribute('aria-hidden','true');
+  const dial=document.createElement('img');dial.className='planet-dial';dial.src='./assets/restyle/ai-dial.webp';dial.alt='';dial.setAttribute('aria-hidden','true');
   s.querySelector('.planet-composition').prepend(dial);
  }
  s.querySelector('.planet-ai h2').textContent='Alfa AI';s.querySelector('.planet-ai .planet-label').textContent=data.ai.requestsLabel;s.querySelector('.planet-ai').dataset.value=data.ai.requests;

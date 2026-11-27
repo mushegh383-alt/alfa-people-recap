@@ -47,7 +47,7 @@ export function createSpending(data) {
     if (artwork || ['snowflake', 'alfa', 'burst', 'ornament'].includes(shape.kind)) {
       const image = document.createElement('img');
       // Иконки в новом стиле (PNG) — те же места и анимация.
-      image.src = artwork ? `./assets/restyle/spending/${artwork.replace('.svg', '.png')}` : shape.kind === 'ornament' ? './assets/restyle/spending/ornament.png' : `./assets/restyle/spending/spending-${shape.kind}.png`;
+      image.src = artwork ? `./assets/restyle/spending/${artwork.replace('.svg', '.webp')}` : shape.kind === 'ornament' ? './assets/restyle/spending/ornament.webp' : `./assets/restyle/spending/spending-${shape.kind}.webp`;
       image.alt = '';
       if (shape.kind === 'burst' && !artwork) {
         const turn = document.createElement('div'); turn.className = 'spending-burst-turn'; turn.append(image); face.append(turn);

@@ -128,7 +128,7 @@ img { display: block; }
   75% { transform: translate3d(calc(var(--orbit-x) * -.7), calc(var(--orbit-y) * .5), 0); }
 }
 @keyframes star-breathe { 0%, 100% { transform: scale(1) rotate(-3deg); } 50% { transform: scale(1.06) rotate(5deg); } }
-.thanks { background: #110d0a url('./assets/thanks-texture.png') center / cover; }
+.thanks { background: #110d0a url('./assets/thanks-texture.webp') center / cover; }
 .thanks-scene { position: relative; width: 100%; height: 100%; min-height: 0; }
 .thanks-composition { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1441px; transform: translate(-50%, -50%) scale(var(--thanks-scale, .4)); transform-origin: center; }
 .thanks-art { position: absolute; inset: 0; width: 1920px; height: 1441px; pointer-events: none; }
@@ -353,7 +353,7 @@ body.is-loading #recap-shell, body.is-loading .skip-link { visibility: hidden; }
 .recap-intro.has-income-next::after { content: ''; position: absolute; inset: 0; z-index: 3; background: #110d0a; opacity: var(--income-shade, 0); pointer-events: none; }
 .income-glass { position: relative; height: calc(2.6 * var(--recap-screen)); background: #110d0a; isolation: isolate; }
 .income-glass-viewport { position: sticky; top: 0; height: var(--recap-screen); overflow: clip; background: #110d0a; }
-.income-glass-viewport::before { content: ''; position: absolute; inset: 0; background: url('./assets/thanks-texture.png') center / cover no-repeat; mask-image: linear-gradient(to bottom, rgb(0 0 0 / var(--income-orb, 0)), #000 180px); pointer-events: none; }
+.income-glass-viewport::before { content: ''; position: absolute; inset: 0; background: url('./assets/thanks-texture.webp') center / cover no-repeat; mask-image: linear-gradient(to bottom, rgb(0 0 0 / var(--income-orb, 0)), #000 180px); pointer-events: none; }
 .income-glass-arrival { position: absolute; inset: 0; background: var(--red); opacity: var(--income-arrival-red, 1); pointer-events: none; }
 .income-glass-viewport::after { content: ''; position: absolute; inset: 0; z-index: 5; background: url('./assets/optimized/achievement-texture.webp') center / cover no-repeat; mix-blend-mode: multiply; opacity: calc(.72 * var(--income-paper, 0)); mask-image: linear-gradient(to bottom, rgb(0 0 0 / var(--income-orb, 0)), #000 180px); pointer-events: none; }
 .income-glass-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: var(--income-orb, 0); pointer-events: none; }
@@ -376,7 +376,7 @@ body.is-loading #recap-shell, body.is-loading .skip-link { visibility: hidden; }
 /* Local experiment: one pinned viewport for the four opening chapters. */
 .opening-story { position: relative; height: calc(6.7 * var(--recap-screen)); background: #110d0a; }
 .story-pin { position: sticky; top: 0; height: var(--recap-screen); isolation: isolate; overflow: clip; background: var(--red); }
-.story-dark { position: absolute; inset: 0; background: #110d0a url('./assets/thanks-texture.png') center / cover no-repeat; opacity: var(--story-dark, 0); pointer-events: none; }
+.story-dark { position: absolute; inset: 0; background: #110d0a url('./assets/thanks-texture.webp') center / cover no-repeat; opacity: var(--story-dark, 0); pointer-events: none; }
 .story-panel { position: absolute; inset: 0; opacity: 0; visibility: hidden; transform-origin: center; }
 .story-panel-hero { z-index: 1; }
 .story-panel-personal { z-index: 2; }
@@ -390,7 +390,7 @@ body.is-loading #recap-shell, body.is-loading .skip-link { visibility: hidden; }
 .opening-story .hero-video-slot { transform-origin: 50% 55%; }
 .opening-story .hero-decor { will-change: transform; }
 .opening-story .income-glass { position: absolute; inset: 0; height: 100%; background: transparent; }
-.opening-story .income-glass-viewport { position: absolute; inset: 0; height: 100%; background: #110d0a url('./assets/thanks-texture.png') center / cover no-repeat; }
+.opening-story .income-glass-viewport { position: absolute; inset: 0; height: 100%; background: #110d0a url('./assets/thanks-texture.webp') center / cover no-repeat; }
 .opening-story .income-glass-arrival, .opening-story .income-glass-viewport::before { display: none; }
 .opening-story .income-glass-title { top: 61px; }
 .opening-story .income-glass-rank { top: -50px; }
@@ -536,7 +536,7 @@ html { scroll-behavior: auto; }
 
 /* One static, seamless grain layer keeps footage, live type and artwork in the
    same printed finish. It does not capture input or animate during scrolling. */
-.november::after { content: ''; position: fixed; inset: 0; z-index: 50; pointer-events: none; background: url('./assets/finish-grain.png') repeat; background-size: 384px 384px; opacity: .075; }
+.november::after { content: ''; position: fixed; inset: 0; z-index: 50; pointer-events: none; background: url('./assets/finish-grain.webp') repeat; background-size: 384px 384px; opacity: .075; }
 .november :is(.hero-title, .thanks-title, .november-heading) { text-shadow: 0 0 12px #ffffff80; }
 .november :is(.thanks-digits, .november-number, .spending-digits, .office-number, .achievement-number) { text-shadow: 0 4px 13.2px currentColor; }
 .november :is(.november-copy, .spending-caption, .office-caption, .november-park-label) { text-shadow: 0 0 6px color-mix(in srgb, currentColor 35%, transparent); }

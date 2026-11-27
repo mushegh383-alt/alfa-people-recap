@@ -77,7 +77,7 @@
 
 /* Финальный кадр (Figma node 296:12862, 1919×1790): анимация сама приходит в него —
    ящик дорастает до размера финальной картинки, цифра сидит внутри ящика под его
-   передней стенкой. Стенка — тот же кусок drawer.png, едущий вместе с ящиком. */
+   передней стенкой. Стенка — тот же кусок drawer.webp, едущий вместе с ящиком. */
 .office-front-track {position:absolute;left:612.55px;top:485px;width:760.33px;height:471px;z-index:5;pointer-events:none;transform-origin:50% 50%;will-change:transform;filter:drop-shadow(0 -10px 12px rgb(67 21 18 / .13));}
 .office-front-mask {position:absolute;inset:0;mask:url('./assets/office-figma/front-mask.svg') -35.47px 297.27px / 843.01px 138.31px no-repeat;-webkit-mask:url('./assets/office-figma/front-mask.svg') -35.47px 297.27px / 843.01px 138.31px no-repeat;}
 .office-front-mask img {position:absolute;left:-18.78px;top:-349.26px;width:900.13px;height:900.2px;max-width:none;}

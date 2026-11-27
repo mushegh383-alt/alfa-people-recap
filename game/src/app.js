@@ -25,7 +25,7 @@ root.innerHTML = `
       <ul class="rules">
         <li><span class="rule-art stamp-mini" style="--frame:url('${asset(STAMPS[1].frame)}')"><img src="${asset(STAMPS[1].image)}" alt=""></span><span>Марка</span><b>+1</b></li>
         <li><span class="rule-art stamp-mini is-express" style="--frame:url('${asset(STAMPS[2].frame)}')"><img src="${asset(STAMPS[2].image)}" alt=""></span><span>Супермарка</span><b>+3</b></li>
-        <li><span class="rule-art is-blot"><img src="${asset('blot.png')}" alt=""></span><span>Клякса</span><b class="is-minus">−5</b></li>
+        <li><span class="rule-art is-blot"><img src="${asset('blot.webp')}" alt=""></span><span>Клякса</span><b class="is-minus">−5</b></li>
       </ul>
     </div>
     <div class="attempts-block">
@@ -37,7 +37,7 @@ root.innerHTML = `
 
   <main class="stage-wrap">
     <div class="game-stage" tabindex="-1" aria-label="Игровое поле. Управляйте пипликом мышью, пальцем или стрелками.">
-      <img class="scenery" src="${asset('scenery.png')}" alt="" draggable="false">
+      <img class="scenery" src="${asset('scenery.webp')}" alt="" draggable="false">
       <canvas class="game-canvas" aria-hidden="true"></canvas>
       <div class="hud">
         <div class="score-badge"><b data-score>0</b><span data-score-label>Марки на счёте</span><i data-round hidden>+0 за раунд</i></div>

@@ -3,12 +3,12 @@
   "assetCount": 26,
   "assets": [
     {
-      "name": "final-tree.png",
+      "name": "final-tree.webp",
       "source": "https://www.figma.com/api/mcp/asset/8ed532ea-8e97-4639-93c6-a2737cbbee2d.png",
       "bytes": 678085,
       "sha256": "b9bdd46e1634b7fb6e707161c6bc6e2fc822404470fabc06ac2a73651f17ae9c",
       "exactMatches": [
-        "assets/final-tree.png"
+        "assets/final-tree.webp"
       ],
       "format": "PNG",
       "width": 1024,
@@ -30,12 +30,12 @@
       "opaquePixelPercent": 24.421
     },
     {
-      "name": "ornament.png",
+      "name": "ornament.webp",
       "source": "https://www.figma.com/api/mcp/asset/ea6a6d94-29bc-41d4-b2b3-65621c78c88e.png",
       "bytes": 1062987,
       "sha256": "51daacac51e58eb379c1a686ebe109c3645fbb06f43604da98ee52a66f390eab",
       "exactMatches": [
-        "assets/hero-ornament.png"
+        "assets/hero-ornament.webp"
       ],
       "format": "PNG",
       "width": 1024,
@@ -57,7 +57,7 @@
       "opaquePixelPercent": 39.208
     },
     {
-      "name": "achievement-star.png",
+      "name": "achievement-star.webp",
       "source": "https://www.figma.com/api/mcp/asset/7affbeb2-e2a2-4706-b8f5-24d312b7ad81.png",
       "bytes": 1019464,
       "sha256": "40e7a1e17bd55f389eccf98390172526c7bdc69037ec5942542bd8ecbc214b66",
@@ -82,12 +82,12 @@
       "opaquePixelPercent": 23.107
     },
     {
-      "name": "final-goat.png",
+      "name": "final-goat.webp",
       "source": "https://www.figma.com/api/mcp/asset/95931e3d-96da-4ad5-aadb-e56f1927602c.png",
       "bytes": 3461671,
       "sha256": "1916dff32ea357e31ed7de28eadf02e8f4ce523b6ae47e45a392e3fdc9f51398",
       "exactMatches": [
-        "assets/final-goat.png"
+        "assets/final-goat.webp"
       ],
       "format": "PNG",
       "width": 2488,
@@ -109,12 +109,12 @@
       "opaquePixelPercent": 100.0
     },
     {
-      "name": "final-gift.png",
+      "name": "final-gift.webp",
       "source": "https://www.figma.com/api/mcp/asset/95749f79-d309-4011-89da-37fc26a93fde.png",
       "bytes": 1054864,
       "sha256": "96ea0c9c5646ae7d368ad2a228b1d626c41f16dcf04d28c241aa297563e58dab",
       "exactMatches": [
-        "assets/final-gift.png"
+        "assets/final-gift.webp"
       ],
       "format": "PNG",
       "width": 1024,
@@ -136,12 +136,12 @@
       "opaquePixelPercent": 43.604
     },
     {
-      "name": "final-gift-under.png",
+      "name": "final-gift-under.webp",
       "source": "https://www.figma.com/api/mcp/asset/13dd2a50-2fec-43ad-84c8-3bc7cfa89dcc.png",
       "bytes": 1331083,
       "sha256": "b4c7a284c41b0bd4a17ff5474db2239689b0c89a33f50dad962c0fc405b8b74d",
       "exactMatches": [
-        "assets/final-gift-under.png"
+        "assets/final-gift-under.webp"
       ],
       "format": "PNG",
       "width": 1024,
@@ -150,12 +150,12 @@
       "hasAlphaChannel": false
     },
     {
-      "name": "office-scene.png",
+      "name": "office-scene.webp",
       "source": "https://www.figma.com/api/mcp/asset/8917b6c0-86ed-469d-93d9-d2a62a09dc5d.png",
       "bytes": 1123182,
       "sha256": "83064bd277c94a0c1d23b08dd8cf3ea28c216ec7d6aba521060638225bd21261",
       "exactMatches": [
-        "assets/office-scene.png"
+        "assets/office-scene.webp"
       ],
       "format": "PNG",
       "width": 1024,
@@ -177,7 +177,7 @@
       "opaquePixelPercent": 53.36
     },
     {
-      "name": "thanks-background.png",
+      "name": "thanks-background.webp",
       "source": "https://www.figma.com/api/mcp/asset/aeff6f95-b146-41fc-a683-fcb448bf1d82.png",
       "bytes": 2406588,
       "sha256": "04b8419a406f4f47fffb7c5693a3ba3a6247b148021910f6da33b2f75dc22bb2",
@@ -217,13 +217,13 @@
       "opaquePixelPercent": 100.0
     },
     {
-      "name": "cap.png",
+      "name": "cap.webp",
       "source": "https://www.figma.com/api/mcp/asset/8a3441ac-d686-4179-a31f-a24671b0c0e1.png",
       "bytes": 2713447,
       "sha256": "ae56ec5fb412d75c22c91904601a96d3480d1ecd2ee240f6620e3ed477d2be99",
       "exactMatches": [
-        "assets/income-ornament-layer.png",
-        "assets/income-glass/cap-gold.png"
+        "assets/income-ornament-layer.webp",
+        "assets/income-glass/cap-gold.webp"
       ],
       "format": "PNG",
       "width": 1595,
@@ -232,7 +232,7 @@
       "hasAlphaChannel": false
     },
     {
-      "name": "personal-background.png",
+      "name": "personal-background.webp",
       "source": "https://www.figma.com/api/mcp/asset/6184d11f-79c3-48c5-9b85-5cd3bc067187.png",
       "bytes": 2402993,
       "sha256": "31eeaee44123f354747ce8ac202f23dd573a729bcd00e07163c722f900cd9f31",
@@ -244,7 +244,7 @@
       "hasAlphaChannel": false
     },
     {
-      "name": "personal-frame.png",
+      "name": "personal-frame.webp",
       "source": "https://www.figma.com/api/mcp/asset/fa7be785-03bc-4aa7-9d05-841adcbb17d4.png",
       "bytes": 1383081,
       "sha256": "fa16e094202d8ce9e3c29627cab5fb8b1c0d79eb06779579b070325a149a3fe2",
@@ -269,7 +269,7 @@
       "opaquePixelPercent": 67.993
     },
     {
-      "name": "thanks-heart.png",
+      "name": "thanks-heart.webp",
       "source": "https://www.figma.com/api/mcp/asset/9293eace-9111-4af3-b894-a3f0cbff6ee3.png",
       "bytes": 1485709,
       "sha256": "437acc3582026a47f312df8f63f0846f2a0355a5eed16103db17463c9477d14d",
@@ -294,7 +294,7 @@
       "opaquePixelPercent": 33.579
     },
     {
-      "name": "coins-blue-star.png",
+      "name": "coins-blue-star.webp",
       "source": "https://www.figma.com/api/mcp/asset/a59dae3f-aab6-498a-940b-4d088ca9cc0f.png",
       "bytes": 1818954,
       "sha256": "dbae10b61baf6421a67ffd6927d0439e1a7d8ed61fe6da6d6599839ea03758e9",
@@ -306,7 +306,7 @@
       "hasAlphaChannel": false
     },
     {
-      "name": "coin-outer.png",
+      "name": "coin-outer.webp",
       "source": "https://www.figma.com/api/mcp/asset/6d5a08a8-b9a7-4875-a785-2ec764e8d051.png",
       "bytes": 1512243,
       "sha256": "fa6f1d9b68f0fd57f6bcd0193a0b656ccdb5cf3e3bba2c3e97a936f0c733ff86",
@@ -331,7 +331,7 @@
       "opaquePixelPercent": 41.547
     },
     {
-      "name": "coin-middle.png",
+      "name": "coin-middle.webp",
       "source": "https://www.figma.com/api/mcp/asset/430beff6-1a1c-4a2a-b9cc-9ac1e576e12a.png",
       "bytes": 1579949,
       "sha256": "57300be7f9564ab07e6045041775c9538085fc10922b89ada28830bab21fd03d",
@@ -356,7 +356,7 @@
       "opaquePixelPercent": 38.992
     },
     {
-      "name": "coins-pink-star.png",
+      "name": "coins-pink-star.webp",
       "source": "https://www.figma.com/api/mcp/asset/ecef25df-a338-48f1-a747-503a7bdb154f.png",
       "bytes": 1968729,
       "sha256": "3d278a8e0b1414756b0d9d10b3d5bb80f3445f966c3cca57d756e301c30b0308",

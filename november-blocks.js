@@ -13,14 +13,14 @@ export function createNovemberCoins(data){
  const minis=document.createElement('div');minis.className='coins-blue-orbit';minis.setAttribute('aria-hidden','true');
  [[230,560,300,0,-1],[1640,500,230,0,1],[1690,1200,330,0,1],[200,1290,250,1,-1],[1470,1560,170,1,1],[290,200,150,1,-1],[1740,180,130,1,1]].forEach(([x,y,w,far,dir],i)=>{
   const m=document.createElement('div');m.className=`coins-mini${far?' is-far':''}`;Object.assign(m.style,{left:`${x-w/2}px`,top:`${y-w*.34}px`,width:`${w}px`,height:`${w*.68}px`,animationDelay:`${-i*.9}s`});
-  m.dataset.dir=dir;m.innerHTML=`<img src="${optimizedAssetUrl(art+'../restyle/coin-top.png')}" alt="">`;minis.append(m);});
+  m.dataset.dir=dir;m.innerHTML=`<img src="${optimizedAssetUrl(art+'../restyle/coin-top.webp')}" alt="">`;minis.append(m);});
  [[360,880],[1530,820],[700,300],[1320,1380],[560,1500],[1780,700],[120,860],[1180,260]].forEach(([x,y],i)=>{const sp=document.createElement('i');sp.className='coins-sparkle';Object.assign(sp.style,{left:`${x}px`,top:`${y}px`,animationDelay:`${-i*.45}s`});minis.append(sp);});
  c.append(deco);
  copy(c,'h2','november-heading coins-heading',data.coins.title,0,154,1920);
- image(c,'../restyle/coin-bottom.png','november-coin coin-bottom',446,926,977,656);
- image(c,'../restyle/coin-middle.png','november-coin coin-middle',427,595,1007,675);
+ image(c,'../restyle/coin-bottom.webp','november-coin coin-bottom',446,926,977,656);
+ image(c,'../restyle/coin-middle.webp','november-coin coin-middle',427,595,1007,675);
  count(c,data.coins.earned,523,536,822,550);
- image(c,'../restyle/coin-top.png','november-coin coin-top',457,267,977,656);
+ image(c,'../restyle/coin-top.webp','november-coin coin-top',457,267,977,656);
  copy(c,'p','november-copy coins-copy',data.coins.label,451,1516,1018);c.append(minis);return section;
 }
 export function createNovemberPark(data){

@@ -2,7 +2,7 @@
   "year": 2026,
   "person": {
     "name": "андрей",
-    "photo": "./assets/november/personal-frame.png",
+    "photo": "./assets/november/personal-frame.webp",
     "photoAlt": "Андрей улыбается",
     "photoMode": "framed"
   },
@@ -18,11 +18,11 @@
     "received": 15,
     "sentLabel": "Открыток вы отправили",
     "receivedLabel": "Открыток вы получили",
-    "front": "./assets/postcard-front.png",
-    "alternate": "./assets/postcard-alternate.png",
+    "front": "./assets/postcard-front.webp",
+    "alternate": "./assets/postcard-alternate.webp",
     "video": "./assets/envelope/envelope.mp4",
-    "poster": "./assets/envelope/open.png",
-    "still": "./assets/restyle/envelope-open.png"
+    "poster": "./assets/envelope/open.webp",
+    "still": "./assets/restyle/envelope-open.webp"
   },
   "thanks": {
     "sent": 55,
@@ -40,16 +40,16 @@
     "caption": "Раз вы заходили в Alfa People в {year} году",
     "note": "Столько дней вы заходили в Alfa People в этом году. Наверное, проверяли циферки зарплаты. Давайте видеться чаще в {nextYear}?",
     "video": "./assets/income-ornament-scroll.mp4",
-    "poster": "./assets/income-ornament-layer.png"
+    "poster": "./assets/income-ornament-layer.webp"
   },
   "copy": {
     "heading": "итоги",
     "visits": "Раз вы заходили в Alfa People в {year} году"
   },
   "art": {
-    "texture": "./assets/texture.png",
+    "texture": "./assets/texture.webp",
     "frame": "./assets/scallop-frame.svg",
-    "character": "./assets/character.png"
+    "character": "./assets/character.webp"
   },
   "intro": {
     "mode": "video",
@@ -60,7 +60,7 @@
     "revealVideo": "./assets/restyle/intro-desk.mp4",
     "revealVideoMobile": "./assets/restyle/intro-phone.mp4",
     "loopVideoMobile": "./assets/restyle/loop-phone.mp4",
-    "poster": "./assets/intro-film/poster.png",
+    "poster": "./assets/intro-film/poster.webp",
     "loopVideo": "./assets/restyle/loop-desk.mp4"
   },
   "coins": {
@@ -87,7 +87,7 @@
   "moments": {
     "count": 12,
     "label": "Моментов\nвы опубликовали",
-    "star": "./assets/restyle/moments-star.png",
+    "star": "./assets/restyle/moments-star.webp",
     "photos": [
       "./assets/restyle/moment-0.jpg",
       "./assets/restyle/moment-1.jpg",
@@ -97,9 +97,9 @@
   "ai": {
     "requests": 543,
     "still": "./assets/restyle/personal-sky-desk.jpg",
-    "orb": "./assets/restyle/ai-orb-red.png",
-    "orbAlt": "./assets/restyle/ai-orb-blue.png",
-    "stand": "./assets/restyle/ai-stand.png",
+    "orb": "./assets/restyle/ai-orb-red.webp",
+    "orbAlt": "./assets/restyle/ai-orb-blue.webp",
+    "stand": "./assets/restyle/ai-stand.webp",
     "stillMobile": "./assets/restyle/personal-sky-phone.jpg",
     "agent": "иллюстратор",
     "hours": 129,

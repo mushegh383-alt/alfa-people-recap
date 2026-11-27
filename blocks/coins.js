@@ -7,7 +7,7 @@ export function createCoins(data) {
   section.setAttribute('aria-labelledby', 'coins-title');
   section.innerHTML = `
     <div class="coins-stage">
-      <div class="coins-paper" aria-hidden="true"><img src="./assets/thanks-texture.png" alt="" /></div>
+      <div class="coins-paper" aria-hidden="true"><img src="./assets/thanks-texture.webp" alt="" /></div>
       <div class="coins-composition">
         <h2 id="coins-title" class="coins-title"></h2>
         <div class="coins-stack" aria-hidden="true"></div>
@@ -32,7 +32,7 @@ export function createCoins(data) {
       transformOrigin: `${layer.pivotX}px ${layer.pivotY}px`,
     });
     const image = document.createElement('img');
-    image.src = './assets/coins-source.png';
+    image.src = './assets/coins-source.webp';
     image.width = 1119; image.height = 1406; image.alt = '';
     slice.append(image);
     if (index === 2) {
